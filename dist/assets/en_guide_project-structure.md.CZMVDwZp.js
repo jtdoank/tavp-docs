@@ -1,0 +1,34 @@
+import{_ as s,o as e,c as n,a2 as p}from"./chunks/framework.BWuWLRhz.js";const u=JSON.parse('{"title":"Project Structure","description":"","frontmatter":{},"headers":[],"relativePath":"en/guide/project-structure.md","filePath":"en/guide/project-structure.md"}'),t={name:"en/guide/project-structure.md"};function l(r,a,o,i,c,h){return e(),n("div",null,[...a[0]||(a[0]=[p(`<h1 id="project-structure" tabindex="-1">Project Structure <a class="header-anchor" href="#project-structure" aria-label="Permalink to &quot;Project Structure&quot;">​</a></h1><p>TAVP folder structure after installation:</p><div class="language- vp-adaptive-theme"><button title="Copy Code" class="copy"></button><span class="lang"></span><pre class="shiki shiki-themes github-light github-dark vp-code" tabindex="0"><code><span class="line"><span>my-app/</span></span>
+<span class="line"><span>├── app/</span></span>
+<span class="line"><span>│   ├── Controllers/          # HTTP controllers</span></span>
+<span class="line"><span>│   ├── Models/               # Database models</span></span>
+<span class="line"><span>│   ├── Middleware/            # HTTP middleware</span></span>
+<span class="line"><span>│   ├── Services/             # Business logic</span></span>
+<span class="line"><span>│   ├── Events/               # Event classes</span></span>
+<span class="line"><span>│   └── Listeners/            # Event listeners</span></span>
+<span class="line"><span>├── bootstrap/</span></span>
+<span class="line"><span>│   └── app.php               # Application bootstrap</span></span>
+<span class="line"><span>├── config/                   # Configuration files</span></span>
+<span class="line"><span>│   ├── app.php</span></span>
+<span class="line"><span>│   ├── auth.php</span></span>
+<span class="line"><span>│   ├── cache.php</span></span>
+<span class="line"><span>│   ├── database.php</span></span>
+<span class="line"><span>│   ├── mail.php</span></span>
+<span class="line"><span>│   └── queue.php</span></span>
+<span class="line"><span>├── database/</span></span>
+<span class="line"><span>│   ├── migrations/           # Database migrations</span></span>
+<span class="line"><span>│   └── seeders/              # Database seeders</span></span>
+<span class="line"><span>├── public/                   # Web root</span></span>
+<span class="line"><span>│   └── index.php             # Entry point</span></span>
+<span class="line"><span>├── resources/</span></span>
+<span class="line"><span>│   ├── views/                # Volt templates</span></span>
+<span class="line"><span>│   ├── css/                  # Stylesheets</span></span>
+<span class="line"><span>│   └── js/                   # JavaScript</span></span>
+<span class="line"><span>├── routes/</span></span>
+<span class="line"><span>│   ├── web.php               # Web routes</span></span>
+<span class="line"><span>│   └── api.php               # API routes</span></span>
+<span class="line"><span>├── storage/                  # File storage</span></span>
+<span class="line"><span>├── tests/                    # Test files</span></span>
+<span class="line"><span>│   ├── Unit/</span></span>
+<span class="line"><span>│   └── Feature/</span></span>
+<span class="line"><span>└── vendor/                   # Composer dependencies</span></span></code></pre></div><h2 id="key-files" tabindex="-1">Key Files <a class="header-anchor" href="#key-files" aria-label="Permalink to &quot;Key Files&quot;">​</a></h2><h3 id="bootstrap-app-php" tabindex="-1"><code>bootstrap/app.php</code> <a class="header-anchor" href="#bootstrap-app-php" aria-label="Permalink to &quot;\`bootstrap/app.php\`&quot;">​</a></h3><p>Application bootstrap. Register services here.</p><h3 id="config-php" tabindex="-1"><code>config/*.php</code> <a class="header-anchor" href="#config-php" aria-label="Permalink to &quot;\`config/*.php\`&quot;">​</a></h3><p>Configuration files. All settings are here.</p><h3 id="routes-web-php" tabindex="-1"><code>routes/web.php</code> <a class="header-anchor" href="#routes-web-php" aria-label="Permalink to &quot;\`routes/web.php\`&quot;">​</a></h3><p>Web routes. Define URL patterns here.</p><h3 id="routes-api-php" tabindex="-1"><code>routes/api.php</code> <a class="header-anchor" href="#routes-api-php" aria-label="Permalink to &quot;\`routes/api.php\`&quot;">​</a></h3><p>API routes. RESTful endpoints here.</p><h3 id="app-controllers" tabindex="-1"><code>app/Controllers/</code> <a class="header-anchor" href="#app-controllers" aria-label="Permalink to &quot;\`app/Controllers/\`&quot;">​</a></h3><p>HTTP controllers. Handle requests here.</p><h3 id="app-models" tabindex="-1"><code>app/Models/</code> <a class="header-anchor" href="#app-models" aria-label="Permalink to &quot;\`app/Models/\`&quot;">​</a></h3><p>Database models. Eloquent-style ORM here.</p><h3 id="resources-views" tabindex="-1"><code>resources/views/</code> <a class="header-anchor" href="#resources-views" aria-label="Permalink to &quot;\`resources/views/\`&quot;">​</a></h3><p>Volt templates. HTML views here.</p><h2 id="next" tabindex="-1">Next <a class="header-anchor" href="#next" aria-label="Permalink to &quot;Next&quot;">​</a></h2><ul><li><a href="/en/features/authentication.html">Features</a></li><li><a href="/en/ecosystem/overview.html">Ecosystem</a></li></ul>`,20)])])}const b=s(t,[["render",l]]);export{u as __pageData,b as default};
