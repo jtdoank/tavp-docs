@@ -26,7 +26,7 @@ export default defineConfig({
     nav: [
       { text: 'Guide', link: '/guide/what-is-tavp' },
       { text: 'Ecosystem', link: '/ecosystem/overview' },
-      { text: 'Features', link: '/features/auth' },
+      { text: 'Features', link: '/features/authentication' },
       { text: 'GitHub', link: 'https://github.com/tavp-stack' }
     ],
     sidebar: {
@@ -66,7 +66,7 @@ export default defineConfig({
         {
           text: 'Features',
           items: [
-            { text: 'Authentication', link: '/features/auth' },
+            { text: 'Authentication', link: '/features/authentication' },
             { text: 'ORM', link: '/features/orm' },
             { text: 'Migrations', link: '/features/migrations' },
             { text: 'Routing', link: '/features/routing' },
