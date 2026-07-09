@@ -1,0 +1,121 @@
+# CLI Reference
+
+> Complete reference for TAVP CLI commands.
+
+## Available Commands
+
+### Project Commands
+
+| Command | Description |
+|---------|-------------|
+| `tavp new <name>` | Create new project |
+| `tavp serve` | Start development server |
+| `tavp optimize` | Cache config, routes, views |
+| `tavp optimize:clear` | Clear all caches |
+
+### Make Commands
+
+| Command | Description |
+|---------|-------------|
+| `tavp make:model <name>` | Create model |
+| `tavp make:controller <name>` | Create controller |
+| `tavp make:middleware <name>` | Create middleware |
+| `tavp make:migration <name>` | Create migration |
+| `tavp make:seeder <name>` | Create seeder |
+| `tavp make:scaffold <name>` | Create model + controller + view + migration |
+| `tavp make:event <name>` | Create event |
+| `tavp make:listener <name>` | Create listener |
+
+### Database Commands
+
+| Command | Description |
+|---------|-------------|
+| `tavp migrate` | Run pending migrations |
+| `tavp migrate:rollback` | Rollback last migration |
+| `tavp migrate:reset` | Rollback all migrations |
+| `tavp migrate:fresh` | Drop all tables and re-migrate |
+| `tavp migrate:fresh --seed` | Fresh migrate with seeding |
+| `tavp migrate:status` | Show migration status |
+
+### Authentication Commands
+
+| Command | Description |
+|---------|-------------|
+| `tavp key:generate` | Generate APP_KEY |
+| `tavp auth:clear-tokens` | Clear all auth tokens |
+
+### Hosting Commands
+
+| Command | Description |
+|---------|-------------|
+| `tavp phalcon:install` | Install Phalcon C-extension |
+| `tavp deploy` | Deploy to production |
+
+### Module Commands
+
+| Command | Description |
+|---------|-------------|
+| `tavp module:install <name>` | Install module |
+| `tavp module:uninstall <name>` | Uninstall module |
+| `tavp module:enable <name>` | Enable module |
+| `tavp module:disable <name>` | Disable module |
+
+### Queue Commands
+
+| Command | Description |
+|---------|-------------|
+| `tavp queue:work` | Process queue jobs |
+| `tavp queue:work --queue=emails` | Process specific queue |
+| `tavp queue:retry all` | Retry failed jobs |
+
+### Cache Commands
+
+| Command | Description |
+|---------|-------------|
+| `tavp cache:clear` | Clear cache |
+| `tavp cache:forget <key>` | Remove specific cache |
+
+### TAVP Coil Commands
+
+| Command | Description |
+|---------|-------------|
+| `tavp coil:start` | Start Swoole server |
+| `tavp coil:stop` | Stop Swoole server |
+| `tavp coil:status` | Check Swoole status |
+
+### TAVP Relay Commands
+
+| Command | Description |
+|---------|-------------|
+| `tavp relay:start` | Start RoadRunner server |
+| `tavp relay:stop` | Stop RoadRunner server |
+| `tavp relay:status` | Check RoadRunner status |
+
+### AI Commands
+
+| Command | Description |
+|---------|-------------|
+| `tavp ai "<description>"` | Generate code with AI |
+| `tavp ai:chat` | Start AI chat |
+
+### Marketplace Commands
+
+| Command | Description |
+|---------|-------------|
+| `tavp module:publish` | Publish module to marketplace |
+| `tavp theme:publish` | Publish theme to marketplace |
+
+### Cloud Commands
+
+| Command | Description |
+|---------|-------------|
+| `tavp cloud:deploy` | Deploy to TAVP Cloud |
+| `tavp cloud:status` | Check deployment status |
+| `tavp cloud:logs` | View logs |
+
+### Help
+
+| Command | Description |
+|---------|-------------|
+| `tavp help` | Show all commands |
+| `tavp help <command>` | Show command help |

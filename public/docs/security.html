@@ -1,0 +1,125 @@
+# Security Guide
+
+> Security best practices for TAVP Stack applications.
+
+## Authentication Security
+
+### Password Hashing
+```php
+// Always use bcrypt or argon2
+$hashedPassword = bcrypt($plainPassword);
+
+// Verify password
+if (password_verify($plainPassword, $hashedPassword)) {
+    // Password is correct
+}
+```
+
+### OTP Security
+- Rate limit OTP requests (5 per hour)
+- OTP expires after 5 minutes
+- OTP is single-use only
+
+### JWT Security
+- Use short-lived tokens (15 minutes)
+- Implement refresh tokens
+- Store tokens securely (httpOnly cookies or secure storage)
+
+## CSRF Protection
+
+```php
+// Enable CSRF middleware
+$middleware = [
+    \Tavp\Middleware\ValidateCsrfToken::class,
+];
+
+// In forms
+<form method="POST">
+    {{ csrf_field() }}
+    <!-- form fields -->
+</form>
+```
+
+## XSS Prevention
+
+```php
+// Escape output
+{{ user.name }}
+
+// For raw HTML (use carefully)
+{{ user.content | raw }}
+```
+
+## SQL Injection Prevention
+
+```php
+// Use parameterized queries
+$users = DB::select('SELECT * FROM users WHERE email = ?', [$email]);
+
+// Use ORM (safe by default)
+$user = User::where('email', $email)->first();
+```
+
+## Rate Limiting
+
+```php
+// Apply rate limit to routes
+$router->post('/api/auth/login', [
+    'middleware' => 'throttle:5,1',
+    'uses' => 'AuthController@login',
+]);
+```
+
+## Security Headers
+
+```php
+// config/security.php
+return [
+    'headers' => [
+        'X-Content-Type-Options' => 'nosniff',
+        'X-Frame-Options' => 'DENY',
+        'X-XSS-Protection' => '1; mode=block',
+        'Strict-Transport-Security' => 'max-age=31536000; includeSubDomains',
+    ],
+];
+```
+
+## Environment Security
+
+```bash
+# Never commit .env file
+echo ".env" >> .gitignore
+
+# Use environment variables for secrets
+APP_KEY=base64:...
+DB_PASSWORD=secret
+JWT_SECRET=secret
+```
+
+## Dependency Scanning
+
+```bash
+# Scan for vulnerabilities
+tavp security:scan
+
+# Check outdated packages
+composer outdated
+```
+
+## OWASP Top 10 Checklist
+
+- [ ] A01: Broken Access Control
+- [ ] A02: Cryptographic Failures
+- [ ] A03: Injection
+- [ ] A04: Insecure Design
+- [ ] A05: Security Misconfiguration
+- [ ] A06: Vulnerable Components
+- [ ] A07: Authentication Failures
+- [ ] A08: Data Integrity Failures
+- [ ] A09: Logging Failures
+- [ ] A10: SSRF
+
+## Need Help?
+
+- [TAVP Discord](https://discord.gg/tavp)
+- [GitHub Security Advisories](https://github.com/tavp-stack/tavp-core/security)

@@ -1,0 +1,118 @@
+# Search Guide
+
+> Full-text search in TAVP Stack.
+
+## Configuration
+
+```php
+// config/search.php
+return [
+    'default' => env('SEARCH_DRIVER', 'database'),
+    
+    'drivers' => [
+        'database' => [
+            'driver' => 'database',
+        ],
+        
+        'meilisearch' => [
+            'driver' => 'meilisearch',
+            'host' => env('MEILISEARCH_HOST', 'http://localhost:7700'),
+            'key' => env('MEILISEARCH_KEY'),
+        ],
+        
+        'elasticsearch' => [
+            'driver' => 'elasticsearch',
+            'hosts' => [
+                env('ELASTICSEARCH_HOST', 'localhost:9200'),
+            ],
+        ],
+    ],
+];
+```
+
+## Basic Usage
+
+```php
+use Tavp\Support\Facades\Search;
+
+// Search
+$results = Search::search('users', 'John');
+
+// Search with options
+$results = Search::search('users', 'John', [
+    'limit' => 10,
+    'offset' => 0,
+]);
+```
+
+## Model Search
+
+```php
+namespace App\Models;
+
+use Tavp\Database\Model;
+use Tavp\Search\Searchable;
+
+class User extends Model
+{
+    use Searchable;
+    
+    protected $searchable = ['name', 'email'];
+}
+
+// Search
+$users = User::search('John')->get();
+```
+
+## Indexing
+
+```php
+// Index a model
+User::searchIndex();
+
+// Remove from index
+$user->searchRemove();
+
+// Reindex all
+User::searchReindex();
+```
+
+## Database Search (Fallback)
+
+```php
+// Uses LIKE queries
+$results = User::where('name', 'LIKE', '%John%')
+    ->orWhere('email', 'LIKE', '%John%')
+    ->get();
+```
+
+## Meilisearch
+
+```php
+// Install Meilisearch
+// https://docs.meilisearch.com/learn/getting_started/installation.html
+
+// Configure
+// config/search.php
+'meilisearch' => [
+    'driver' => 'meilisearch',
+    'host' => 'http://localhost:7700',
+    'key' => 'your-master-key',
+],
+```
+
+## Elasticsearch
+
+```php
+// Install Elasticsearch
+// https://www.elastic.co/guide/en/elasticsearch/reference/current/install-elasticsearch.html
+
+// Configure
+// config/search.php
+'elasticsearch' => [
+    'driver' => 'elasticsearch',
+    'hosts' => [
+        'localhost:9200',
+    ],
+],
+```

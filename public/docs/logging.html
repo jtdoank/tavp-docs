@@ -1,0 +1,123 @@
+# Logging Guide
+
+> Logging in TAVP Stack.
+
+## Configuration
+
+```php
+// config/logging.php
+return [
+    'default' => env('LOG_CHANNEL', 'stack'),
+    
+    'channels' => [
+        'stack' => [
+            'driver' => 'stack',
+            'channels' => ['single'],
+        ],
+        
+        'single' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/app.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+        ],
+        
+        'daily' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/app.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+            'days' => 14,
+        ],
+        
+        'stderr' => [
+            'driver' => 'monolog',
+            'handler' => Monolog\Handler\StreamHandler::class,
+            'with' => ['stream' => 'php://stderr'],
+        ],
+        
+        'syslog' => [
+            'driver' => 'syslog',
+            'level' => env('LOG_LEVEL', 'debug'),
+        ],
+    ],
+];
+```
+
+## Basic Usage
+
+```php
+use Tavp\Support\Facades\Log;
+
+// Log levels
+Log::emergency('Emergency message');
+Log::alert('Alert message');
+Log::critical('Critical message');
+Log::error('Error message');
+Log::warning('Warning message');
+Log::notice('Notice message');
+Log::info('Info message');
+Log::debug('Debug message');
+
+// Log with context
+Log::info('User logged in', ['user_id' => 1]);
+Log::error('Failed to send email', ['error' => $e->getMessage()]);
+```
+
+## Logger in Controllers
+
+```php
+namespace App\Controllers;
+
+use Tavp\Http\Controller;
+use Tavp\Support\Facades\Log;
+
+class UserController extends Controller
+{
+    public function store()
+    {
+        try {
+            // Create user
+            Log::info('User created', ['user_id' => $user->id]);
+            
+            return redirect('/users');
+        } catch (\Exception $e) {
+            Log::error('Failed to create user', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+            
+            return back()->withErrors(['error' => 'Failed to create user']);
+        }
+    }
+}
+```
+
+## Log Channels
+
+```php
+// Use specific channel
+Log::channel('single')->info('Single channel log');
+Log::channel('daily')->info('Daily channel log');
+
+// Create custom channel
+Log::channel('slack')->error('Slack notification');
+```
+
+## Structured Logging
+
+```php
+Log::info('Order processed', [
+    'order_id' => $order->id,
+    'amount' => $order->total,
+    'user_id' => $order->user_id,
+]);
+```
+
+## Log Files
+
+```bash
+# View logs
+tail -f storage/logs/app.log
+
+# Search logs
+grep "error" storage/logs/app.log
+```

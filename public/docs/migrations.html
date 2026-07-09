@@ -1,0 +1,157 @@
+# Migration Guide
+
+> Creating and running database migrations.
+
+## Creating Migrations
+
+```bash
+# Create migration
+tavp make:migration create_users_table
+
+# Create model with migration
+tavp make:model User --migration
+```
+
+## Migration Structure
+
+```php
+<?php
+// database/migrations/2026_01_01_000000_create_users_table.php
+
+use Tavp\Database\Schema\Blueprint;
+use Tavp\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up(): void
+    {
+        Schema::create('users', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->string('email')->unique();
+            $table->string('password');
+            $table->rememberToken();
+            $table->timestamps();
+        });
+    }
+    
+    public function down(): void
+    {
+        Schema::dropIfExists('users');
+    }
+};
+```
+
+## Column Types
+
+| Method | Description |
+|--------|-------------|
+| id() | Auto-incrementing ID |
+| string(name, length) | VARCHAR |
+| text(name) | TEXT |
+| longText(name) | LONGTEXT |
+| integer(name) | INT |
+| bigInteger(name) | BIGINT |
+| boolean(name) | BOOLEAN |
+| decimal(name, precision, scale) | DECIMAL |
+| float(name) | FLOAT |
+| double(name) | DOUBLE |
+| date(name) | DATE |
+| dateTime(name) | DATETIME |
+| timestamp(name) | TIMESTAMP |
+| time(name) | TIME |
+| binary(name) | BLOB |
+| json(name) | JSON |
+| timestamps() | created_at, updated_at |
+| softDeletes() | deleted_at |
+
+## Modifying Tables
+
+```php
+Schema::table('users', function (Blueprint $table) {
+    // Add column
+    $table->string('phone')->nullable();
+    
+    // Modify column
+    $table->string('name', 100)->change();
+    
+    // Rename column
+    $table->renameColumn('name', 'full_name');
+    
+    // Drop column
+    $table->dropColumn('phone');
+    
+    // Add index
+    $table->index('email');
+    
+    // Add unique index
+    $table->unique('email');
+    
+    // Add foreign key
+    $table->foreignId('user_id')
+          ->constrained()
+          ->onDelete('cascade');
+});
+```
+
+## Running Migrations
+
+```bash
+# Run all pending
+tavp migrate
+
+# Rollback last batch
+tavp migrate:rollback
+
+# Rollback all
+tavp migrate:reset
+
+# Fresh start
+tavp migrate:fresh
+
+# Fresh with seeding
+tavp migrate:fresh --seed
+
+# Status
+tavp migrate:status
+```
+
+## Seeding
+
+```php
+<?php
+// database/seeders/DatabaseSeeder.php
+
+use Tavp\Database\Seeder;
+
+class DatabaseSeeder extends Seeder
+{
+    public function run(): void
+    {
+        $this->call([
+            UserSeeder::class,
+            PostSeeder::class,
+        ]);
+    }
+}
+```
+
+```php
+<?php
+// database/seeders/UserSeeder.php
+
+use App\Models\User;
+use Tavp\Database\Seeder;
+
+class UserSeeder extends Seeder
+{
+    public function run(): void
+    {
+        User::create([
+            'name' => 'Admin',
+            'email' => 'admin@example.com',
+            'password' => bcrypt('password'),
+        ]);
+    }
+}
+```

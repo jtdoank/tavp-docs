@@ -1,0 +1,148 @@
+# Validation Guide
+
+> Request validation in TAVP Stack.
+
+## Basic Usage
+
+```php
+namespace App\Controllers;
+
+use Tavp\Http\Controller;
+
+class UserController extends Controller
+{
+    public function store()
+    {
+        $rules = [
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users',
+            'password' => 'required|string|min:8|confirmed',
+        ];
+        
+        $messages = [
+            'email.required' => 'Email is required',
+            'email.unique' => 'Email already exists',
+        ];
+        
+        $this->validate($rules, $messages);
+        
+        // Validation passed
+    }
+}
+```
+
+## Validation Rules
+
+| Rule | Description |
+|------|-------------|
+| required | Field is required |
+| string | Must be a string |
+| integer | Must be an integer |
+| email | Must be a valid email |
+| unique:table | Must be unique in database |
+| min:n | Minimum length/value |
+| max:n | Maximum length/value |
+| confirmed | Must match confirmation field |
+| in:val1,val2 | Must be in list |
+| regex:pattern | Must match regex |
+
+## Form Requests
+
+```php
+namespace App\Http\Requests;
+
+use Tavp\Http\FormRequest;
+
+class StoreUserRequest extends FormRequest
+{
+    public function rules()
+    {
+        return [
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users',
+            'password' => 'required|string|min:8',
+        ];
+    }
+    
+    public function messages()
+    {
+        return [
+            'email.required' => 'Email is required',
+        ];
+    }
+}
+
+// Use in controller
+public function store(StoreUserRequest $request)
+{
+    // Validation already passed
+    $validated = $request->validated();
+}
+```
+
+## Custom Validation Rules
+
+```php
+namespace App\Rules;
+
+use Tavp\Validation\Rule;
+
+class Uppercase extends Rule
+{
+    public function validate($attribute, $value, $parameters)
+    {
+        return strtoupper($value) === $value;
+    }
+    
+    public function message()
+    {
+        return 'The :attribute must be uppercase.';
+    }
+}
+
+// Use custom rule
+$rules = [
+    'name' => ['required', new Uppercase],
+];
+```
+
+## Error Handling
+
+```php
+try {
+    $this->validate($rules);
+} catch (\Tavp\Validation\ValidationException $e) {
+    $errors = $e->errors();
+    return response()->json(['errors' => $errors], 422);
+}
+```
+
+## Available Rules
+
+- accepted
+- active_url
+- after:date
+- before:date
+- between:min,max
+- confirmed
+- date
+- date_format:format
+- different:field
+- digits:value
+- email
+- exists:table,column
+- filled
+- in:val1,val2,...
+- integer
+- max:value
+- min:value
+- not_in:val1,val2,...
+- nullable
+- numeric
+- required
+- required_if:field,value
+- required_unless:field,value
+- same:field
+- string
+- timezone
+- url

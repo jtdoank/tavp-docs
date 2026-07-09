@@ -1,0 +1,115 @@
+# Middleware Guide
+
+> HTTP middleware in TAVP Stack.
+
+## Creating Middleware
+
+```php
+namespace App\Http\Middleware;
+
+use Tavp\Http\Middleware\Middleware;
+
+class CheckAge extends Middleware
+{
+    public function handle($request, $next, $minAge = 18)
+    {
+        if ($request->user()->age < $minAge) {
+            return response()->json(['error' => 'Age requirement not met'], 403);
+        }
+        
+        return $next($request);
+    }
+}
+```
+
+## Registering Middleware
+
+```php
+// bootstrap/app.php
+$middleware = [
+    \Tavp\Middleware\TrustProxies::class,
+    \Tavp\Middleware\HandleCors::class,
+    \Tavp\Middleware\ValidateCsrfToken::class,
+    \Tavp\Middleware\StartSession::class,
+    \Tavp\Middleware\Authenticate::class,
+];
+
+// Route middleware
+$routeMiddleware = [
+    'auth' => \Tavp\Middleware\Authenticate::class,
+    'throttle' => \Tavp\Middleware\ThrottleRequests::class,
+];
+```
+
+## Using Middleware
+
+```php
+// Route middleware
+$router->get('/profile', [
+    'middleware' => 'auth',
+    'uses' => 'ProfileController@show',
+]);
+
+// Multiple middleware
+$router->get('/admin', [
+    'middleware' => ['auth', 'admin'],
+    'uses' => 'AdminController@index',
+]);
+
+// Inline middleware
+$router->get('/users/{id}', [
+    'middleware' => 'auth:api',
+    'uses' => 'UserController@show',
+]);
+```
+
+## Built-in Middleware
+
+| Middleware | Description |
+|------------|-------------|
+| Authenticate | Redirect unauthenticated users |
+| RedirectIfAuthenticated | Redirect authenticated guests |
+| ValidateCsrfToken | CSRF protection |
+| TrustProxies | Trust proxy headers |
+| HandleCors | CORS handling |
+| StartSession | Session management |
+| ThrottleRequests | Rate limiting |
+
+## Middleware Groups
+
+```php
+// bootstrap/app.php
+$middlewareGroups = [
+    'web' => [
+        \Tavp\Middleware\StartSession::class,
+        \Tavp\Middleware\ShareErrorsFromSession::class,
+        \Tavp\Middleware\VerifyCsrfToken::class,
+    ],
+    
+    'api' => [
+        \Tavp\Middleware\ThrottleRequests::class.':60,1',
+    ],
+];
+```
+
+## Terminable Middleware
+
+```php
+namespace App\Http\Middleware;
+
+use Tavp\Http\Middleware\TerminableMiddleware;
+
+class StoreResponseHistory implements TerminableMiddleware
+{
+    public function handle($request, $next)
+    {
+        return $next($request);
+    }
+    
+    public function terminate($request, $response)
+    {
+        // Runs after response is sent
+        History::store($request, $response);
+    }
+}
+```

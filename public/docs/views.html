@@ -1,0 +1,128 @@
+# Views Guide
+
+> Templating with Volt in TAVP Stack.
+
+## Basic Views
+
+```php
+// resources/views/home.volt
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ title }}</title>
+</head>
+<body>
+    <h1>{{ greeting }}</h1>
+</body>
+</html>
+```
+
+## Layouts
+
+```php
+<!-- resources/views/layouts/app.volt -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% block title %}TAVP{% endblock %}</title>
+    <link rel="stylesheet" href="/css/app.css">
+</head>
+<body>
+    <nav>
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+    </nav>
+    
+    {% block content %}{% endblock %}
+    
+    <script src="/js/app.js"></script>
+</body>
+</html>
+```
+
+## Extending Layouts
+
+```php
+<!-- resources/views/home.volt -->
+{% extends 'layouts/app.volt' %}
+
+{% block title %}Home - TAVP{% endblock %}
+
+{% block content %}
+<h1>Welcome to TAVP</h1>
+{% endblock %}
+```
+
+## Conditionals
+
+```volt
+{% if user %}
+    <p>Welcome, {{ user.name }}!</p>
+{% else %}
+    <p>Please login.</p>
+{% endif %}
+
+{% if posts %}
+    {% for post in posts %}
+        <article>
+            <h2>{{ post.title }}</h2>
+            <p>{{ post.content }}</p>
+        </article>
+    {% endfor %}
+{% else %}
+    <p>No posts found.</p>
+{% endif %}
+```
+
+## Loops
+
+```volt
+<ul>
+{% for user in users %}
+    <li>{{ user.name }}</li>
+{% endfor %}
+</ul>
+
+{% for key, value in data %}
+    <p>{{ key }}: {{ value }}</p>
+{% endfor %}
+```
+
+## Filters
+
+```volt
+{{ name | upper }}
+{{ name | lower }}
+{{ price | number_format(2) }}
+{{ date | date('Y-m-d') }}
+{{ html | raw }}
+{{ text | truncate(100) }}
+```
+
+## Components
+
+```php
+<!-- resources/views/components/button.volt -->
+<button class="btn btn-{{ type | default('primary') }}">
+    {{ slot }}
+</button>
+```
+
+```php
+<!-- Usage -->
+{{ component('button', ['type' => 'primary']) }}
+    Click me
+{{ endcomponent }}
+```
+
+## Partials
+
+```php
+<!-- resources/views/partials/header.volt -->
+<header>
+    <h1>My App</h1>
+</header>
+
+<!-- Usage in view -->
+{% include 'partials/header.volt' %}
+```

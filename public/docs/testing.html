@@ -1,0 +1,132 @@
+<?php
+/**
+ * TAVP Testing Guide
+ */
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Testing — TAVP Docs</title>
+    <link rel="stylesheet" href="https://tavp.dev/css/docs.css">
+</head>
+<body>
+<div class="docs-container">
+    <aside class="docs-sidebar">
+        <h2>TAVP Docs</h2>
+        <nav>
+            <a href="/docs/testing">Testing</a>
+            <a href="/docs/architecture">Architecture</a>
+            <a href="/docs/database">Database</a>
+        </nav>
+    </aside>
+    
+    <main class="docs-content">
+        <h1>Testing Guide</h1>
+        
+        <section>
+            <h2>Setup</h2>
+            <pre><code># Install test dependencies
+composer require --dev phpunit/phpunit
+
+# Run all tests
+composer test
+
+# Run specific test suite
+vendor/bin/phpunit --testsuite Unit
+vendor/bin/phpunit --testsuite Feature</code></pre>
+        </section>
+        
+        <section>
+            <h2>Unit Tests</h2>
+            <pre><code><?php
+namespace Tests\Unit;
+
+use PHPUnit\Framework\TestCase;
+
+class UserTest extends TestCase
+{
+    public function test_user_has_name(): void
+    {
+        $user = new \App\Models\User();
+        $user->name = 'John';
+        
+        $this->assertEquals('John', $user->name);
+    }
+    
+    public function test_user_can_be_created(): void
+    {
+        $user = \App\Models\User::create([
+            'name' => 'John',
+            'email' => 'john@example.com',
+            'password' => bcrypt('secret'),
+        ]);
+        
+        $this->assertNotNull($user->id);
+        $this->assertEquals('John', $user->name);
+    }
+}</code></pre>
+        </section>
+        
+        <section>
+            <h2>Feature Tests</h2>
+            <pre><code><?php
+namespace Tests\Feature;
+
+use Tests\TestCase;
+
+class LoginTest extends TestCase
+{
+    public function test_user_can_login_with_otp(): void
+    {
+        $response = $this->post('/api/auth/otp/send', [
+            'email' => 'john@example.com',
+        ]);
+        
+        $response->assertOk();
+        
+        $response = $this->post('/api/auth/otp/verify', [
+            'email' => 'john@example.com',
+            'code' => '123456',
+        ]);
+        
+        $response->assertOk();
+        $this->assertAuthenticated();
+    }
+}</code></pre>
+        </section>
+        
+        <section>
+            <h2>Database Tests</h2>
+            <pre><code><?php
+namespace Tests\Feature;
+
+use Tests\TestCase;
+use App\Models\User;
+
+class UserTest extends TestCase
+{
+    public function test_users_table_has_expected_columns(): void
+    {
+        $this->assertDatabaseHas('users', [
+            'name' => 'John',
+            'email' => 'john@example.com',
+        ]);
+    }
+    
+    public function test_user_can_be_deleted(): void
+    {
+        $user = User::factory()->create();
+        
+        $user->delete();
+        
+        $this->assertDatabaseMissing('users', [
+            'id' => $user->id,
+        ]);
+    }
+}</code></pre>
+        </section>
+    </main>
+</div>
+</body>
+</html>

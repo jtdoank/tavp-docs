@@ -1,0 +1,113 @@
+# Service Container Guide
+
+> Dependency injection in TAVP Stack.
+
+## Basic Usage
+
+```php
+use Tavp\Support\Facades\App;
+
+// Bind
+App::bind('mailer', function () {
+    return new Mailer();
+});
+
+// Resolve
+$mailer = App::make('mailer');
+
+// Bind singleton
+App::singleton('mailer', function () {
+    return new Mailer();
+});
+```
+
+## Binding
+
+```php
+// Simple binding
+$di->set('mailer', function () {
+    return new Mailer();
+});
+
+// Singleton
+$di->setShared('mailer', function () {
+    return new Mailer();
+});
+
+// Instance
+$di->set('config', $config);
+```
+
+## Resolution
+
+```php
+// Make
+$mailer = $di->make('mailer');
+
+// Get shared
+$mailer = $di->getShared('mailer');
+
+// Has
+if ($di->has('mailer')) {
+    // Service exists
+}
+```
+
+## Autowiring
+
+```php
+namespace App\Controllers;
+
+use App\Services\UserService;
+use App\Mail\Mailer;
+
+class UserController
+{
+    public function __construct(
+        protected UserService $userService,
+        protected Mailer $mailer
+    ) {}
+}
+```
+
+## Service Providers
+
+```php
+namespace App\Providers;
+
+use Tavp\Support\ServiceProvider;
+
+class AppServiceProvider extends ServiceProvider
+{
+    public function register(): void
+    {
+        $this->app->singleton('mailer', function () {
+            return new Mailer();
+        });
+    }
+    
+    public function boot(): void
+    {
+        // Boot logic
+    }
+}
+```
+
+## Facades
+
+```php
+namespace Tavp\Support\Facades;
+
+use Tavp\Support\Facades\Facade;
+
+class Mail extends Facade
+{
+    protected static function getFacadeAccessor()
+    {
+        return 'mailer';
+    }
+}
+
+// Usage
+Mail::to('user@example.com')->send(new WelcomeEmail());
+```

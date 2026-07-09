@@ -1,0 +1,95 @@
+# TAVP Long-Term Support (LTS) Policy
+
+> Support commitments for TAVP Stack releases.
+
+## Versioning
+
+TAVP follows Semantic Versioning (SemVer):
+
+- **MAJOR** (x.0.0) — Breaking changes
+- **MINOR** (1.x.0) — New features (backward-compatible)
+- **PATCH** (1.0.x) — Bug fixes (backward-compatible)
+
+## LTS Versions
+
+| Version | Release Date | Support Until | Status |
+|---------|--------------|---------------|--------|
+| 1.0.x | 2026 | 2028 | Active |
+| 2.0.x | 2028 | 2030 | Planned |
+
+## Support Guarantees
+
+### Active Support (2 years)
+- Bug fixes
+- Security patches
+- Performance improvements
+- Minor feature additions
+
+### Security Only (1 year after active)
+- Critical security patches
+- No new features
+- No bug fixes (unless security-related)
+
+## Upgrade Path
+
+### Minor Version Upgrades
+```bash
+# Update dependencies
+composer update
+
+# Run migrations
+tavp migrate
+
+# Clear cache
+tavp optimize:clear
+```
+
+### Major Version Upgrades
+```bash
+# Read upgrade guide
+# https://tavp.dev/docs/upgrade
+
+# Update dependencies
+composer require tavp/core:^2.0
+
+# Run migrations
+tavp migrate
+
+# Fix deprecated code
+# (see deprecation warnings in logs)
+```
+
+## Deprecation Policy
+
+1. **Deprecation Warning** — Introduced in MINOR version
+2. **Alternative Provided** — New method/feature available
+3. **Removal** — Removed in next MAJOR version
+
+Example:
+- v1.2.0: `User::findAll()` deprecated, use `User::all()`
+- v1.3.0: Deprecation warning in logs
+- v2.0.0: `User::findAll()` removed
+
+## Security Policy
+
+### Reporting Vulnerabilities
+- Email: security@tavp.dev
+- Response time: 24h
+- Fix time: 72h (critical), 7 days (high)
+
+### Security Updates
+- Released immediately for critical issues
+- Backported to all supported versions
+- No breaking changes in security patches
+
+## LTS Benefits
+
+1. **Stability** — No breaking changes for 2 years
+2. **Security** — Guaranteed security patches
+3. **Compatibility** — Third-party packages can rely on stable API
+4. **Enterprise** — Meets enterprise compliance requirements
+
+## Need Help?
+
+- [TAVP Discord](https://discord.gg/tavp)
+- [GitHub Discussions](https://github.com/tavp-stack/tavp-core/discussions)
