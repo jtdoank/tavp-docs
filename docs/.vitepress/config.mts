@@ -164,7 +164,7 @@ export default defineConfig({
             { text: 'Configuration', link: '/reference/configuration' },
             { text: 'Helpers', link: '/reference/helpers' },
             { text: 'API Reference', link: '/reference/api-reference' },
-            { text: 'FAQ', link: '/reference/faq' },
+      { text: 'Reference', link: '/reference/cli-commands' },
             { text: 'Troubleshooting', link: '/reference/troubleshooting' },
             { text: 'Performance', link: '/reference/performance' }
           ]
