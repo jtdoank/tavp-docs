@@ -1,0 +1,88 @@
+# Environment Guide
+
+> Environment detection and configuration.
+
+## Detecting Environment
+
+```php
+use Tavp\Support\Facades\App;
+
+// Check current environment
+if (App::environment('local')) {
+    // Local development
+}
+
+if (App::environment('production')) {
+    // Production
+}
+
+// Check multiple environments
+if (App::environment(['local', 'staging'])) {
+    // Local or staging
+}
+```
+
+## Environment Variables
+
+```php
+// Access environment variables
+$appName = env('APP_NAME', 'TAVP');
+$debug = env('APP_DEBUG', false);
+
+// Set environment variables
+putenv('APP_ENV=production');
+```
+
+## Environment Files
+
+```bash
+# .env - Environment configuration
+APP_NAME=TAVP
+APP_ENV=local
+APP_KEY=base64:...
+APP_DEBUG=true
+
+# .env.example - Template for .env
+APP_NAME=TAVP
+APP_ENV=local
+APP_KEY=
+APP_DEBUG=true
+```
+
+## Loading Environment
+
+```php
+// bootstrap/app.php
+$dotenv = Dotenv\Dotenv::createImmutable(base_path());
+$dotenv->safeLoad();
+```
+
+## Environment-Specific Config
+
+```php
+// config/app.php
+return [
+    'debug' => env('APP_DEBUG', false),
+    
+    'log_level' => env('APP_DEBUG', false) ? 'debug' : 'error',
+];
+```
+
+## Environment Adapters
+
+```php
+// Auto-detect and configure environment
+use Tavp\Environment\EnvironmentManager;
+
+$manager = new EnvironmentManager();
+$manager->detect();
+```
+
+## Available Environments
+
+| Environment | Description |
+|-------------|-------------|
+| local | Local development |
+| staging | Staging server |
+| testing | Test environment |
+| production | Production server |

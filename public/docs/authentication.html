@@ -1,0 +1,203 @@
+# Authentication Guide
+
+> User authentication in TAVP Stack.
+
+## Configuration
+
+```php
+// config/auth.php
+return [
+    'defaults' => [
+        'guard' => 'web',
+        'passwords' => 'users',
+    ],
+    
+    'guards' => [
+        'web' => [
+            'driver' => 'session',
+            'provider' => 'users',
+        ],
+        'api' => [
+            'driver' => 'token',
+            'provider' => 'users',
+        ],
+    ],
+    
+    'providers' => [
+        'users' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\User::class,
+        ],
+    ],
+];
+```
+
+## OTP Authentication
+
+### Send OTP
+
+```php
+// POST /api/auth/otp/send
+{
+    "email": "user@example.com"
+}
+```
+
+### Verify OTP
+
+```php
+// POST /api/auth/otp/verify
+{
+    "email": "user@example.com",
+    "code": "123456"
+}
+
+// Response
+{
+    "token": "eyJ0eXAiOiJKV1Q...",
+    "user": {
+        "id": 1,
+        "name": "John",
+        "email": "user@example.com"
+    }
+}
+```
+
+## JWT Authentication
+
+### Login
+
+```php
+// POST /api/auth/login
+{
+    "email": "user@example.com",
+    "password": "secret"
+}
+
+// Response
+{
+    "token": "eyJ0eXAiOiJKV1Q...",
+    "expires_in": 900
+}
+```
+
+### Use Token
+
+```bash
+# Include token in Authorization header
+Authorization: Bearer eyJ0eXAiOiJKV1Q...
+```
+
+### Refresh Token
+
+```php
+// POST /api/auth/refresh
+Authorization: Bearer eyJ0eXAiOiJKV1Q...
+
+// Response
+{
+    "token": "eyJ0eXAiOiJKV1Q...",
+    "expires_in": 900
+}
+```
+
+## Social OAuth
+
+### Google OAuth
+
+```php
+// GET /api/auth/google/redirect
+// Redirects to Google login
+
+// GET /api/auth/google/callback
+// Handles callback and returns token
+```
+
+### Apple OAuth
+
+```php
+// GET /api/auth/apple/redirect
+// Redirects to Apple login
+
+// GET /api/auth/apple/callback
+// Handles callback and returns token
+```
+
+## Magic Link
+
+### Send Magic Link
+
+```php
+// POST /api/auth/magic-link
+{
+    "email": "user@example.com"
+}
+```
+
+### Verify Magic Link
+
+```php
+// GET /api/auth/magic-link/verify?token=abc123
+// Returns JWT token
+```
+
+## Password Reset
+
+### Send Reset Link
+
+```php
+// POST /api/auth/password/reset
+{
+    "email": "user@example.com"
+}
+```
+
+### Reset Password
+
+```php
+// POST /api/auth/password/reset/confirm
+{
+    "token": "abc123",
+    "password": "new-password",
+    "password_confirmation": "new-password"
+}
+```
+
+## Middleware
+
+```php
+// Require authentication
+$router->get('/profile', [
+    'middleware' => 'auth',
+    'uses' => 'ProfileController@show',
+]);
+
+// Optional authentication
+$router->get('/posts', [
+    'middleware' => 'auth.optional',
+    'uses' => 'PostController@index',
+]);
+
+// Require specific role
+$router->get('/admin', [
+    'middleware' => 'auth:admin',
+    'uses' => 'AdminController@index',
+]);
+```
+
+## Guards
+
+```php
+// Use specific guard
+auth('api')->user();
+auth('web')->user();
+
+// Attempt login
+auth('web')->attempt([
+    'email' => $email,
+    'password' => $password,
+]);
+
+// Logout
+auth('web')->logout();
+```

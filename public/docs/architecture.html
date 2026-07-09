@@ -1,0 +1,115 @@
+<?php
+/**
+ * TAVP Architecture Overview
+ * 
+ * Documentation for the TAVP Stack architecture.
+ */
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Architecture — TAVP Docs</title>
+    <link rel="stylesheet" href="https://tavp.dev/css/docs.css">
+</head>
+<body>
+<div class="docs-container">
+    <aside class="docs-sidebar">
+        <h2>TAVP Docs</h2>
+        <nav>
+            <a href="/docs/architecture">Architecture</a>
+            <a href="/docs/database">Database</a>
+            <a href="/docs/orm">ORM Guide</a>
+            <a href="/docs/migrations">Migrations</a>
+            <a href="/docs/validation">Validation</a>
+            <a href="/docs/events">Events</a>
+            <a href="/docs/queues">Queues</a>
+            <a href="/docs/cache">Cache</a>
+            <a href="/docs/mail">Mail</a>
+            <a href="/docs/storage">Storage</a>
+            <a href="/docs/search">Search</a>
+            <a href="/docs/broadcasting">Broadcasting</a>
+            <a href="/docs/testing">Testing</a>
+            <a href="/docs/security">Security</a>
+            <a href="/docs/performance">Performance</a>
+        </nav>
+    </aside>
+    
+    <main class="docs-content">
+        <h1>Architecture Overview</h1>
+        
+        <section>
+            <h2>Request Lifecycle</h2>
+            <p>When a request enters TAVP, it follows this lifecycle:</p>
+            <ol>
+                <li><strong>Entry Point</strong> — <code>public/index.php</code> bootstraps the application</li>
+                <li><strong>DI Container</strong> — Services are registered and resolved</li>
+                <li><strong>Middleware Pipeline</strong> — Request passes through middleware stack</li>
+                <li><strong>Router</strong> — Request is matched to a route</li>
+                <li><strong>Controller</strong> — Route handler executes business logic</li>
+                <li><strong>Response</strong> — Response is returned to the client</li>
+            </ol>
+        </section>
+        
+        <section>
+            <h2>Directory Structure</h2>
+            <pre><code>my-app/
+├── app/
+│   ├── Controllers/      # HTTP controllers
+│   ├── Models/           # Eloquent-style models
+│   ├── Middleware/        # HTTP middleware
+│   ├── Services/         # Business logic
+│   └── Events/           # Event classes
+├── bootstrap/
+│   └── app.php           # Application bootstrap
+├── config/               # Configuration files
+├── database/
+│   ├── migrations/       # Database migrations
+│   └── seeders/          # Database seeders
+├── public/               # Web root
+│   └── index.php         # Entry point
+├── resources/
+│   ├── views/            # Volt templates
+│   ├── css/              # Stylesheets
+│   └── js/               # JavaScript
+├── routes/               # Route definitions
+├── storage/              # File storage
+├── tests/                # Test files
+└── vendor/               # Composer dependencies</code></pre>
+        </section>
+        
+        <section>
+            <h2>Service Container</h2>
+            <p>TAVP uses Phalcon's DI container as its service container. Services are registered in <code>bootstrap/app.php</code>:</p>
+            <pre><code>$di->setShared('router', function () {
+    $router = new Router();
+    require config_path('routes.php');
+    return $router;
+});</code></pre>
+        </section>
+        
+        <section>
+            <h2>Middleware Pipeline</h2>
+            <p>Middleware runs in order, each can modify the request or response:</p>
+            <pre><code>$middleware = [
+    \Tavp\Middleware\TrustProxies::class,
+    \Tavp\Middleware\HandleCors::class,
+    \Tavp\Middleware\ValidateCsrfToken::class,
+    \Tavp\Middleware\StartSession::class,
+    \Tavp\Middleware\Authenticate::class,
+];</code></pre>
+        </section>
+        
+        <section>
+            <h2>Three Runtimes</h2>
+            <p>TAVP supports three runtime modes:</p>
+            <ul>
+                <li><strong>PHP-FPM</strong> — Traditional, works everywhere</li>
+                <li><strong>TAVP Coil (Swoole)</strong> — Coroutine-based, highest performance</li>
+                <li><strong>TAVP Relay (RoadRunner)</strong> — Go-based, balanced approach</li>
+            </ul>
+        </section>
+    </main>
+</div>
+</body>
+</html>

@@ -1,0 +1,101 @@
+# Mail Guide
+
+> Sending emails in TAVP Stack.
+
+## Configuration
+
+```php
+// config/mail.php
+return [
+    'default' => env('MAIL_MAILER', 'smtp'),
+    
+    'mailers' => [
+        'smtp' => [
+            'transport' => 'smtp',
+            'host' => env('MAIL_HOST', 'smtp.mailgun.org'),
+            'port' => env('MAIL_PORT', 587),
+            'encryption' => env('MAIL_ENCRYPTION', 'tls'),
+            'username' => env('MAIL_USERNAME'),
+            'password' => env('MAIL_PASSWORD'),
+        ],
+        
+        'log' => [
+            'transport' => 'log',
+            'channel' => 'mail',
+        ],
+    ],
+];
+```
+
+## Creating Mailables
+
+```php
+namespace App\Mail;
+
+use Tavp\Mail\Mailable;
+
+class WelcomeEmail extends Mailable
+{
+    public $user;
+    
+    public function __construct($user)
+    {
+        $this->user = $user;
+    }
+    
+    public function build()
+    {
+        return $this->view('emails.welcome')
+                    ->subject('Welcome to TAVP!');
+    }
+}
+```
+
+## Sending Emails
+
+```php
+use App\Mail\WelcomeEmail;
+use Tavp\Support\Facades\Mail;
+
+// Send to user
+Mail::to($user->email)->send(new WelcomeEmail($user));
+
+// Send later
+Mail::to($user->email)->queue(new WelcomeEmail($user));
+
+// Send to multiple recipients
+Mail::to(['user1@example.com', 'user2@example.com'])
+    ->send(new WelcomeEmail($user));
+```
+
+## Email Templates
+
+```volt
+<!-- resources/views/emails/welcome.volt -->
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        .container { max-width: 600px; margin: 0 auto; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome, {{ user.name }}!</h1>
+        <p>Thank you for registering with TAVP.</p>
+        <p>Best regards,<br>The TAVP Team</p>
+    </div>
+</body>
+</html>
+```
+
+## Attachments
+
+```php
+public function build()
+{
+    return $this->view('emails.invoice')
+                ->attach(storage_path('invoices/invoice-123.pdf'));
+}
+```

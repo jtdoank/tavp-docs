@@ -1,0 +1,164 @@
+# Deployment Guide
+
+> Deploying TAVP Stack applications.
+
+## Docker Deployment
+
+```bash
+# Build image
+docker build -t my-tavp-app .
+
+# Run container
+docker run -d \
+  -p 8000:8000 \
+  -e APP_ENV=production \
+  -e APP_KEY=base64:... \
+  -e DB_HOST=mysql \
+  -e DB_DATABASE=tavp \
+  my-tavp-app
+```
+
+## Docker Compose
+
+```yaml
+# docker-compose.prod.yml
+version: '3.8'
+
+services:
+  app:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - APP_ENV=production
+      - APP_KEY=${APP_KEY}
+      - DB_HOST=mysql
+      - DB_DATABASE=tavp
+      - DB_USERNAME=root
+      - DB_PASSWORD=${DB_PASSWORD}
+    depends_on:
+      - mysql
+      - redis
+
+  mysql:
+    image: mysql:8.0
+    environment:
+      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
+      - MYSQL_DATABASE=tavp
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  redis:
+    image: redis:7-alpine
+    volumes:
+      - redis_data:/data
+
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./docker/nginx.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - app
+
+volumes:
+  mysql_data:
+  redis_data:
+```
+
+## Kubernetes Deployment
+
+```yaml
+# k8s/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tavp-app
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: tavp-app
+  template:
+    metadata:
+      labels:
+        app: tavp-app
+    spec:
+      containers:
+        - name: app
+          image: tavp-app:latest
+          ports:
+            - containerPort: 8000
+          env:
+            - name: APP_ENV
+              value: production
+            - name: DB_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: tavp-secrets
+                  key: db-host
+```
+
+## Traditional Deployment
+
+```bash
+# SSH into server
+ssh user@your-server.com
+
+# Clone repository
+git clone https://github.com/your-org/your-app.git
+cd your-app
+
+# Install dependencies
+composer install --optimize-autoloader --no-dev
+
+# Configure environment
+cp .env.example .env
+php artisan key:generate
+
+# Run migrations
+tavp migrate
+
+# Build frontend
+npm install && npm run build
+
+# Configure web server (Nginx/Apache)
+# See /docs/nginx-config or /docs/apache-config
+```
+
+## Environment Variables
+
+```bash
+# .env
+APP_NAME=TAVP
+APP_ENV=production
+APP_KEY=base64:...
+APP_URL=https://your-domain.com
+
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=tavp
+DB_USERNAME=root
+DB_PASSWORD=secret
+
+CACHE_DRIVER=redis
+QUEUE_CONNECTION=redis
+SESSION_DRIVER=redis
+```
+
+## Post-Deployment
+
+```bash
+# Clear cache
+tavp optimize:clear
+
+# Cache config
+tavp optimize
+
+# Restart services
+sudo systemctl restart php8.3-fpm
+sudo systemctl restart nginx
+```

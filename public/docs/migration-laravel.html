@@ -1,0 +1,254 @@
+# Laravel to TAVP Migration Guide
+
+> Complete guide for migrating from Laravel to TAVP Stack.
+
+## Overview
+
+TAVP provides a Laravel-like experience with Phalcon's performance. This guide covers migration from Laravel.
+
+## Key Differences
+
+| Feature | Laravel | TAVP |
+|---------|---------|------|
+| Framework | PHP (full) | Phalcon (C-extension) |
+| ORM | Eloquent | Tavp ORM (Eloquent-like) |
+| Template | Blade | Volt |
+| Router | Illuminate Router | Phalcon Router |
+| CLI | Artisan | Tavp CLI |
+| Performance | ~800 req/s | ~12,000 req/s |
+
+## Step-by-Step Migration
+
+### 1. Install TAVP
+
+```bash
+composer create-project tavp/core my-app
+cd my-app
+```
+
+### 2. Migrate Database Configuration
+
+**Laravel:**
+```php
+// config/database.php
+'mysql' => [
+    'driver' => 'mysql',
+    'host' => env('DB_HOST', '127.0.0.1'),
+    'database' => env('DB_DATABASE', 'laravel'),
+    // ...
+],
+```
+
+**TAVP:**
+```php
+// config/database.php
+'mysql' => [
+    'driver' => 'mysql',
+    'host' => env('DB_HOST', '127.0.0.1'),
+    'database' => env('DB_DATABASE', 'tavp'),
+    // ...
+],
+```
+
+### 3. Migrate Models
+
+**Laravel:**
+```php
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class User extends Model
+{
+    protected $fillable = ['name', 'email'];
+}
+```
+
+**TAVP:**
+```php
+namespace App\Models;
+
+use Tavp\Database\Model;
+
+class User extends Model
+{
+    protected $fillable = ['name', 'email'];
+}
+```
+
+### 4. Migrate Controllers
+
+**Laravel:**
+```php
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+
+class UserController extends Controller
+{
+    public function index()
+    {
+        return User::all();
+    }
+}
+```
+
+**TAVP:**
+```php
+namespace App\Controllers;
+
+use Tavp\Http\Controller;
+use App\Models\User;
+
+class UserController extends Controller
+{
+    public function index()
+    {
+        return User::all();
+    }
+}
+```
+
+### 5. Migrate Routes
+
+**Laravel:**
+```php
+// routes/web.php
+Route::get('/users', [UserController::class, 'index']);
+```
+
+**TAVP:**
+```php
+// routes/web.php
+$router->get('/users', [UserController::class, 'index']);
+```
+
+### 6. Migrate Views (Blade → Volt)
+
+**Blade:**
+```blade
+@extends('layouts.app')
+
+@section('content')
+    <h1>{{ $user->name }}</h1>
+@endsection
+```
+
+**Volt:**
+```volt
+{% extends 'layouts/app.volt' %}
+
+{% block content %}
+    <h1>{{ user.name }}</h1>
+{% endblock %}
+```
+
+### 7. Migrate CLI Commands (Artisan → Tavp)
+
+**Artisan:**
+```php
+php artisan make:model User
+php artisan migrate
+php artisan serve
+```
+
+**Tavp:**
+```bash
+tavp make:model User
+tavp migrate
+tavp serve
+```
+
+### 8. Migrate Authentication
+
+**Laravel:**
+```php
+// config/auth.php
+'default' => 'web',
+```
+
+**TAVP:**
+```php
+// config/auth.php
+'default' => 'web',
+'guards' => [
+    'web' => ['driver' => 'session', 'provider' => 'users'],
+    'api' => ['driver' => 'token', 'provider' => 'users'],
+],
+```
+
+### 9. Migrate Migrations
+
+**Laravel:**
+```php
+Schema::create('users', function (Blueprint $table) {
+    $table->id();
+    $table->string('name');
+    $table->string('email')->unique();
+    $table->timestamps();
+});
+```
+
+**TAVP:**
+```php
+use Tavp\Database\Schema\Blueprint;
+use Tavp\Support\Facades\Schema;
+
+Schema::create('users', function (Blueprint $table) {
+    $table->id();
+    $table->string('name');
+    $table->string('email')->unique();
+    $table->timestamps();
+});
+```
+
+### 10. Migrate Configuration
+
+**Laravel:**
+```php
+// config/app.php
+return [
+    'name' => env('APP_NAME', 'Laravel'),
+    'debug' => env('APP_DEBUG', false),
+];
+```
+
+**TAVP:**
+```php
+// config/app.php
+return [
+    'name' => env('APP_NAME', 'TAVP'),
+    'debug' => env('APP_DEBUG', false),
+];
+```
+
+## Common Pitfalls
+
+### 1. Template Syntax
+- Blade uses `{{ }}` and `@` directives
+- Volt uses `{{ }}` and `{% %}` (Twig-like)
+
+### 2. ORM Differences
+- Eloquent uses `Model::where()` → returns Collection
+- Tavp ORM uses `Model::where()` → returns Resultset
+
+### 3. Middleware
+- Laravel middleware classes have `handle()` method
+- Tavp middleware classes have `handle()` method (similar)
+
+### 4. Service Providers
+- Laravel uses `AppServiceProvider::register()`
+- TAVP uses `AppServiceProvider::register()` (similar)
+
+## Performance Comparison
+
+| Metric | Laravel | TAVP |
+|--------|---------|------|
+| Requests/sec | 800 | 12,000 |
+| Memory (per worker) | 45MB | 8MB |
+| P95 latency | <100ms | <5ms |
+
+## Need Help?
+
+- [TAVP Discord](https://discord.gg/tavp)
+- [GitHub Discussions](https://github.com/tavp-stack/tavp-core/discussions)

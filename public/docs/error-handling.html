@@ -1,0 +1,122 @@
+# Error Handling Guide
+
+> Error handling in TAVP Stack.
+
+## Exception Handler
+
+```php
+namespace App\Exceptions;
+
+use Tavp\Exceptions\Handler;
+
+class ExceptionHandler extends Handler
+{
+    protected $dontReport = [
+        // Exceptions to not report
+    ];
+    
+    protected $dontFlash = [
+        'password',
+        'password_confirmation',
+    ];
+    
+    public function register(): void
+    {
+        $this->reportable(function (\Throwable $e) {
+            // Custom reporting
+        });
+    }
+}
+```
+
+## Custom Exceptions
+
+```php
+namespace App\Exceptions;
+
+use Exception;
+
+class UserNotFoundException extends Exception
+{
+    protected $message = 'User not found';
+    protected $code = 404;
+    
+    public function render()
+    {
+        return response()->json([
+            'error' => $this->message,
+        ], $this->code);
+    }
+}
+```
+
+## Throwing Exceptions
+
+```php
+use App\Exceptions\UserNotFoundException;
+
+// Throw exception
+throw new UserNotFoundException();
+
+// Throw with message
+throw new \InvalidArgumentException('Invalid argument');
+
+// Throw with code
+throw new \Exception('Server error', 500);
+```
+
+## Rendering Exceptions
+
+```php
+namespace App\Exceptions;
+
+use Exception;
+
+class ValidationException extends Exception
+{
+    public function render()
+    {
+        return response()->json([
+            'error' => 'Validation failed',
+            'errors' => $this->errors,
+        ], 422);
+    }
+}
+```
+
+## Error Pages
+
+```php
+// resources/views/errors/404.volt
+{% extends 'layouts/app.volt' %}
+
+{% block content %}
+<h1>404 - Page Not Found</h1>
+<p>The page you're looking for doesn't exist.</p>
+<a href="/">Go Home</a>
+{% endblock %}
+```
+
+## Global Error Handler
+
+```php
+// bootstrap/app.php
+$handler = new ExceptionHandler($di);
+$handler->register();
+```
+
+## Error Logging
+
+```php
+try {
+    // Code
+} catch (\Exception $e) {
+    Log::error('Error occurred', [
+        'message' => $e->getMessage(),
+        'file' => $e->getFile(),
+        'line' => $e->getLine(),
+    ]);
+    
+    throw $e;
+}
+```

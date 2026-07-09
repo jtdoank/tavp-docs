@@ -1,0 +1,1639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TAVP — Product Brief</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0e1a;
+            --bg-secondary: #0f1424;
+            --bg-card: #141a2e;
+            --bg-card-hover: #1a2240;
+            --accent-blue: #4f8ff7;
+            --accent-purple: #8b5cf6;
+            --accent-cyan: #22d3ee;
+            --accent-green: #34d399;
+            --accent-orange: #fb923c;
+            --accent-pink: #ec4899;
+            --accent-red: #ef4444;
+            --accent-yellow: #fbbf24;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --border: #1e293b;
+            --border-light: #334155;
+            --gradient-blue: linear-gradient(135deg, #4f8ff7, #8b5cf6);
+            --gradient-green: linear-gradient(135deg, #34d399, #22d3ee);
+            --gradient-orange: linear-gradient(135deg, #fb923c, #ec4899);
+            --gradient-hero: linear-gradient(135deg, #0a0e1a 0%, #1a1040 50%, #0a0e1a 100%);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+        /* ═══ HERO ═══ */
+        .hero {
+            position: relative; min-height: 100vh;
+            display: flex; align-items: center; justify-content: center;
+            background: var(--gradient-hero); overflow: hidden;
+        }
+        .hero::before {
+            content: ''; position: absolute; top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background: radial-gradient(circle at 30% 40%, rgba(79,143,247,0.08) 0%, transparent 50%),
+                        radial-gradient(circle at 70% 60%, rgba(139,92,246,0.06) 0%, transparent 50%);
+            animation: float 20s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%,100%{transform:translate(0,0) rotate(0deg)}
+            33%{transform:translate(30px,-30px) rotate(1deg)}
+            66%{transform:translate(-20px,20px) rotate(-1deg)}
+        }
+        .hero-grid {
+            position: absolute; inset: 0;
+            background-image:
+                linear-gradient(rgba(79,143,247,0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(79,143,247,0.03) 1px, transparent 1px);
+            background-size: 60px 60px;
+            mask-image: radial-gradient(ellipse at center, black 30%, transparent 70%);
+        }
+        .hero-content { position: relative; text-align: center; padding: 80px 24px; max-width: 900px; }
+        .hero-badge {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 8px 20px; background: rgba(79,143,247,0.1);
+            border: 1px solid rgba(79,143,247,0.2); border-radius: 100px;
+            font-size: 14px; font-weight: 500; color: var(--accent-blue);
+            margin-bottom: 32px; letter-spacing: 0.5px;
+        }
+        .hero-badge .dot {
+            width: 8px; height: 8px; background: var(--accent-green);
+            border-radius: 50%; animation: pulse 2s ease-in-out infinite;
+        }
+        @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+        .hero h1 {
+            font-size: clamp(48px,7vw,88px); font-weight: 900;
+            line-height: 1.05; margin-bottom: 8px; letter-spacing: -2px;
+        }
+        .hero h1 .gradient-text {
+            background: var(--gradient-blue); -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent; background-clip: text;
+        }
+        .hero-subtitle {
+            font-size: clamp(18px,2.5vw,24px); color: var(--text-secondary);
+            margin-bottom: 16px; font-weight: 300; max-width: 700px;
+            margin-left: auto; margin-right: auto;
+        }
+        .hero-tagline { font-size: 16px; color: var(--text-muted); margin-bottom: 48px; font-style: italic; }
+        .hero-stack { display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; margin-bottom: 48px; }
+        .stack-chip {
+            display: flex; align-items: center; gap: 8px;
+            padding: 10px 20px; background: var(--bg-card);
+            border: 1px solid var(--border); border-radius: 12px;
+            font-size: 14px; font-weight: 600; transition: all 0.3s ease;
+        }
+        .stack-chip:hover { border-color: var(--accent-blue); background: rgba(79,143,247,0.05); transform: translateY(-2px); }
+        .stack-chip .icon {
+            width: 20px; height: 20px; border-radius: 4px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 11px; font-weight: 800;
+        }
+        .icon-tw{background:#06b6d4;color:#0a0e1a}.icon-al{background:#8b5cf6;color:#fff}
+        .icon-vt{background:#4f8ff7;color:#fff}.icon-ph{background:#f97316;color:#fff}
+        .hero-meta { display: flex; justify-content: center; gap: 40px; flex-wrap: wrap; }
+        .meta-item { text-align: center; }
+        .meta-item .value { font-size: 28px; font-weight: 800; color: var(--accent-blue); font-family: 'JetBrains Mono', monospace; }
+        .meta-item .label { font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; }
+
+        /* ═══ SECTIONS ═══ */
+        section { padding: 100px 0; position: relative; }
+        .section-header { text-align: center; margin-bottom: 64px; }
+        .section-tag {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 6px 16px; background: rgba(79,143,247,0.08);
+            border: 1px solid rgba(79,143,247,0.15); border-radius: 100px;
+            font-size: 12px; font-weight: 600; color: var(--accent-blue);
+            text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 20px;
+        }
+        .section-header h2 {
+            font-size: clamp(32px,4vw,48px); font-weight: 800;
+            line-height: 1.15; letter-spacing: -1px; margin-bottom: 16px;
+        }
+        .section-header p { font-size: 18px; color: var(--text-secondary); max-width: 600px; margin: 0 auto; }
+        .divider { height: 1px; background: linear-gradient(90deg, transparent, var(--border-light), transparent); margin: 0; }
+
+        /* ═══ CARDS ═══ */
+        .why-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 24px; }
+        .why-card {
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: 16px; padding: 32px; transition: all 0.3s ease;
+            position: relative; overflow: hidden;
+        }
+        .why-card::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0;
+            height: 3px; background: var(--gradient-blue); opacity: 0; transition: opacity 0.3s ease;
+        }
+        .why-card:hover { border-color: rgba(79,143,247,0.3); background: var(--bg-card-hover); transform: translateY(-4px); }
+        .why-card:hover::before { opacity: 1; }
+        .why-card .card-icon {
+            width: 48px; height: 48px; border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 22px; margin-bottom: 20px;
+        }
+        .why-card h3 { font-size: 20px; font-weight: 700; margin-bottom: 12px; }
+        .why-card p { color: var(--text-secondary); font-size: 15px; line-height: 1.7; }
+
+        /* ═══ BENCHMARK ═══ */
+        .benchmark-section { background: var(--bg-secondary); }
+        .benchmark-container { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; }
+        @media(max-width:768px){.benchmark-container{grid-template-columns:1fr;}}
+        .benchmark-text h3 { font-size: 28px; font-weight: 700; margin-bottom: 16px; }
+        .benchmark-text p { color: var(--text-secondary); margin-bottom: 24px; }
+        .benchmark-chart { display: flex; flex-direction: column; gap: 20px; }
+        .bench-item { display: flex; flex-direction: column; gap: 8px; }
+        .bench-item .bench-header { display: flex; justify-content: space-between; align-items: center; }
+        .bench-item .bench-label { font-size: 14px; font-weight: 600; }
+        .bench-item .bench-value { font-size: 14px; font-weight: 700; font-family: 'JetBrains Mono', monospace; }
+        .bench-bar { height: 32px; background: rgba(255,255,255,0.03); border-radius: 8px; overflow: hidden; }
+        .bench-fill { height: 100%; border-radius: 8px; display: flex; align-items: center; padding-left: 12px; font-size: 12px; font-weight: 600; color: white; }
+        .bench-fill.tavp{background:var(--gradient-blue)}.bench-fill.laravel{background:linear-gradient(135deg,#ef4444,#f97316)}
+        .bench-fill.wordpress{background:linear-gradient(135deg,#64748b,#475569)}
+
+        /* ═══ TABLES ═══ */
+        .comparison-table, .styled-table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; }
+        .comparison-table th, .comparison-table td, .styled-table th, .styled-table td {
+            padding: 14px 20px; text-align: left; border-bottom: 1px solid var(--border); font-size: 14px;
+        }
+        .comparison-table th, .styled-table th {
+            color: var(--text-muted); font-weight: 600; text-transform: uppercase;
+            font-size: 11px; letter-spacing: 1px; background: var(--bg-card);
+            border-bottom: 2px solid var(--border-light);
+        }
+        .comparison-table tr:hover td, .styled-table tr:hover td { background: rgba(79,143,247,0.03); }
+        .comparison-table .win { color: var(--accent-green); font-weight: 700; }
+
+        /* ═══ POSITIONING ═══ */
+        .positioning-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+        @media(max-width:768px){.positioning-grid{grid-template-columns:1fr;}}
+        .position-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 36px; }
+        .position-card.wrong{border-color:rgba(239,68,68,0.3)}.position-card.right{border-color:rgba(52,211,153,0.3)}
+        .position-card .position-label {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 4px 12px; border-radius: 6px; font-size: 12px;
+            font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 20px;
+        }
+        .position-card.wrong .position-label{background:rgba(239,68,68,0.1);color:var(--accent-red)}
+        .position-card.right .position-label{background:rgba(52,211,153,0.1);color:var(--accent-green)}
+        .position-card h3 { font-size: 22px; font-weight: 700; margin-bottom: 16px; }
+        .position-card ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+        .position-card ul li { display: flex; align-items: flex-start; gap: 10px; color: var(--text-secondary); font-size: 15px; }
+        .position-card ul li::before { content: ''; width: 6px; height: 6px; border-radius: 50%; margin-top: 8px; flex-shrink: 0; }
+        .position-card.wrong ul li::before{background:var(--accent-red)}.position-card.right ul li::before{background:var(--accent-green)}
+
+        /* ═══ TIERS ═══ */
+        .tiers-container { display: grid; grid-template-columns: repeat(3,1fr); gap: 24px; }
+        @media(max-width:900px){.tiers-container{grid-template-columns:1fr;}}
+        .tier-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; transition: all 0.3s ease; }
+        .tier-card:hover { border-color: rgba(79,143,247,0.3); transform: translateY(-4px); }
+        .tier-header { padding: 32px 28px 24px; border-bottom: 1px solid var(--border); }
+        .tier-number {
+            display: inline-flex; align-items: center; justify-content: center;
+            width: 32px; height: 32px; border-radius: 8px; font-size: 14px;
+            font-weight: 800; margin-bottom: 16px; font-family: 'JetBrains Mono', monospace;
+        }
+        .tier-1 .tier-number{background:rgba(52,211,153,0.15);color:var(--accent-green)}
+        .tier-2 .tier-number{background:rgba(79,143,247,0.15);color:var(--accent-blue)}
+        .tier-3 .tier-number{background:rgba(139,92,246,0.15);color:var(--accent-purple)}
+        .tier-header h3 { font-size: 22px; font-weight: 700; margin-bottom: 4px; }
+        .tier-header .tier-subtitle { color: var(--text-muted); font-size: 14px; }
+        .tier-body { padding: 24px 28px; }
+        .tier-meta { display: flex; gap: 24px; margin-bottom: 20px; flex-wrap: wrap; }
+        .tier-meta-item { display: flex; flex-direction: column; gap: 2px; }
+        .tier-meta-item .meta-val { font-size: 18px; font-weight: 700; font-family: 'JetBrains Mono', monospace; }
+        .tier-meta-item .meta-lbl { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+        .tier-features { list-style: none; display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
+        .tier-features li { display: flex; align-items: center; gap: 10px; font-size: 14px; color: var(--text-secondary); }
+        .tier-features li .check {
+            width: 18px; height: 18px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 10px; flex-shrink: 0;
+        }
+        .tier-features li .check.yes{background:rgba(52,211,153,0.15);color:var(--accent-green)}
+        .tier-features li .check.no{background:rgba(100,116,139,0.15);color:var(--text-muted)}
+        .tier-cmd {
+            background: var(--bg-primary); border: 1px solid var(--border);
+            border-radius: 10px; padding: 12px 16px; font-family: 'JetBrains Mono', monospace;
+            font-size: 13px; color: var(--accent-cyan); display: flex; align-items: center; gap: 8px;
+        }
+        .tier-cmd .prompt{color:var(--accent-green)}
+
+        /* ═══ ECOSYSTEM ═══ */
+        .eco-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; }
+        .eco-card {
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: 16px; padding: 28px; text-align: center; transition: all 0.3s ease;
+        }
+        .eco-card:hover { border-color: rgba(79,143,247,0.3); transform: translateY(-4px); }
+        .eco-card .eco-icon {
+            width: 56px; height: 56px; border-radius: 14px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 24px; margin: 0 auto 16px;
+        }
+        .eco-card h4 { font-size: 18px; font-weight: 700; margin-bottom: 4px; font-family: 'JetBrains Mono', monospace; }
+        .eco-card .eco-type { font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; }
+        .eco-card p { font-size: 14px; color: var(--text-secondary); line-height: 1.6; }
+        .eco-card .eco-cmd {
+            margin-top: 16px; padding: 8px 12px; background: var(--bg-primary);
+            border: 1px solid var(--border); border-radius: 8px;
+            font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--accent-cyan);
+        }
+
+        /* ═══ TIMELINE ═══ */
+        .ease-timeline { position: relative; max-width: 800px; margin: 0 auto; }
+        .ease-timeline::before {
+            content: ''; position: absolute; left: 24px; top: 0; bottom: 0;
+            width: 2px; background: linear-gradient(to bottom, var(--accent-blue), var(--accent-purple), var(--accent-green));
+            border-radius: 1px;
+        }
+        .ease-step { position: relative; padding-left: 72px; padding-bottom: 40px; }
+        .ease-step:last-child { padding-bottom: 0; }
+        .ease-step .step-dot {
+            position: absolute; left: 12px; top: 4px;
+            width: 26px; height: 26px; border-radius: 50%;
+            background: var(--bg-primary); border: 3px solid var(--accent-blue);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 11px; font-weight: 800; color: var(--accent-blue);
+            font-family: 'JetBrains Mono', monospace;
+        }
+        .ease-step .step-time {
+            display: inline-block; padding: 2px 10px;
+            background: rgba(79,143,247,0.1); border-radius: 6px;
+            font-size: 12px; font-weight: 600; color: var(--accent-blue);
+            font-family: 'JetBrains Mono', monospace; margin-bottom: 8px;
+        }
+        .ease-step h4 { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+        .ease-step p { color: var(--text-secondary); font-size: 14px; margin-bottom: 12px; }
+        .cmd-block {
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: 10px; padding: 14px 18px;
+            font-family: 'JetBrains Mono', monospace; font-size: 13px;
+            line-height: 1.8; overflow-x: auto;
+        }
+        .cmd-block .prompt{color:var(--accent-green)}.cmd-block .cmd{color:var(--accent-cyan)}
+        .cmd-block .comment{color:var(--text-muted)}.cmd-block .flag{color:var(--accent-orange)}
+
+        /* ═══ AUTH ═══ */
+        .auth-flow { display: grid; grid-template-columns: 1fr auto 1fr; gap: 24px; align-items: start; max-width: 900px; margin: 0 auto; }
+        @media(max-width:768px){.auth-flow{grid-template-columns:1fr;}.auth-arrow{transform:rotate(90deg)!important;}}
+        .auth-box { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 28px; }
+        .auth-box h4 { font-size: 18px; font-weight: 700; margin-bottom: 16px; display: flex; align-items: center; gap: 10px; }
+        .auth-box .auth-badge { padding: 3px 10px; border-radius: 6px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+        .auth-badge.web{background:rgba(79,143,247,0.15);color:var(--accent-blue)}
+        .auth-badge.mobile{background:rgba(139,92,246,0.15);color:var(--accent-purple)}
+        .auth-steps { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+        .auth-steps li { display: flex; align-items: center; gap: 10px; font-size: 14px; color: var(--text-secondary); }
+        .auth-steps li .step-num {
+            width: 24px; height: 24px; border-radius: 6px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 11px; font-weight: 800; flex-shrink: 0;
+            font-family: 'JetBrains Mono', monospace; background: rgba(79,143,247,0.1); color: var(--accent-blue);
+        }
+        .auth-arrow { display: flex; align-items: center; justify-content: center; padding-top: 60px; color: var(--text-muted); font-size: 24px; }
+
+        /* ═══ HOSTING ═══ */
+        .hosting-section { background: var(--bg-secondary); }
+        .hosting-bars { display: flex; flex-direction: column; gap: 28px; max-width: 800px; margin: 0 auto; }
+        .hosting-bar { display: flex; flex-direction: column; gap: 10px; }
+        .hosting-bar .bar-header { display: flex; justify-content: space-between; align-items: center; }
+        .hosting-bar .bar-label { font-size: 16px; font-weight: 600; }
+        .hosting-bar .bar-sites { font-size: 20px; font-weight: 800; font-family: 'JetBrains Mono', monospace; }
+        .hosting-bar .bar-track { height: 40px; background: rgba(255,255,255,0.03); border-radius: 10px; overflow: hidden; }
+        .hosting-bar .bar-fill { height: 100%; border-radius: 10px; display: flex; align-items: center; padding-left: 16px; font-size: 13px; font-weight: 600; font-family: 'JetBrains Mono', monospace; }
+        .hosting-bar .bar-detail { font-size: 13px; color: var(--text-muted); }
+        .hosting-highlight { text-align: center; margin-top: 48px; padding: 32px; background: var(--bg-card); border: 1px solid rgba(79,143,247,0.3); border-radius: 16px; }
+        .hosting-highlight .highlight-number { font-size: 56px; font-weight: 900; background: var(--gradient-blue); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-family: 'JetBrains Mono', monospace; }
+        .hosting-highlight p { color: var(--text-secondary); font-size: 16px; }
+
+        /* ═══ AI ═══ */
+        .ai-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 24px; }
+        @media(max-width:768px){.ai-grid{grid-template-columns:1fr;}}
+        .ai-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 28px; transition: all 0.3s ease; }
+        .ai-card:hover { border-color: rgba(139,92,246,0.3); transform: translateY(-4px); }
+        .ai-card .ai-layer { display: inline-block; padding: 3px 10px; border-radius: 6px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; font-family: 'JetBrains Mono', monospace; }
+        .ai-card h4 { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
+        .ai-card p { color: var(--text-secondary); font-size: 14px; line-height: 1.7; }
+        .ai-card .ai-example { margin-top: 16px; padding: 12px 16px; background: var(--bg-primary); border: 1px solid var(--border); border-radius: 10px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--accent-cyan); line-height: 1.7; }
+
+        /* ═══ REVENUE ═══ */
+        .revenue-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); gap: 20px; }
+        .revenue-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 28px; text-align: center; transition: all 0.3s ease; }
+        .revenue-card:hover { border-color: rgba(79,143,247,0.3); transform: translateY(-4px); }
+        .revenue-card .rev-icon { font-size: 28px; margin-bottom: 12px; }
+        .revenue-card h4 { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
+        .revenue-card p { font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
+        .revenue-note { text-align: center; margin-top: 32px; padding: 20px; background: rgba(52,211,153,0.05); border: 1px solid rgba(52,211,153,0.15); border-radius: 12px; color: var(--accent-green); font-weight: 600; font-size: 15px; }
+
+        /* ═══ ROADMAP ═══ */
+        .roadmap-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px,1fr)); gap: 20px; }
+        .roadmap-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 28px; position: relative; overflow: hidden; }
+        .roadmap-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; }
+        .roadmap-card.phase-1::before{background:var(--accent-green)}.roadmap-card.phase-2::before{background:var(--accent-blue)}
+        .roadmap-card.phase-3::before{background:var(--accent-purple)}.roadmap-card.phase-4::before{background:var(--accent-orange)}
+        .roadmap-card.phase-5::before{background:var(--accent-pink)}
+        .roadmap-card .phase-tag { display: inline-block; padding: 3px 10px; border-radius: 6px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; font-family: 'JetBrains Mono', monospace; }
+        .roadmap-card.phase-1 .phase-tag{background:rgba(52,211,153,0.1);color:var(--accent-green)}
+        .roadmap-card.phase-2 .phase-tag{background:rgba(79,143,247,0.1);color:var(--accent-blue)}
+        .roadmap-card.phase-3 .phase-tag{background:rgba(139,92,246,0.1);color:var(--accent-purple)}
+        .roadmap-card.phase-4 .phase-tag{background:rgba(251,146,60,0.1);color:var(--accent-orange)}
+        .roadmap-card.phase-5 .phase-tag{background:rgba(236,72,153,0.1);color:var(--accent-pink)}
+        .roadmap-card h4 { font-size: 18px; font-weight: 700; margin-bottom: 12px; }
+        .roadmap-card ul { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+        .roadmap-card ul li { font-size: 14px; color: var(--text-secondary); padding-left: 16px; position: relative; }
+        .roadmap-card ul li::before { content: '→'; position: absolute; left: 0; color: var(--text-muted); }
+        .roadmap-card .phase-goal { margin-top: 16px; padding: 10px 14px; background: var(--bg-primary); border: 1px solid var(--border); border-radius: 8px; font-size: 13px; color: var(--accent-cyan); }
+        .roadmap-card .phase-goal strong{color:var(--text-primary)}
+
+        /* ═══ VISION ═══ */
+        .vision-section { background: var(--bg-secondary); text-align: center; }
+        .vision-quote { max-width: 800px; margin: 0 auto; }
+        .vision-quote blockquote { font-size: clamp(24px,3vw,36px); font-weight: 300; line-height: 1.4; color: var(--text-primary); margin-bottom: 32px; font-style: italic; }
+        .vision-quote blockquote strong { font-weight: 700; background: var(--gradient-blue); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .vision-analogy { display: flex; justify-content: center; gap: 32px; flex-wrap: wrap; margin-top: 48px; }
+        .analogy-item { display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 24px 32px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; }
+        .analogy-item .analogy-emoji{font-size:40px}.analogy-item .analogy-label{font-size:18px;font-weight:700}
+        .analogy-item .analogy-desc{font-size:14px;color:var(--text-muted);text-align:center}
+
+        /* ═══ CONCURRENCY (NEW) ═══ */
+        .concurrency-tabs { display: flex; gap: 4px; margin-bottom: 32px; justify-content: center; flex-wrap: wrap; }
+        .concurrency-tab {
+            padding: 10px 24px; border-radius: 10px; font-size: 14px; font-weight: 600;
+            cursor: pointer; transition: all 0.3s ease; border: 1px solid var(--border);
+            background: var(--bg-card); color: var(--text-secondary); font-family: 'JetBrains Mono', monospace;
+        }
+        .concurrency-tab:hover { border-color: rgba(79,143,247,0.3); color: var(--text-primary); }
+        .concurrency-tab.active { background: rgba(79,143,247,0.1); border-color: var(--accent-blue); color: var(--accent-blue); }
+        .concurrency-content { display: none; }
+        .concurrency-content.active { display: block; }
+
+        .runtime-header { display: flex; align-items: center; gap: 20px; margin-bottom: 32px; flex-wrap: wrap; }
+        .runtime-icon {
+            width: 64px; height: 64px; border-radius: 16px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 28px; font-weight: 900; flex-shrink: 0;
+        }
+        .runtime-header-text h3 { font-size: 28px; font-weight: 800; margin-bottom: 4px; }
+        .runtime-header-text p { color: var(--text-secondary); font-size: 15px; }
+
+        .runtime-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 32px; }
+        @media(max-width:768px){.runtime-grid{grid-template-columns:1fr;}}
+        .runtime-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 24px; }
+        .runtime-card h4 { font-size: 16px; font-weight: 700; margin-bottom: 12px; }
+        .runtime-card ul { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+        .runtime-card ul li { font-size: 14px; color: var(--text-secondary); display: flex; align-items: flex-start; gap: 8px; }
+        .runtime-card ul li .li-icon { flex-shrink: 0; margin-top: 2px; }
+
+        .arch-diagram {
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: 16px; padding: 32px; margin-bottom: 32px;
+            font-family: 'JetBrains Mono', monospace; font-size: 13px;
+            line-height: 1.8; overflow-x: auto; color: var(--text-secondary);
+        }
+        .arch-diagram .highlight-blue { color: var(--accent-blue); }
+        .arch-diagram .highlight-green { color: var(--accent-green); }
+        .arch-diagram .highlight-purple { color: var(--accent-purple); }
+        .arch-diagram .highlight-orange { color: var(--accent-orange); }
+        .arch-diagram .highlight-cyan { color: var(--accent-cyan); }
+        .arch-diagram .highlight-muted { color: var(--text-muted); }
+        .arch-diagram .highlight-yellow { color: var(--accent-yellow); }
+
+        .challenge-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px,1fr)); gap: 16px; margin-bottom: 32px; }
+        .challenge-card {
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: 12px; padding: 20px; border-left: 3px solid var(--accent-orange);
+        }
+        .challenge-card h5 { font-size: 15px; font-weight: 700; margin-bottom: 6px; color: var(--accent-orange); }
+        .challenge-card p { font-size: 13px; color: var(--text-secondary); }
+        .challenge-card .sol { margin-top: 8px; font-size: 13px; color: var(--accent-green); }
+
+        .runtime-bench-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); gap: 16px; }
+        .runtime-bench-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 24px; text-align: center; }
+        .runtime-bench-card .rb-value { font-size: 32px; font-weight: 900; font-family: 'JetBrains Mono', monospace; margin-bottom: 4px; }
+        .runtime-bench-card .rb-label { font-size: 13px; color: var(--text-muted); }
+        .runtime-bench-card .rb-sub { font-size: 12px; color: var(--text-secondary); margin-top: 4px; }
+
+        /* ═══ HIGHLIGHT BOX ═══ */
+        .highlight-box { padding: 24px 28px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; margin: 20px 0; }
+        .highlight-box h4 { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
+        .highlight-box p { color: var(--text-secondary); font-size: 14px; }
+
+        .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; align-items: start; }
+        @media(max-width:768px){.two-col{grid-template-columns:1fr;}}
+
+        .badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 700; }
+        .badge-green{background:rgba(52,211,153,0.15);color:var(--accent-green)}
+        .badge-blue{background:rgba(79,143,247,0.15);color:var(--accent-blue)}
+        .badge-purple{background:rgba(139,92,246,0.15);color:var(--accent-purple)}
+        .badge-orange{background:rgba(251,146,60,0.15);color:var(--accent-orange)}
+        .badge-muted{background:rgba(100,116,139,0.15);color:var(--text-muted)}
+
+        .code-block {
+            background: var(--bg-primary); border: 1px solid var(--border);
+            border-radius: 12px; padding: 20px 24px; font-family: 'JetBrains Mono', monospace;
+            font-size: 13px; line-height: 1.8; overflow-x: auto; margin: 16px 0;
+        }
+        .code-block .comment{color:var(--text-muted)}.code-block .keyword{color:var(--accent-purple)}
+        .code-block .string{color:var(--accent-green)}.code-block .function{color:var(--accent-blue)}
+        .code-block .variable{color:var(--accent-cyan)}.code-block .prompt{color:var(--accent-green)}
+        .code-block .flag{color:var(--accent-orange)}.code-block .type{color:var(--accent-yellow)}
+
+        .mapping-grid { display: grid; grid-template-columns: 1fr auto 1fr; gap: 0; max-width: 800px; margin: 0 auto; }
+        .mapping-cell { padding: 14px 20px; border-bottom: 1px solid var(--border); font-size: 14px; display: flex; align-items: center; }
+        .mapping-cell.left{justify-content:flex-end;color:var(--text-muted)}
+        .mapping-cell.center{justify-content:center;color:var(--accent-blue);font-size:16px}
+        .mapping-cell.right{font-weight:600}
+        .mapping-header .mapping-cell { font-weight: 800; font-size: 13px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); border-bottom: 2px solid var(--border-light); }
+
+        footer { padding: 60px 0; text-align: center; border-top: 1px solid var(--border); }
+        footer .footer-brand{font-size:32px;font-weight:900;margin-bottom:8px}
+        footer .footer-tagline{color:var(--text-muted);font-size:16px;margin-bottom:24px}
+        footer .footer-links{display:flex;justify-content:center;gap:32px;flex-wrap:wrap}
+        footer .footer-links a{color:var(--text-secondary);text-decoration:none;font-size:14px;transition:color .2s ease}
+        footer .footer-links a:hover{color:var(--accent-blue)}
+        footer .footer-copy{margin-top:32px;font-size:13px;color:var(--text-muted)}
+    </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- HERO -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<section class="hero">
+    <div class="hero-grid"></div>
+    <div class="hero-content">
+        <div class="hero-badge"><span class="dot"></span>Product Brief &mdash; v1.0</div>
+        <h1><span class="gradient-text">TAVP</span></h1>
+        <p class="hero-subtitle">The PHP Stack for Fast, Lightweight Web Apps</p>
+        <p class="hero-tagline">Build fast. Scale forever. Ship today.</p>
+        <div class="hero-stack">
+            <div class="stack-chip"><span class="icon icon-tw">TW</span>Tailwind CSS</div>
+            <div class="stack-chip"><span class="icon icon-al">A</span>Alpine.js</div>
+            <div class="stack-chip"><span class="icon icon-vt">V</span>Volt</div>
+            <div class="stack-chip"><span class="icon icon-ph">P</span>Phalcon</div>
+        </div>
+        <div class="hero-meta">
+            <div class="meta-item"><div class="value">8.7x</div><div class="label">More sites per server</div></div>
+            <div class="meta-item"><div class="value">~15MB</div><div class="label">RAM per site</div></div>
+            <div class="meta-item"><div class="value">60s</div><div class="label">Zero to running</div></div>
+            <div class="meta-item"><div class="value">3</div><div class="label">Concurrency models</div></div>
+        </div>
+    </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ═══ WHAT IS TAVP ═══ -->
+<section>
+    <div class="container">
+        <div class="section-header">
+            <div class="section-tag">Overview</div>
+            <h2>What is TAVP?</h2>
+            <p>A curated tech stack that integrates four proven technologies into one cohesive developer experience, powered by Phalcon's C-extension engine.</p>
+        </div>
+        <div class="why-grid">
+            <div class="why-card">
+                <div class="card-icon" style="background:rgba(6,182,212,0.1);color:#06b6d4;">🎨</div>
+                <h3>Tailwind CSS</h3>
+                <p>Utility-first CSS framework. Build any design directly in Volt templates without writing custom CSS. Responsive, composable, production-optimized.</p>
+            </div>
+            <div class="why-card">
+                <div class="card-icon" style="background:rgba(139,92,246,0.1);color:#8b5cf6;">⚡</div>
+                <h3>Alpine.js</h3>
+                <p>Lightweight JavaScript (15KB). Declarative interactivity via x-data, x-show, @click. Replaces jQuery. Eliminates the need for Livewire-like reactive layers.</p>
+            </div>
+            <div class="why-card">
+                <div class="card-icon" style="background:rgba(79,143,247,0.1);color:#4f8ff7;">📄</div>
+                <h3>Volt</h3>
+                <p>Phalcon's template engine, inspired by Jinja2 and Blade. Clean syntax, inheritance, macros, and automatic PHP compilation with built-in caching.</p>
+            </div>
+            <div class="why-card">
+                <div class="card-icon" style="background:rgba(249,115,22,0.1);color:#f97316;">🔧</div>
+                <h3>Phalcon</h3>
+                <p>Full-stack MVC framework as a C-extension. Not PHP code &mdash; compiled C loaded into PHP engine. Zero file loading, zero autoloading per request.</p>
+            </div>
+        </div>
+        <div class="highlight-box" style="margin-top:40px;">
+            <h4>Key Distinction</h4>
+            <p><strong>TAVP is a tech stack, not a framework.</strong> Phalcon is the framework (engine). TAVP is the integrated experience layer on top of Phalcon &mdash; like how TALL Stack combines Laravel with Tailwind, Alpine, and Livewire. But TAVP uses <em>equal-weight</em> components, with no single component dominating.</p>
+        </div>
+    </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ═══ PERFORMANCE ═══ -->
+<section class="benchmark-section">
+    <div class="container">
+        <div class="section-header">
+            <div class="section-tag">Performance</div>
+            <h2>Why Phalcon? Unmatched Efficiency</h2>
+            <p>Phalcon is the only PHP framework written as a C-extension. Not a marketing claim &mdash; a fundamental architectural difference no pure-PHP framework can replicate.</p>
+        </div>
+        <div class="benchmark-container">
+            <div class="benchmark-text">
+                <h3>Memory Per Worker</h3>
+                <p>On a shared hosting server with 4GB RAM, TAVP can host dramatically more sites than any other PHP stack.</p>
+                <div class="benchmark-chart">
+                    <div class="bench-item">
+                        <div class="bench-header"><span class="bench-label" style="color:var(--accent-blue);">TAVP (Phalcon)</span><span class="bench-value" style="color:var(--accent-blue);">~15-30 MB</span></div>
+                        <div class="bench-bar"><div class="bench-fill tavp" style="width:12%;">15MB</div></div>
+                    </div>
+                    <div class="bench-item">
+                        <div class="bench-header"><span class="bench-label" style="color:var(--accent-orange);">Laravel</span><span class="bench-value">~100-150 MB</span></div>
+                        <div class="bench-bar"><div class="bench-fill laravel" style="width:55%;">100MB</div></div>
+                    </div>
+                    <div class="bench-item">
+                        <div class="bench-header"><span class="bench-label" style="color:var(--text-muted);">WordPress</span><span class="bench-value">~256+ MB</span></div>
+                        <div class="bench-bar"><div class="bench-fill wordpress" style="width:100%;">256MB</div></div>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <table class="comparison-table">
+                    <thead><tr><th>Metric</th><th>TAVP</th><th>Laravel Octane</th><th>WordPress</th></tr></thead>
+                    <tbody>
+                        <tr><td>RAM / worker</td><td class="win">5-15 MB</td><td>50-100+ MB</td><td>256+ MB</td></tr>
+                        <tr><td>Sites / 4GB server</td><td class="win">~130</td><td>~26</td><td>~15</td></tr>
+                        <tr><td>P99 Latency</td><td class="win">2-5 ms</td><td>5-15 ms</td><td>15-50 ms</td></tr>
+                        <tr><td>Framework type</td><td class="win">C-extension</td><td>PHP + Swoole</td><td>PHP (legacy)</td></tr>
+                        <tr><td>Reactive layer</td><td class="win">Alpine.js (built-in)</td><td>Livewire (extra layer)</td><td>jQuery / plugins</td></tr>
+                        <tr><td>Auth</td><td class="win">OTP-first</td><td>Password-first</td><td>Password-only</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ═══ CONCURRENCY (NEW — DETAILED) ═══ -->
+<section>
+    <div class="container">
+        <div class="section-header">
+            <div class="section-tag">Concurrency</div>
+            <h2>Three Concurrency Models</h2>
+            <p>TAVP offers three runtime strategies for concurrency and async processing. Each targets different infrastructure needs &mdash; they can coexist in the same project.</p>
+        </div>
+
+        <div class="concurrency-tabs" id="concurrencyTabs">
+            <div class="concurrency-tab active" onclick="showConcurrency('coil')">TAVP Coil (Swoole)</div>
+            <div class="concurrency-tab" onclick="showConcurrency('relay')">TAVP Relay (RoadRunner)</div>
+            <div class="concurrency-tab" onclick="showConcurrency('weave')">TAVP Weave (PHP Fibers)</div>
+            <div class="concurrency-tab" onclick="showConcurrency('compare')">Comparison</div>
+        </div>
+
+        <!-- ═══ TAVP Coil ═══ -->
+        <div class="concurrency-content active" id="concurrency-coil">
+            <div class="runtime-header">
+                <div class="runtime-icon" style="background:rgba(79,143,247,0.15);color:var(--accent-blue);">⚡</div>
+                <div class="runtime-header-text">
+                    <h3>TAVP Coil</h3>
+                    <p>Swoole-powered runtime with native coroutines, async I/O, and persistent memory. Maximum performance for VPS and dedicated servers.</p>
+                </div>
+            </div>
+
+            <div class="arch-diagram">
+<span class="highlight-muted">  Traditional TAVP (PHP-FPM):</span>
+<span class="highlight-muted">  Request → PHP-FPM Worker → Boot Phalcon → Process → Response → Kill</span>
+<span class="highlight-muted">  (Every request: full framework boot)</span>
+
+<span class="highlight-blue">  TAVP Coil (Swoole):</span>
+
+  ┌───────────────────────────────────────────────────────┐
+  │  <span class="highlight-green">Swoole Server Process</span> (stay alive, never restarts)    │
+  │                                                       │
+  │  ┌─ <span class="highlight-cyan">Worker 1</span> ──────────────────────────────────────┐  │
+  │  │  <span class="highlight-orange">Phalcon app LOADED ONCE, stays in memory</span>        │  │
+  │  │  ┌─ Coroutine 1: handle Request A ────────────┐  │  │
+  │  │  ├─ Coroutine 2: handle Request B ────────────┤  │  │
+  │  │  ├─ Coroutine 3: handle Request C ────────────┤  │  │
+  │  │  └─ Coroutine N: handle Request N ────────────┘  │  │
+  │  └──────────────────────────────────────────────────┘  │
+  │                                                       │
+  │  ┌─ <span class="highlight-cyan">Worker 2</span> ──────────────────────────────────────┐  │
+  │  │  <span class="highlight-orange">Phalcon app LOADED ONCE, stays in memory</span>        │  │
+  │  │  ┌─ Coroutine 1: handle Request X ────────────┐  │  │
+  │  │  ├─ Coroutine 2: handle Request Y ────────────┤  │  │
+  │  │  └─ ...                                      ┘  │  │
+  │  └──────────────────────────────────────────────────┘  │
+  └───────────────────────────────────────────────────────┘
+            </div>
+
+            <div class="runtime-grid">
+                <div class="runtime-card">
+                    <h4>What Swoole Provides</h4>
+                    <ul>
+                        <li><span class="li-icon" style="color:var(--accent-green);">✓</span> Native coroutines &mdash; cooperative multitasking inside PHP processes</li>
+                        <li><span class="li-icon" style="color:var(--accent-green);">✓</span> Async I/O &mdash; hooks blocking PHP functions at the C level, auto-converts to non-blocking</li>
+                        <li><span class="li-icon" style="color:var(--accent-green);">✓</span> Persistent memory &mdash; Phalcon (C-extension) loaded once per worker, stays in RAM</li>
+                        <li><span class="li-icon" style="color:var(--accent-green);">✓</span> 10,000+ concurrent coroutines per worker</li>
+                        <li><span class="li-icon" style="color:var(--accent-green);">✓</span> Built-in connection pooling (MySQL, Redis, HTTP)</li>
+                        <li><span class="li-icon" style="color:var(--accent-green);">✓</span> Built-in timer, task queue, WebSocket server</li>
+                    </ul>
+                </div>
+                <div class="runtime-card">
+                    <h4>Coroutine Usage in Controllers</h4>
+                    <div class="code-block">
+<span class="comment">// Parallel API calls in one request</span>
+<span class="keyword">public function</span> <span class="function">index</span>()
+{
+    $users = <span class="keyword">null</span>;
+    $orders = <span class="keyword">null</span>;
+    $stats = <span class="keyword">null</span>;
+
+    <span class="type">Co\join</span>([
+        <span class="function">go</span>(<span class="keyword">function</span>() <span class="keyword">use</span> (&$users) {
+            $users = <span class="variable">$this</span>->api->get(<span class="string">'/users'</span>);
+        }),
+        <span class="function">go</span>(<span class="keyword">function</span>() <span class="keyword">use</span> (&$orders) {
+            $orders = <span class="variable">$this</span>->api->get(<span class="string">'/orders'</span>);
+        }),
+        <span class="function">go</span>(<span class="keyword">function</span>() <span class="keyword">use</span> (&$stats) {
+            $stats = <span class="variable">$this</span>->api->get(<span class="string">'/stats'</span>);
+        }),
+    ]);
+    <span class="comment">// Total: 300ms (slowest call)</span>
+    <span class="comment">// Sequential would be: 650ms</span>
+
+    <span class="keyword">return</span> <span class="variable">$this</span>->view(<span class="string">'dashboard'</span>,
+        <span class="function">compact</span>(<span class="string">'users'</span>,<span class="string">'orders'</span>,<span class="string">'stats'</span>));
+}</div>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <h4>Benchmark: Swoole vs PHP-FPM</h4>
+                <p>In comparable tests (Hyperf/Swoole vs Laravel/PHP-FPM), Swoole-based frameworks achieve <strong>~15,000-19,000 requests/sec</strong> vs ~1,200-2,500 requests/sec for PHP-FPM &mdash; roughly <strong>8-15x faster</strong>. Phalcon running inside Swoole has the potential to exceed this due to C-extension's lower per-request overhead.</p>
+            </div>
+
+            <h3 style="font-size:22px;margin:32px 0 16px;">Challenges &amp; Solutions</h3>
+            <p style="color:var(--text-secondary);margin-bottom:20px;font-size:15px;">Swoole long-lived processes introduce challenges that PHP-FPM never had. TAVP Coil addresses each one.</p>
+
+            <div class="challenge-grid">
+                <div class="challenge-card">
+                    <h5>Memory Leaks</h5>
+                    <p>PHP-FPM auto-resets memory each request. Swoole does not. Variables that grow across requests will leak.</p>
+                    <div class="sol">Solution: TAVP Coil RequestCleanup mechanism &mdash; resets request-scoped services, clears DI container entries, forces GC after each request.</div>
+                </div>
+                <div class="challenge-card">
+                    <h5>State Pollution</h5>
+                    <p>Mutable state in service classes can "leak" from Request A to Request B. Superglobals ($_GET, $_POST) do not auto-reset.</p>
+                    <div class="sol">Solution: TAVP enforces stateless service classes. All request data accessed via Phalcon Request object, never superglobals.</div>
+                </div>
+                <div class="challenge-card">
+                    <h5>Database Connections</h5>
+                    <p>PHP-FPM auto-closes DB connections. Swoole keeps them open &mdash; can exhaust connection limits.</p>
+                    <div class="sol">Solution: Swoole connection pool with configurable min/max connections. Connections returned to pool after each request.</div>
+                </div>
+                <div class="challenge-card">
+                    <h5>Debugging Difficulty</h5>
+                    <p>Long-running processes make stack traces more complex. Errors in one coroutine can affect the whole worker.</p>
+                    <div class="sol">Solution: Isolated error handling per coroutine. Structured JSON logging with request ID correlation. TAVP Coil debug mode with per-coroutine memory tracking.</div>
+                </div>
+                <div class="challenge-card">
+                    <h5>File Handles</h5>
+                    <p>File handles stay open across requests. Can exhaust system limits under high load.</p>
+                    <div class="sol">Solution: Explicit file close in finally blocks. TAVP's Storage abstraction auto-closes handles after use.</div>
+                </div>
+                <div class="challenge-card">
+                    <h5>Not for Shared Hosting</h3>
+                    <p>Swoole requires CLI access and ability to run persistent processes. Not available on shared hosting.</p>
+                    <div class="sol">Solution: TAVP Coil is for VPS/dedicated. Shared hosting uses standard PHP-FPM or TAVP Weave (Fibers).</div>
+                </div>
+            </div>
+
+            <h3 style="font-size:22px;margin:32px 0 16px;">CLI Usage</h3>
+            <div class="code-block">
+<span class="prompt">$</span> <span class="cmd">tavp coil:start</span>
+
+<span class="comment">  TAVP Coil v1.0 (Swoole 5.x)</span>
+<span class="comment">  ├── Workers: 8 (auto-detected from CPU cores)</span>
+<span class="comment">  ├── Max coroutines: 10,000 per worker</span>
+<span class="comment">  ├── Listening: 0.0.0.0:9501</span>
+<span class="comment">  ├── Phalcon: v5.7.0 (loaded once per worker)</span>
+<span class="comment">  ├── Hook flags: SWOOLE_HOOK_ALL</span>
+<span class="comment">  └── Ready.</span>
+
+<span class="prompt">$</span> <span class="cmd">tavp coil:start</span> <span class="flag">--workers=4 --port=9501 --daemonize</span>
+            </div>
+        </div>
+
+        <!-- ═══ TAVP Relay ═══ -->
+        <div class="concurrency-content" id="concurrency-relay">
+            <div class="runtime-header">
+                <div class="runtime-icon" style="background:rgba(139,92,246,0.15);color:var(--accent-purple);">🔀</div>
+                <div class="runtime-header-text">
+                    <h3>TAVP Relay</h3>
+                    <p>RoadRunner-powered runtime with Go-based infrastructure. Go handles HTTP, queues, WebSocket, gRPC, and metrics. PHP handles business logic. Process isolation built-in.</p>
+                </div>
+            </div>
+
+            <div class="arch-diagram">
+<span class="highlight-purple">  TAVP Relay Architecture:</span>
+
+  ┌──────────────────────────────────────────────────────────┐
+  │  <span class="highlight-green">RoadRunner (Go binary)</span>                                    │
+  │  ├── HTTP server ............. <span class="highlight-cyan">Go handles all HTTP I/O</span>    │
+  │  ├── WebSocket server ........ <span class="highlight-cyan">Go handles connections</span>     │
+  │  ├── Queue worker ............ <span class="highlight-cyan">Go manages job pipeline</span>    │
+  │  ├── gRPC server ............. <span class="highlight-cyan">Go handles gRPC protocol</span>   │
+  │  ├── Metrics (Prometheus) .... <span class="highlight-cyan">Go exports metrics</span>         │
+  │  └── Scheduler ............... <span class="highlight-cyan">Go manages cron tasks</span>      │
+  │           │                                                │
+  │           │  <span class="highlight-muted">communicates via unix socket / TCP</span>            │
+  │           ▼                                                │
+  │  ┌──────────────────────────────────────────────────────┐ │
+  │  │  <span class="highlight-orange">PHP Workers (persistent, stay alive)</span>                   │ │
+  │  │  ├── Worker 1: Phalcon app (in memory)               │ │
+  │  │  ├── Worker 2: Phalcon app (in memory)               │ │
+  │  │  ├── Worker 3: Phalcon app (in memory)               │ │
+  │  │  └── Worker N: Phalcon app (in memory)               │ │
+  │  └──────────────────────────────────────────────────────┘ │
+  │                                                           │
+  │  <span class="highlight-green">Process isolation: PHP crash ≠ Go crash.</span>                   │
+  │  <span class="highlight-green">If PHP worker dies, Go restarts it automatically.</span>          │
+  └──────────────────────────────────────────────────────────┘
+            </div>
+
+            <div class="runtime-grid">
+                <div class="runtime-card">
+                    <h4>What RoadRunner Provides</h4>
+                    <ul>
+                        <li><span class="li-icon" style="color:var(--accent-green);">✓</span> Process isolation &mdash; PHP crash does not take down the server</li>
+                        <li><span class="li-icon" style="color:var(--accent-green);">✓</span> Go handles all I/O (HTTP, WebSocket, Queue, gRPC)</li>
+                        <li><span class="li-icon" style="color:var(--accent-green);">✓</span> Automatic worker restart on failure</li>
+                        <li><span class="li-icon" style="color:var(--accent-green);">✓</span> Built-in Prometheus metrics</li>
+                        <li><span class="li-icon" style="color:var(--accent-green);">✓</span> Built-in job pipeline (no external queue needed)</li>
+                        <li><span class="li-icon" style="color:var(--accent-green);">✓</span> GRPC for microservice communication</li>
+                        <li><span class="li-icon" style="color:var(--accent-green);">✓</span> Single Go binary &mdash; no external dependencies</li>
+                    </ul>
+                </div>
+                <div class="runtime-card">
+                    <h4>Why Not Just Swoole?</h4>
+                    <ul>
+                        <li><span class="li-icon" style="color:var(--accent-orange);">!</span> Swoole: one PHP error can crash entire worker (shared process)</li>
+                        <li><span class="li-icon" style="color:var(--accent-green);">✓</span> Relay: Go isolates each PHP request (process boundary)</li>
+                        <li><span class="li-icon" style="color:var(--accent-orange);">!</span> Swoole: all infra (queue, WS, metrics) must be configured separately</li>
+                        <li><span class="li-icon" style="color:var(--accent-green);">✓</span> Relay: all infra built into single Go binary</li>
+                        <li><span class="li-icon" style="color:var(--accent-orange);">!</span> Swoole: debugging long-running C-extension process is hard</li>
+                        <li><span class="li-icon" style="color:var(--accent-green);">✓</span> Relay: Go handles infra, PHP only handles request logic</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <h4>Inspired by Spiral Framework</h4>
+                <p>Spiral Framework uses RoadRunner as its runtime and reports <strong>5-10x faster performance</strong> than Laravel/Symfony. The key insight: "the ability not to unload the program core, database connections, and sockets from memory more than makes up for the limitations of persistent workers." TAVP Relay applies the same architecture to Phalcon.</p>
+            </div>
+
+            <h3 style="font-size:22px;margin:32px 0 16px;">CLI Usage</h3>
+            <div class="code-block">
+<span class="prompt">$</span> <span class="cmd">tavp relay:start</span>
+
+<span class="comment">  TAVP Relay v1.0 (RoadRunner 2024.x)</span>
+<span class="comment">  ├── Workers: 8 (PHP persistent)</span>
+<span class="comment">  ├── HTTP: 0.0.0.0:8080 (Go)</span>
+<span class="comment">  ├── Queue: enabled (Go job pipeline)</span>
+<span class="comment">  ├── WebSocket: 0.0.0.0:8081 (Go)</span>
+<span class="comment">  ├── gRPC: 0.0.0.0:9001 (Go)</span>
+<span class="comment">  ├── Metrics: 0.0.0.0:2112 (Prometheus)</span>
+<span class="comment">  └── Ready.</span>
+
+<span class="prompt">$</span> <span class="cmd">tavp relay:start</span> <span class="flag">--workers=auto --relay=http,queue,websocket</span>
+            </div>
+        </div>
+
+        <!-- ═══ TAVP Weave ═══ -->
+        <div class="concurrency-content" id="concurrency-weave">
+            <div class="runtime-header">
+                <div class="runtime-icon" style="background:rgba(52,211,153,0.15);color:var(--accent-green);">🧶</div>
+                <div class="runtime-header-text">
+                    <h3>TAVP Weave</h3>
+                    <p>PHP Fibers-based lightweight async. Zero external dependencies. Built into PHP 8.1+. Runs anywhere &mdash; including shared hosting. No Swoole, no RoadRunner required.</p>
+                </div>
+            </div>
+
+            <div class="runtime-grid">
+                <div class="runtime-card">
+                    <h4>What PHP Fibers Provide</h4>
+                    <ul>
+                        <li><span class="li-icon" style="color:var(--accent-green);">✓</span> Cooperative multitasking &mdash; built into PHP 8.1+</li>
+                        <li><span class="li-icon" style="color:var(--accent-green);">✓</span> Zero external dependencies (no extensions needed)</li>
+                        <li><span class="li-icon" style="color:var(--accent-green);">✓</span> Works on shared hosting (PHP-FPM compatible)</li>
+                        <li><span class="li-icon" style="color:var(--accent-green);">✓</span> Parallel I/O operations (HTTP calls, DB queries)</li>
+                        <li><span class="li-icon" style="color:var(--accent-green);">✓</span> Synchronous-looking syntax (no callback hell)</li>
+                        <li><span class="li-icon" style="color:var(--accent-orange);">!</span> Cannot hook blocking PHP functions (unlike Swoole)</li>
+                        <li><span class="li-icon" style="color:var(--accent-orange);">!</span> Not true non-blocking I/O</li>
+                        <li><span class="li-icon" style="color:var(--accent-orange);">!</span> Does not change PHP-FPM model (still process-per-request)</li>
+                    </ul>
+                </div>
+                <div class="runtime-card">
+                    <h4>Usage in Controllers</h4>
+                    <div class="code-block">
+<span class="keyword">use</span> <span class="type">Tavp\Weave\Async</span>;
+
+<span class="keyword">class</span> <span class="type">DashboardController</span>
+{
+    <span class="keyword">public function</span> <span class="function">index</span>()
+    {
+        <span class="comment">// Parallel fetch with Fibers</span>
+        $results = <span class="type">Async</span>::<span class="function">all</span>([
+            <span class="string">'users'</span> => <span class="keyword">function</span>() {
+                <span class="keyword">return</span> <span class="type">User</span>::<span class="function">query</span>()
+                    -><span class="function">where</span>(<span class="string">'active'</span>, <span class="keyword">true</span>)
+                    -><span class="function">get</span>();
+            },
+            <span class="string">'orders'</span> => <span class="keyword">function</span>() {
+                <span class="keyword">return</span> <span class="type">Order</span>::<span class="function">query</span>()
+                    -><span class="function">where</span>(<span class="string">'status'</span>, <span class="string">'pending'</span>)
+                    -><span class="function">get</span>();
+            },
+            <span class="string">'stats'</span> => <span class="keyword">function</span>() {
+                <span class="keyword">return</span> <span class="variable">$this</span>-><span class="function">calculateStats</span>();
+            },
+        ]);
+
+        <span class="keyword">return</span> <span class="variable">$this</span>-><span class="function">view</span>(
+            <span class="string">'dashboard'</span>, $results
+        );
+    }
+}</div>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <h4>When to Use TAVP Weave</h4>
+                <p>Perfect for <strong>shared hosting</strong>, small-to-medium apps, or any project where you want lightweight async without installing additional extensions. Use it for parallel HTTP calls to third-party APIs, parallel database queries, or any I/O-bound operations that benefit from concurrent execution. It won't turn PHP-FPM into an async server, but it will eliminate sequential wait times within a single request.</p>
+            </div>
+
+            <h3 style="font-size:22px;margin:32px 0 16px;">CLI Usage</h3>
+            <div class="code-block">
+<span class="comment"># Enable TAVP Weave (zero config, just use it)</span>
+<span class="prompt">$</span> <span class="cmd">tavp weave:enable</span>
+
+<span class="comment">  TAVP Weave v1.0</span>
+<span class="comment">  ├── Runtime: PHP 8.3 Fibers (built-in)</span>
+<span class="comment">  ├── Extension required: none</span>
+<span class="comment">  ├── Works with: PHP-FPM, Apache mod_php, LiteSpeed</span>
+<span class="comment">  └── Ready. Just use Async::all() in your controllers.</span>
+
+<span class="comment"># No separate server needed. Uses existing PHP-FPM.</span>
+<span class="prompt">$</span> <span class="cmd">tavp serve</span>  <span class="comment"># Regular PHP-FPM server with Fibers enabled</span>
+            </div>
+        </div>
+
+        <!-- ═══ COMPARISON ═══ -->
+        <div class="concurrency-content" id="concurrency-compare">
+            <div style="text-align:center;margin-bottom:40px;">
+                <h3 style="font-size:28px;font-weight:800;">Runtime Comparison</h3>
+                <p style="color:var(--text-secondary);">Three models, three use cases. All compatible with TAVP stack.</p>
+            </div>
+
+            <div class="runtime-bench-grid" style="margin-bottom:40px;">
+                <div class="runtime-bench-card">
+                    <div class="rb-value" style="color:var(--accent-blue);">TAVP Coil</div>
+                    <div class="rb-label">Swoole Runtime</div>
+                    <div class="rb-sub">Coroutines + Async I/O + Persistent Memory</div>
+                </div>
+                <div class="runtime-bench-card">
+                    <div class="rb-value" style="color:var(--accent-purple);">TAVP Relay</div>
+                    <div class="rb-label">RoadRunner Runtime</div>
+                    <div class="rb-sub">Go Infra + Process Isolation + Built-in Services</div>
+                </div>
+                <div class="runtime-bench-card">
+                    <div class="rb-value" style="color:var(--accent-green);">TAVP Weave</div>
+                    <div class="rb-label">PHP Fibers</div>
+                    <div class="rb-sub">Zero Dependency + Shared Hosting Compatible</div>
+                </div>
+            </div>
+
+            <table class="styled-table">
+                <thead>
+                    <tr>
+                        <th>Feature</th>
+                        <th>TAVP (PHP-FPM)</th>
+                        <th>TAVP Coil</th>
+                        <th>TAVP Relay</th>
+                        <th>TAVP Weave</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Runtime</strong></td>
+                        <td>PHP-FPM</td>
+                        <td>Swoole</td>
+                        <td>RoadRunner (Go)</td>
+                        <td>PHP-FPM + Fibers</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Coroutine</strong></td>
+                        <td><span class="badge badge-muted">No</span></td>
+                        <td><span class="badge badge-green">Native</span></td>
+                        <td><span class="badge badge-purple">Via Go</span></td>
+                        <td><span class="badge badge-green">Fibers</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Async I/O</strong></td>
+                        <td><span class="badge badge-muted">No</span></td>
+                        <td><span class="badge badge-green">Full (hooks all blocking)</span></td>
+                        <td><span class="badge badge-green">Full (Go handles I/O)</span></td>
+                        <td><span class="badge badge-orange">Partial (cooperative)</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Persistent Memory</strong></td>
+                        <td><span class="badge badge-muted">No</span></td>
+                        <td><span class="badge badge-green">Yes</span></td>
+                        <td><span class="badge badge-green">Yes</span></td>
+                        <td><span class="badge badge-muted">No</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>RAM / Worker</strong></td>
+                        <td class="win">~15 MB</td>
+                        <td>~30 MB</td>
+                        <td>~25 MB</td>
+                        <td class="win">~15 MB</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Shared Hosting</strong></td>
+                        <td><span class="badge badge-green">Yes</span></td>
+                        <td><span class="badge badge-muted">No</span></td>
+                        <td><span class="badge badge-muted">No</span></td>
+                        <td><span class="badge badge-green">Yes</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Process Isolation</strong></td>
+                        <td><span class="badge badge-green">Yes (FPM)</span></td>
+                        <td><span class="badge badge-orange">Shared worker</span></td>
+                        <td><span class="badge badge-green">Yes (Go ↔ PHP)</span></td>
+                        <td><span class="badge badge-green">Yes (FPM)</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Memory Leak Risk</strong></td>
+                        <td class="win">None (auto-reset)</td>
+                        <td>High (long-lived)</td>
+                        <td>Medium (isolated)</td>
+                        <td class="win">None (auto-reset)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Debug Difficulty</strong></td>
+                        <td class="win">Easy</td>
+                        <td>Hard</td>
+                        <td>Medium</td>
+                        <td class="win">Easy</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Extension Required</strong></td>
+                        <td>None</td>
+                        <td>Swoole</td>
+                        <td>RoadRunner binary</td>
+                        <td>None (PHP 8.1+)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Queue</strong></td>
+                        <td>Module</td>
+                        <td>Built-in (Swoole Task)</td>
+                        <td>Built-in (Go pipeline)</td>
+                        <td>Module</td>
+                    </tr>
+                    <tr>
+                        <td><strong>WebSocket</strong></td>
+                        <td>Module (Soketi)</td>
+                        <td>Built-in (Swoole WS)</td>
+                        <td>Built-in (Go WS)</td>
+                        <td>Module (Soketi)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Best For</strong></td>
+                        <td>Web apps, CMS, shared hosting</td>
+                        <td>API backends, high-traffic, VPS</td>
+                        <td>Enterprise, microservices, complex infra</td>
+                        <td>Shared hosting, lightweight async</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="highlight-box" style="margin-top:32px;">
+                <h4>All Three Can Coexist</h4>
+                <p>These are not mutually exclusive choices. A single TAVP project can use <strong>TAVP Relay</strong> as its production server (HTTP + Queue + WebSocket), <strong>TAVP Weave</strong> for parallel I/O inside controllers, and fall back to standard <strong>PHP-FPM</strong> on shared hosting. The application code stays the same &mdash; only the runtime changes.</p>
+            </div>
+
+            <div style="margin-top:32px;">
+                <h3 style="font-size:22px;margin-bottom:16px;">Decision Guide</h3>
+                <div class="arch-diagram">
+<span class="highlight-cyan">  Where are you hosting?</span>
+<span class="highlight-muted">  │</span>
+<span class="highlight-muted">  ├──</span> <span class="highlight-green">Shared Hosting</span> (cPanel, HestiaCP, etc.)
+<span class="highlight-muted">  │   └──</span> <span class="highlight-blue">Use standard TAVP (PHP-FPM) + TAVP Weave</span>
+<span class="highlight-muted">  │       Zero extra setup. Fibers for parallel I/O.</span>
+<span class="highlight-muted">  │</span>
+<span class="highlight-muted">  ├──</span> <span class="highlight-green">VPS / Dedicated Server</span> (you control the server)
+<span class="highlight-muted">  │   └──</span> <span class="highlight-blue">Use TAVP Coil (Swoole)</span>
+<span class="highlight-muted">  │       Max performance. Coroutines. Persistent memory.</span>
+<span class="highlight-muted">  │</span>
+<span class="highlight-muted">  └──</span> <span class="highlight-green">Enterprise / Complex Infrastructure</span>
+<span class="highlight-muted">      └──</span> <span class="highlight-blue">Use TAVP Relay (RoadRunner)</span>
+<span class="highlight-muted">          Process isolation. Built-in infra. Go handles the hard stuff.</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ═══ POSITIONING ═══ -->
+<section class="benchmark-section">
+    <div class="container">
+        <div class="section-header">
+            <div class="section-tag">Positioning</div>
+            <h2>Not a Laravel Competitor</h2>
+            <p>TAVP lives in a different lane. It occupies the sweet spot between raw performance and developer experience.</p>
+        </div>
+        <div class="positioning-grid">
+            <div class="position-card wrong">
+                <div class="position-label">Wrong</div>
+                <h3>What TAVP is NOT</h3>
+                <ul>
+                    <li>Not "a better Laravel"</li>
+                    <li>Not "a WordPress replacement"</li>
+                    <li>Not a monolithic framework</li>
+                    <li>Not competing for the same audience</li>
+                </ul>
+            </div>
+            <div class="position-card right">
+                <div class="position-label">Correct</div>
+                <h3>What TAVP IS</h3>
+                <ul>
+                    <li>A tech stack integrating proven components</li>
+                    <li>Powered by Phalcon's C-extension engine</li>
+                    <li>Three concurrency models (Coil, Relay, Weave)</li>
+                    <li>Mobile-ready backend from day one</li>
+                </ul>
+            </div>
+        </div>
+        <div class="mapping-grid" style="margin-top:48px;">
+            <div class="mapping-header">
+                <div class="mapping-cell left">TALL Ecosystem</div>
+                <div class="mapping-cell center"></div>
+                <div class="mapping-cell right">TAVP Ecosystem</div>
+            </div>
+            <div class="mapping-row"><div class="mapping-cell left">Laravel</div><div class="mapping-cell center">→</div><div class="mapping-cell right">Phalcon</div></div>
+            <div class="mapping-row"><div class="mapping-cell left">Livewire</div><div class="mapping-cell center">→</div><div class="mapping-cell right">Alpine.js (built-in)</div></div>
+            <div class="mapping-row"><div class="mapping-cell left">Breeze</div><div class="mapping-cell center">→</div><div class="mapping-cell right">TAVPid</div></div>
+            <div class="mapping-row"><div class="mapping-cell left">Jetstream</div><div class="mapping-cell center">→</div><div class="mapping-cell right">TAVPkit</div></div>
+            <div class="mapping-row"><div class="mapping-cell left">Filament</div><div class="mapping-cell center">→</div><div class="mapping-cell right">TAVPhub</div></div>
+            <div class="mapping-row"><div class="mapping-cell left">WireUI / Mary</div><div class="mapping-cell center">→</div><div class="mapping-cell right">TAVPblocks</div></div>
+            <div class="mapping-row"><div class="mapping-cell left">Spark</div><div class="mapping-cell center">→</div><div class="mapping-cell right">TAVPhive</div></div>
+            <div class="mapping-row"><div class="mapping-cell left">Octane (Swoole)</div><div class="mapping-cell center">→</div><div class="mapping-cell right">TAVP Coil</div></div>
+            <div class="mapping-row"><div class="mapping-cell left">Octane (RoadRunner)</div><div class="mapping-cell center">→</div><div class="mapping-cell right">TAVP Relay</div></div>
+        </div>
+    </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ═══ TIERS ═══ -->
+<section>
+    <div class="container">
+        <div class="section-header">
+            <div class="section-tag">Entry Points</div>
+            <h2>Three Tiers, One Ecosystem</h2>
+            <p>Start small, grow when ready. Upgrade anytime without rewriting.</p>
+        </div>
+        <div class="tiers-container">
+            <div class="tier-card tier-1">
+                <div class="tier-header">
+                    <div class="tier-number">1</div>
+                    <h3>Website</h3>
+                    <span class="tier-subtitle">Landing page, portfolio, company profile</span>
+                </div>
+                <div class="tier-body">
+                    <div class="tier-meta">
+                        <div class="tier-meta-item"><span class="meta-val" style="color:var(--accent-green);">~30</span><span class="meta-lbl">Files</span></div>
+                        <div class="tier-meta-item"><span class="meta-val" style="color:var(--accent-green);">5 min</span><span class="meta-lbl">Setup</span></div>
+                        <div class="tier-meta-item"><span class="meta-val" style="color:var(--accent-green);">0</span><span class="meta-lbl">DB tables</span></div>
+                    </div>
+                    <ul class="tier-features">
+                        <li><span class="check yes">✓</span> Phalcon + Volt + Tailwind + Alpine.js</li>
+                        <li><span class="check yes">✓</span> Responsive layouts &amp; components</li>
+                        <li><span class="check yes">✓</span> Contact form (Alpine.js)</li>
+                        <li><span class="check yes">✓</span> SEO meta tags</li>
+                        <li><span class="check no">&mdash;</span> Database</li>
+                        <li><span class="check no">&mdash;</span> Authentication</li>
+                    </ul>
+                    <div class="tier-cmd"><span class="prompt">$</span> tavp new my-site <span style="color:var(--text-muted);">--template=website</span></div>
+                </div>
+            </div>
+            <div class="tier-card tier-2">
+                <div class="tier-header">
+                    <div class="tier-number">2</div>
+                    <h3>Application</h3>
+                    <span class="tier-subtitle">Dashboard, CRUD, admin, CMS</span>
+                </div>
+                <div class="tier-body">
+                    <div class="tier-meta">
+                        <div class="tier-meta-item"><span class="meta-val" style="color:var(--accent-blue);">~100</span><span class="meta-lbl">Files</span></div>
+                        <div class="tier-meta-item"><span class="meta-val" style="color:var(--accent-blue);">15 min</span><span class="meta-lbl">Setup</span></div>
+                        <div class="tier-meta-item"><span class="meta-val" style="color:var(--accent-blue);">8+</span><span class="meta-lbl">DB tables</span></div>
+                    </div>
+                    <ul class="tier-features">
+                        <li><span class="check yes">✓</span> Everything in Tier 1</li>
+                        <li><span class="check yes">✓</span> TAVPid (OTP auth)</li>
+                        <li><span class="check yes">✓</span> TAVPhub (admin + CRUD)</li>
+                        <li><span class="check yes">✓</span> Migrations &amp; seeders</li>
+                        <li><span class="check yes">✓</span> CLI scaffolding</li>
+                        <li><span class="check yes">✓</span> Datatable (Alpine.js)</li>
+                    </ul>
+                    <div class="tier-cmd"><span class="prompt">$</span> tavp new my-app <span style="color:var(--text-muted);">--template=app</span></div>
+                </div>
+            </div>
+            <div class="tier-card tier-3">
+                <div class="tier-header">
+                    <div class="tier-number">3</div>
+                    <h3>Enterprise</h3>
+                    <span class="tier-subtitle">API-first, mobile backend, scalable</span>
+                </div>
+                <div class="tier-body">
+                    <div class="tier-meta">
+                        <div class="tier-meta-item"><span class="meta-val" style="color:var(--accent-purple);">~300+</span><span class="meta-lbl">Files</span></div>
+                        <div class="tier-meta-item"><span class="meta-val" style="color:var(--accent-purple);">30 min</span><span class="meta-lbl">Setup</span></div>
+                        <div class="tier-meta-item"><span class="meta-val" style="color:var(--accent-purple);">15+</span><span class="meta-lbl">DB tables</span></div>
+                    </div>
+                    <ul class="tier-features">
+                        <li><span class="check yes">✓</span> Everything in Tier 2</li>
+                        <li><span class="check yes">✓</span> Versioned REST API (v1, v2)</li>
+                        <li><span class="check yes">✓</span> JWT + refresh token (Flutter)</li>
+                        <li><span class="check yes">✓</span> Queue, search, real-time</li>
+                        <li><span class="check yes">✓</span> TAVP Coil / Relay runtime</li>
+                        <li><span class="check yes">✓</span> K8s + Terraform + CI/CD</li>
+                    </ul>
+                    <div class="tier-cmd"><span class="prompt">$</span> tavp new my-platform <span style="color:var(--text-muted);">--template=enterprise</span></div>
+                </div>
+            </div>
+        </div>
+        <div class="highlight-box" style="margin-top:32px;text-align:center;">
+            <h4>Upgrade Anytime</h4>
+            <p><code style="color:var(--accent-cyan);font-family:'JetBrains Mono',monospace;">tavp upgrade --to=app</code> &mdash; Installs only missing modules. No data loss. No overwrites.</p>
+        </div>
+    </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ═══ ECOSYSTEM ═══ -->
+<section class="benchmark-section">
+    <div class="container">
+        <div class="section-header">
+            <div class="section-tag">Ecosystem</div>
+            <h2>Eight Tools, One Philosophy</h2>
+            <p>Every tool has its own name and identity. No cloned names. Every tool is searchable without ambiguity.</p>
+        </div>
+        <div class="eco-grid">
+            <div class="eco-card">
+                <div class="eco-icon" style="background:rgba(249,115,22,0.1);color:#f97316;">🔧</div>
+                <h4>TAVP</h4>
+                <div class="eco-type">Tech Stack</div>
+                <p>Tailwind + Alpine + Volt + Phalcon. The integrated stack.</p>
+                <div class="eco-cmd">composer create-project tavp/starter</div>
+            </div>
+            <div class="eco-card">
+                <div class="eco-icon" style="background:rgba(52,211,153,0.1);color:#34d399;">🚀</div>
+                <h4>TAVPkit</h4>
+                <div class="eco-type">Full Starter Kit</div>
+                <p>Auth + Teams + API + Profile. Everything to launch.</p>
+                <div class="eco-cmd">tavp kit:install --teams</div>
+            </div>
+            <div class="eco-card">
+                <div class="eco-icon" style="background:rgba(79,143,247,0.1);color:#4f8ff7;">🪪</div>
+                <h4>TAVPid</h4>
+                <div class="eco-type">Auth Starter</div>
+                <p>OTP-based auth. Email, SMS, WhatsApp. Password optional.</p>
+                <div class="eco-cmd">tavp id:install</div>
+            </div>
+            <div class="eco-card">
+                <div class="eco-icon" style="background:rgba(139,92,246,0.1);color:#8b5cf6;">🎛️</div>
+                <h4>TAVPhub</h4>
+                <div class="eco-type">Admin Panel</div>
+                <p>CRUD, dashboard, datatables, role-based access.</p>
+                <div class="eco-cmd">tavp hub:install</div>
+            </div>
+            <div class="eco-card">
+                <div class="eco-icon" style="background:rgba(34,211,238,0.1);color:#22d3ee;">🧱</div>
+                <h4>TAVPblocks</h4>
+                <div class="eco-type">Component Library</div>
+                <p>UI components: buttons, modals, datatables, forms, toasts.</p>
+                <div class="eco-cmd">tavp blocks:install</div>
+            </div>
+            <div class="eco-card">
+                <div class="eco-icon" style="background:rgba(251,191,36,0.1);color:#fbbf24;">🐝</div>
+                <h4>TAVPhive</h4>
+                <div class="eco-type">SaaS Billing</div>
+                <p>Subscriptions, invoicing. Stripe, Midtrans, Xendit.</p>
+                <div class="eco-cmd">tavp hive:install --stripe</div>
+            </div>
+            <div class="eco-card">
+                <div class="eco-icon" style="background:rgba(79,143,247,0.1);color:#4f8ff7;">⚡</div>
+                <h4>TAVPCoil</h4>
+                <div class="eco-type">Swoole Runtime</div>
+                <p>Coroutines, async I/O, persistent memory. Max performance.</p>
+                <div class="eco-cmd">tavp coil:start</div>
+            </div>
+            <div class="eco-card">
+                <div class="eco-icon" style="background:rgba(139,92,246,0.1);color:#8b5cf6;">🔀</div>
+                <h4>TAVPRelay</h4>
+                <div class="eco-type">RoadRunner Runtime</div>
+                <p>Go-powered infra, process isolation, built-in queue/WS.</p>
+                <div class="eco-cmd">tavp relay:start</div>
+            </div>
+            <div class="eco-card">
+                <div class="eco-icon" style="background:rgba(52,211,153,0.1);color:#34d399;">🧶</div>
+                <h4>TAVPWeave</h4>
+                <div class="eco-type">PHP Fibers</div>
+                <p>Lightweight async. Zero dependency. Shared hosting friendly.</p>
+                <div class="eco-cmd">tavp weave:enable</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ═══ EASE OF USE ═══ -->
+<section>
+    <div class="container">
+        <div class="section-header">
+            <div class="section-tag">Developer Experience</div>
+            <h2>From Zero to Running in 60 Seconds</h2>
+            <p>CLI handles everything: environment detection, Phalcon installation, scaffolding, database, assets. One command.</p>
+        </div>
+        <div class="ease-timeline">
+            <div class="ease-step">
+                <div class="step-dot">1</div>
+                <div class="step-time">0:00 — 0:05</div>
+                <h4>Create Project</h4>
+                <p>Single command. Phalcon auto-installs if not present.</p>
+                <div class="cmd-block"><span class="prompt">$</span> <span class="cmd">tavp new my-app</span> <span class="flag">--template=app</span><br><span class="comment">  → Detecting OS... Linux, PHP 8.3</span><br><span class="comment">  → Installing Phalcon... v5.7.0 ✓</span><br><span class="comment">  → Creating project structure... 62 files ✓</span></div>
+            </div>
+            <div class="ease-step">
+                <div class="step-dot">2</div>
+                <div class="step-time">0:05 — 0:30</div>
+                <h4>Interactive Setup</h4>
+                <p>Wizard guides through database, auth, mail, modules.</p>
+                <div class="cmd-block"><span class="comment">  ? Database: MySQL (localhost:3306)</span><br><span class="comment">  ? OTP channel: Email</span><br><span class="comment">  ? Modules: TAVPid, TAVPhub, TAVPblocks</span><br><span class="comment">  ? Runtime: PHP-FPM (upgradeable to Coil/Relay later)</span><br><span class="comment">  → Migrations... 8 tables ✓</span><br><span class="comment">  → Frontend... Tailwind + Alpine.js ✓</span></div>
+            </div>
+            <div class="ease-step">
+                <div class="step-dot">3</div>
+                <div class="step-time">0:30 — 0:45</div>
+                <h4>Add Authentication</h4>
+                <p>OTP-based. Email → code → login. No passwords.</p>
+                <div class="cmd-block"><span class="prompt">$</span> <span class="cmd">tavp id:install</span><br><span class="comment">  → TAVPid installed ✓</span><br><span class="comment">  → Auth routes registered ✓</span><br><span class="comment">  → Login at /login ✓</span></div>
+            </div>
+            <div class="ease-step">
+                <div class="step-dot">4</div>
+                <div class="step-time">0:45 — 1:00</div>
+                <h4>Scaffold CRUD</h4>
+                <p>Model, migration, controller, views, routes — all generated.</p>
+                <div class="cmd-block"><span class="prompt">$</span> <span class="cmd">tavp hub:make:resource Post</span> <span class="flag">--fields="title:string,body:text"</span><br><span class="comment">  → Model ✓ Migration ✓ Controller ✓ Views ✓ Routes ✓</span><br><span class="comment">  → /admin/posts ready ✓</span></div>
+            </div>
+            <div class="ease-step">
+                <div class="step-dot">5</div>
+                <div class="step-time">1:00</div>
+                <h4>Ship It</h4>
+                <p>Full app with auth, admin, CRUD, responsive UI. Running.</p>
+                <div class="cmd-block"><span class="prompt">$</span> <span class="cmd">tavp serve</span><br><span class="comment">  → http://localhost:8080</span><br><span class="comment">  → Admin: http://localhost:8080/admin</span></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ═══ AUTH ═══ -->
+<section class="benchmark-section">
+    <div class="container">
+        <div class="section-header">
+            <div class="section-tag">Authentication</div>
+            <h2>OTP-First, Not Password-First</h2>
+            <p>TAVPid defaults to OTP. No passwords to leak, no "forgot password" flows. Just email, code, done.</p>
+        </div>
+        <div class="auth-flow">
+            <div class="auth-box">
+                <h4>Web (SSR) <span class="auth-badge web">Session</span></h4>
+                <ol class="auth-steps">
+                    <li><span class="step-num">1</span> User enters email at /login</li>
+                    <li><span class="step-num">2</span> OTP code sent to email</li>
+                    <li><span class="step-num">3</span> User enters 6-digit code</li>
+                    <li><span class="step-num">4</span> Session created + CSRF token</li>
+                    <li><span class="step-num">5</span> Redirect to /admin dashboard</li>
+                </ol>
+            </div>
+            <div class="auth-arrow">⇄</div>
+            <div class="auth-box">
+                <h4>Mobile (Flutter) <span class="auth-badge mobile">JWT</span></h4>
+                <ol class="auth-steps">
+                    <li><span class="step-num">1</span> App sends email to /api/v1/auth/send-otp</li>
+                    <li><span class="step-num">2</span> OTP sent to email/SMS/WhatsApp</li>
+                    <li><span class="step-num">3</span> App sends code to /api/v1/auth/verify-otp</li>
+                    <li><span class="step-num">4</span> JWT access + refresh token returned</li>
+                    <li><span class="step-num">5</span> Device registered for push notifications</li>
+                </ol>
+            </div>
+        </div>
+        <div style="max-width:900px;margin:32px auto 0;">
+            <table class="styled-table">
+                <thead><tr><th>OTP Channel</th><th>Status</th><th>Requires</th></tr></thead>
+                <tbody>
+                    <tr><td>Email</td><td><span class="badge badge-green">Default</span></td><td>SMTP config only</td></tr>
+                    <tr><td>SMS</td><td><span class="badge badge-blue">Optional</span></td><td>Twilio account</td></tr>
+                    <tr><td>WhatsApp</td><td><span class="badge badge-blue">Optional</span></td><td>Twilio WhatsApp API</td></tr>
+                    <tr><td>TOTP (Authenticator)</td><td><span class="badge badge-blue">Optional</span></td><td>Google Authenticator / Authy</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ═══ HOSTING ═══ -->
+<section>
+    <div class="container">
+        <div class="section-header">
+            <div class="section-tag">Hosting</div>
+            <h2>Hosters Love TAVP. Naturally.</h2>
+            <p>No paid partnerships. Web hosters benefit because Phalcon uses dramatically less RAM &mdash; more sites per server, more revenue.</p>
+        </div>
+        <div class="hosting-bars">
+            <div class="hosting-bar">
+                <div class="bar-header"><span class="bar-label">TAVP (Phalcon)</span><span class="bar-sites" style="color:var(--accent-green);">~130 sites</span></div>
+                <div class="bar-track"><div class="bar-fill" style="width:100%;background:var(--gradient-green);">~130 sites / 4GB RAM</div></div>
+                <span class="bar-detail">~15-30MB RAM per site &bull; $3-10/mo hosting sufficient</span>
+            </div>
+            <div class="hosting-bar">
+                <div class="bar-header"><span class="bar-label">Laravel</span><span class="bar-sites">~26 sites</span></div>
+                <div class="bar-track"><div class="bar-fill" style="width:20%;background:var(--gradient-orange);">~26</div></div>
+                <span class="bar-detail">~100-150MB RAM per site &bull; $10-20/mo hosting</span>
+            </div>
+            <div class="hosting-bar">
+                <div class="bar-header"><span class="bar-label">WordPress</span><span class="bar-sites" style="color:var(--text-muted);">~15 sites</span></div>
+                <div class="bar-track"><div class="bar-fill" style="width:12%;background:rgba(100,116,139,0.5);">~15</div></div>
+                <span class="bar-detail">~256+ MB RAM per site &bull; $20-50/mo hosting</span>
+            </div>
+        </div>
+        <div class="hosting-highlight">
+            <div class="highlight-number">8.7x</div>
+            <p>More websites per server compared to WordPress.</p>
+        </div>
+    </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ═══ AI ═══ -->
+<section>
+    <div class="container">
+        <div class="section-header">
+            <div class="section-tag">AI Integration</div>
+            <h2>Four Layers of AI</h2>
+            <p>AI integrated into every layer &mdash; enabling non-programmers to build complete applications.</p>
+        </div>
+        <div class="ai-grid">
+            <div class="ai-card">
+                <div class="ai-layer" style="background:rgba(79,143,247,0.1);color:var(--accent-blue);">Layer 1</div>
+                <h4>AI Builder (Visual)</h4>
+                <p>Drag-and-drop. Output is clean Volt templates, not bloated HTML. Code in files, content in database.</p>
+                <div class="ai-example">Drag "Hero" + "3 Columns" + "Contact Form"<br>→ Clean .volt files, editable by developer</div>
+            </div>
+            <div class="ai-card">
+                <div class="ai-layer" style="background:rgba(139,92,246,0.1);color:var(--accent-purple);">Layer 2</div>
+                <h4>AI Assistant (Chat)</h4>
+                <p>Chatbot in admin panel. Describe in natural language, AI generates complete pages.</p>
+                <div class="ai-example">"Buatkan halaman Tim Kami dengan 3 orang"<br>→ Full page generated + published</div>
+            </div>
+            <div class="ai-card">
+                <div class="ai-layer" style="background:rgba(52,211,153,0.1);color:var(--accent-green);">Layer 3</div>
+                <h4>AI Coder (CLI)</h4>
+                <p>Generate complete modules from terminal via natural language description.</p>
+                <div class="ai-example"><span style="color:var(--accent-green);">$</span> tavp ai "Buat modul booking"<br>→ Complete module generated</div>
+            </div>
+            <div class="ai-card">
+                <div class="ai-layer" style="background:rgba(251,191,36,0.1);color:var(--accent-yellow);">Layer 4</div>
+                <h4>AI Content (CMS)</h4>
+                <p>Improve, translate, SEO-optimize content from admin panel. Every CMS block has AI buttons.</p>
+                <div class="ai-example">[Improve] [Translate] [SEO] [Shorten]<br>→ Instant content transformation</div>
+            </div>
+        </div>
+        <div class="highlight-box" style="margin-top:32px;">
+            <h4>Multi-Driver AI</h4>
+            <p><strong>OpenAI</strong> (GPT-4o), <strong>Anthropic</strong> (Claude), <strong>Ollama</strong> (self-hosted, free), <strong>TAVP Cloud</strong> (optional hosted). Developers choose their provider.</p>
+        </div>
+    </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ═══ MODULE SYSTEM ═══ -->
+<section class="benchmark-section">
+    <div class="container">
+        <div class="section-header">
+            <div class="section-tag">Modularity</div>
+            <h2>Composer-Based Module System</h2>
+            <p>Every component is a Composer package. Additive, never destructive. Developers can build and sell modules.</p>
+        </div>
+        <div class="two-col">
+            <div>
+                <h3 style="font-size:22px;margin-bottom:16px;">How It Works</h3>
+                <div class="code-block">
+<span class="comment"># Install a module</span>
+<span class="prompt">$</span> <span class="cmd">composer require</span> <span class="string">tavp/module-motofuel</span>
+
+<span class="comment"># Auto:</span>
+<span class="comment"># 1. Module discovered (type: tavpkit-module)</span>
+<span class="comment"># 2. Service provider registered</span>
+<span class="comment"># 3. Migrations run</span>
+<span class="comment"># 4. Assets published</span>
+<span class="comment"># 5. Routes registered</span>
+<span class="comment"># 6. View cache cleared</span>
+
+<span class="comment"># Disable (keep data)</span>
+<span class="prompt">$</span> <span class="cmd">tavp module:disable</span> <span class="string">motofuel</span>
+
+<span class="comment"># Uninstall (delete data)</span>
+<span class="prompt">$</span> <span class="cmd">tavp module:uninstall</span> <span class="string">motofuel</span></div>
+            </div>
+            <div>
+                <h3 style="font-size:22px;margin-bottom:16px;">Core vs Module</h3>
+                <table class="styled-table">
+                    <thead><tr><th>Feature</th><th>Layer</th><th>Reason</th></tr></thead>
+                    <tbody>
+                        <tr><td>Auth (TAVPid)</td><td><span class="badge badge-green">Core</span></td><td>Every app needs auth</td></tr>
+                        <tr><td>Routing</td><td><span class="badge badge-green">Core</span></td><td>Every app needs routing</td></tr>
+                        <tr><td>Volt Engine</td><td><span class="badge badge-green">Core</span></td><td>Every app needs templates</td></tr>
+                        <tr><td>CMS</td><td><span class="badge badge-blue">Module</span></td><td>Not every app needs CMS</td></tr>
+                        <tr><td>Queue/Jobs</td><td><span class="badge badge-blue">Module</span></td><td>Not every app needs queues</td></tr>
+                        <tr><td>Search</td><td><span class="badge badge-blue">Module</span></td><td>Not every app needs full-text search</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ═══ REVENUE ═══ -->
+<section>
+    <div class="container">
+        <div class="section-header">
+            <div class="section-tag">Sustainability</div>
+            <h2>Revenue Model</h2>
+            <p>Core framework: always open source (MIT). Revenue from ecosystem services, never from locked features.</p>
+        </div>
+        <div class="revenue-grid">
+            <div class="revenue-card"><div class="rev-icon">🛒</div><h4>Marketplace</h4><p>20% commission on community modules. Developer keeps 80%.</p></div>
+            <div class="revenue-card"><div class="rev-icon">☁️</div><h4>TAVP Cloud</h4><p>Optional hosted service. Free tier. Pro: $9/mo. Enterprise: $29/mo.</p></div>
+            <div class="revenue-card"><div class="rev-icon">🤖</div><h4>AI Credits</h4><p>Pay-per-use AI generation. $0.01 per generation.</p></div>
+            <div class="revenue-card"><div class="rev-icon">⭐</div><h4>Premium Modules</h4><p>Official enterprise modules: multi-tenancy, SSO, analytics.</p></div>
+            <div class="revenue-card"><div class="rev-icon">🎧</div><h4>Support</h4><p>Community (free), Priority ($49/mo), Enterprise (custom).</p></div>
+        </div>
+        <div class="revenue-note">Core framework: Always open source (MIT). No features locked. Ever.</div>
+    </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ═══ ROADMAP ═══ -->
+<section class="benchmark-section">
+    <div class="container">
+        <div class="section-header">
+            <div class="section-tag">Roadmap</div>
+            <h2>Development Phases</h2>
+        </div>
+        <div class="roadmap-container">
+            <div class="roadmap-card phase-1">
+                <div class="phase-tag">Phase 1 — Month 1-4</div>
+                <h4>Foundation</h4>
+                <ul>
+                    <li>TAVP Core framework</li>
+                    <li>CLI tool (tavp command)</li>
+                    <li>Auto Phalcon installer</li>
+                    <li>TAVPid (OTP auth)</li>
+                    <li>Basic TAVPblocks (15 components)</li>
+                    <li>TAVP Weave (PHP Fibers)</li>
+                    <li>Documentation (docs.tavp.dev)</li>
+                </ul>
+                <div class="phase-goal"><strong>Goal:</strong> Hello World in 60 seconds. Full auth app in 5 min.</div>
+            </div>
+            <div class="roadmap-card phase-2">
+                <div class="phase-tag">Phase 2 — Month 5-8</div>
+                <h4>Developer Tools</h4>
+                <ul>
+                    <li>TAVPkit (full starter)</li>
+                    <li>TAVPhub (admin panel)</li>
+                    <li>TAVPblocks (full, 40+ components)</li>
+                    <li>TAVP Coil (Swoole runtime)</li>
+                    <li>Starter templates (5-10)</li>
+                    <li>IDE support (VS Code basic)</li>
+                </ul>
+                <div class="phase-goal"><strong>Goal:</strong> Full admin panel in 10 min. Community starts creating content.</div>
+            </div>
+            <div class="roadmap-card phase-3">
+                <div class="phase-tag">Phase 3 — Month 9-12</div>
+                <h4>Ecosystem Seeds</h4>
+                <ul>
+                    <li>TAVPhive (SaaS billing)</li>
+                    <li>TAVP Relay (RoadRunner runtime)</li>
+                    <li>Module marketplace (launch)</li>
+                    <li>Community launch (open source)</li>
+                    <li>Performance benchmark publication</li>
+                    <li>Hosting integration scripts</li>
+                </ul>
+                <div class="phase-goal"><strong>Goal:</strong> 100+ GitHub stars. First community modules. First hoster support.</div>
+            </div>
+            <div class="roadmap-card phase-4">
+                <div class="phase-tag">Phase 4 — Year 2</div>
+                <h4>Growth</h4>
+                <ul>
+                    <li>Conference talks</li>
+                    <li>Content series</li>
+                    <li>WordPress migration guide</li>
+                    <li>Flutter integration helpers</li>
+                    <li>Community ambassador program</li>
+                </ul>
+                <div class="phase-goal"><strong>Goal:</strong> 1000+ stars. 50+ community packages. 10+ hosters.</div>
+            </div>
+            <div class="roadmap-card phase-5">
+                <div class="phase-tag">Phase 5 — Year 2+</div>
+                <h4>Sustainability</h4>
+                <ul>
+                    <li>Marketplace revenue flowing</li>
+                    <li>Premium modules selling</li>
+                    <li>TAVP Cloud</li>
+                    <li>Enterprise support tier</li>
+                    <li>Community governance</li>
+                </ul>
+                <div class="phase-goal"><strong>Goal:</strong> Self-sustaining ecosystem. Worldwide adoption.</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ═══ VISION ═══ -->
+<section class="vision-section">
+    <div class="container">
+        <div class="vision-quote">
+            <blockquote>TAVP is not just a tech stack.<br>It's an ecosystem where developers worldwide can <strong>build fast</strong>, <strong>scale forever</strong>, and <strong>ship today</strong> &mdash; with tools they actually enjoy using.</blockquote>
+        </div>
+        <div class="vision-analogy">
+            <div class="analogy-item"><div class="analogy-emoji">🔧</div><div class="analogy-label">Phalcon</div><div class="analogy-desc">The engine.<br>C-extension. Raw power.</div></div>
+            <div class="analogy-item"><div class="analogy-emoji">🚗</div><div class="analogy-label">TAVP</div><div class="analogy-desc">The car.<br>Integrated experience.</div></div>
+            <div class="analogy-item"><div class="analogy-emoji">⚡</div><div class="analogy-label">Coil / Relay / Weave</div><div class="analogy-desc">The turbo.<br>Concurrency when you need it.</div></div>
+            <div class="analogy-item"><div class="analogy-emoji">🌍</div><div class="analogy-label">Community</div><div class="analogy-desc">The drivers.<br>Building the roads ahead.</div></div>
+        </div>
+    </div>
+</section>
+
+<footer>
+    <div class="container">
+        <div class="footer-brand">TAVP</div>
+        <div class="footer-tagline">Build fast. Scale forever. Ship today.</div>
+        <div class="footer-links">
+            <a href="#">Documentation</a><a href="#">GitHub</a><a href="#">Discord</a>
+            <a href="#">Marketplace</a><a href="#">Blog</a><a href="#">tavp.dev</a>
+        </div>
+        <div class="footer-copy">Product Brief v1.0 — TAVP Stack — Open Source (MIT License)</div>
+    </div>
+</footer>
+
+<script>
+function showConcurrency(id) {
+    document.querySelectorAll('.concurrency-content').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.concurrency-tab').forEach(el => el.classList.remove('active'));
+    document.getElementById('concurrency-' + id).classList.add('active');
+    event.target.classList.add('active');
+}
+</script>
+
+</body>
+</html>

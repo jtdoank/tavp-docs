@@ -1,0 +1,106 @@
+<?php
+/**
+ * TAVP Database Guide
+ */
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Database — TAVP Docs</title>
+    <link rel="stylesheet" href="https://tavp.dev/css/docs.css">
+</head>
+<body>
+<div class="docs-container">
+    <aside class="docs-sidebar">
+        <h2>TAVP Docs</h2>
+        <nav>
+            <a href="/docs/architecture">Architecture</a>
+            <a href="/docs/database">Database</a>
+            <a href="/docs/orm">ORM Guide</a>
+            <a href="/docs/migrations">Migrations</a>
+            <a href="/docs/validation">Validation</a>
+        </nav>
+    </aside>
+    
+    <main class="docs-content">
+        <h1>Database Guide</h1>
+        
+        <section>
+            <h2>Configuration</h2>
+            <p>Configure your database in <code>config/database.php</code>:</p>
+            <pre><code>return [
+    'default' => env('DB_CONNECTION', 'mysql'),
+    
+    'connections' => [
+        'mysql' => [
+            'driver' => 'mysql',
+            'host' => env('DB_HOST', '127.0.0.1'),
+            'port' => env('DB_PORT', '3306'),
+            'database' => env('DB_DATABASE', 'tavp'),
+            'username' => env('DB_USERNAME', 'root'),
+            'password' => env('DB_PASSWORD', ''),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+        ],
+        
+        'sqlite' => [
+            'driver' => 'sqlite',
+            'database' => env('DB_DATABASE', database_path('database.sqlite')),
+        ],
+        
+        'pgsql' => [
+            'driver' => 'pgsql',
+            'host' => env('DB_HOST', '127.0.0.1'),
+            'database' => env('DB_DATABASE', 'tavp'),
+            'username' => env('DB_USERNAME', 'postgres'),
+            'password' => env('DB_PASSWORD', ''),
+        ],
+    ],
+];</code></pre>
+        </section>
+        
+        <section>
+            <h2>Running Migrations</h2>
+            <pre><code># Run all pending migrations
+tavp migrate
+
+# Rollback last migration
+tavp migrate:rollback
+
+# Rollback all migrations
+tavp migrate:reset
+
+# Fresh start (drop all tables + re-migrate)
+tavp migrate:fresh
+
+# Fresh start with seeding
+tavp migrate:fresh --seed</code></pre>
+        </section>
+        
+        <section>
+            <h2>Raw Queries</h2>
+            <pre><code>use Tavp\Support\Facades\DB;
+
+// Select
+$users = DB::select('SELECT * FROM users WHERE active = ?', [1]);
+
+// Insert
+DB::insert('INSERT INTO users (name, email) VALUES (?, ?)', ['John', 'john@example.com']);
+
+// Update
+DB::update('UPDATE users SET active = ? WHERE id = ?', [0, 1]);
+
+// Delete
+DB::delete('DELETE FROM users WHERE id = ?', [1]);
+
+// Transactions
+DB::transaction(function () {
+    DB::update('UPDATE accounts SET balance = balance - ? WHERE id = ?', [100, 1]);
+    DB::update('UPDATE accounts SET balance = balance + ? WHERE id = ?', [100, 2]);
+});</code></pre>
+        </section>
+    </main>
+</div>
+</body>
+</html>

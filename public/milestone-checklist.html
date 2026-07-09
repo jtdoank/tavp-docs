@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TAVP — Milestone Checklist v2</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg:#0c0c14;--bg2:#11111b;--card:#171722;--card-h:#1e1e2e;
+            --amber:#e8a849;--blue:#6c9eff;--green:#5be0a0;--purple:#c78bff;
+            --pink:#ff6bac;--red:#ff6b6b;--cyan:#5bc4e0;--orange:#ffb86c;
+            --t1:#e8e6e1;--t2:#a8a5a0;--t3:#6b6870;--line:#22222e;
+        }
+        *{margin:0;padding:0;box-sizing:border-box}
+        html{scroll-behavior:smooth}
+        body{font-family:'Space Grotesk',sans-serif;background:var(--bg);color:var(--t1);line-height:1.7;font-size:14px}
+
+        .nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(12,12,20,.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--line)}
+        .nav-i{max-width:1200px;margin:0 auto;padding:0 20px;display:flex;align-items:center;height:50px;gap:16px}
+        .nav-b{font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:600;color:var(--amber);white-space:nowrap}
+        .nav-b s{color:var(--t3);font-weight:400;font-size:11px;text-decoration:none;margin-left:6px}
+        .nav-l{display:flex;gap:1px;overflow-x:auto;flex:1;justify-content:flex-end}
+        .nav-l a{color:var(--t3);text-decoration:none;font-size:10px;font-weight:600;padding:4px 8px;border-radius:4px;transition:.15s;white-space:nowrap}
+        .nav-l a:hover{color:var(--t1);background:rgba(232,168,73,.06)}
+        body{padding-top:50px}
+
+        .container{max-width:1200px;margin:0 auto;padding:0 20px}
+
+        /* HEADER */
+        .hdr{padding:48px 0 32px;text-align:center;background:linear-gradient(180deg,rgba(232,168,73,.03),transparent);border-bottom:1px solid var(--line)}
+        .hdr h1{font-size:32px;font-weight:700;letter-spacing:-.5px;margin-bottom:6px}
+        .hdr h1 em{font-style:normal;color:var(--amber)}
+        .hdr .sub{color:var(--t2);font-size:15px;max-width:600px;margin:0 auto 20px}
+        .stats{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:16px}
+        .st{padding:12px 18px;background:var(--card);border:1px solid var(--line);border-radius:10px;text-align:center;min-width:110px}
+        .st .v{font-size:24px;font-weight:700;font-family:'JetBrains Mono',monospace}
+        .st .l{font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:.5px}
+        .prog-bar{height:10px;background:rgba(255,255,255,.03);border-radius:5px;overflow:hidden;max-width:600px;margin:0 auto}
+        .prog-fill{height:100%;border-radius:5px;transition:width .5s;background:linear-gradient(90deg,var(--green),var(--cyan))}
+
+        /* MILESTONE */
+        section{padding:48px 0;border-bottom:1px solid var(--line)}
+        .ms-hdr{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:18px 22px;background:var(--card);border:1px solid var(--line);border-radius:12px;margin-bottom:16px}
+        .ms-ver{font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:700;padding:5px 12px;border-radius:7px;white-space:nowrap}
+        .ms-hdr h3{font-size:20px;font-weight:700}
+        .ms-hdr .sub{color:var(--t3);font-size:13px}
+        .ms-pct{font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:700;margin-left:auto}
+        .ms-bar{height:6px;background:rgba(255,255,255,.03);border-radius:3px;overflow:hidden;margin-bottom:20px}
+        .ms-bar-f{height:100%;border-radius:3px;transition:width .5s}
+
+        /* WORKSTREAM */
+        .ws{margin-bottom:16px}
+        .ws-h{display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--card);border:1px solid var(--line);border-radius:10px;cursor:pointer;user-select:none;transition:.15s}
+        .ws-h:hover{border-color:#333}
+        .ws-ico{width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
+        .ws-h h4{font-size:14px;font-weight:700;flex:1}
+        .ws-cnt{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--t3);white-space:nowrap}
+        .ws-arrow{color:var(--t3);font-size:12px;transition:.2s;margin-left:6px}
+        .ws-body{max-height:5000px;overflow:hidden;transition:max-height .35s ease}
+        .ws-body.collapsed{max-height:0}
+
+        /* TASK */
+        .tasks{display:flex;flex-direction:column;gap:1px;margin-top:8px;padding-left:4px}
+        .task{display:flex;align-items:flex-start;gap:8px;padding:8px 10px;border-radius:6px;transition:.1s;font-size:13px}
+        .task:hover{background:rgba(255,255,255,.015)}
+        .task input[type=checkbox]{appearance:none;-webkit-appearance:none;width:16px;height:16px;border:2px solid #2a2a38;border-radius:4px;flex-shrink:0;cursor:pointer;transition:.15s;margin-top:2px;display:flex;align-items:center;justify-content:center}
+        .task input[type=checkbox]:checked{background:var(--green);border-color:var(--green)}
+        .task input[type=checkbox]:checked::after{content:'✓';font-size:10px;font-weight:800;color:var(--bg)}
+        .task.done .tt{color:var(--t3);text-decoration:line-through}
+        .tt{color:var(--t2);flex:1;line-height:1.6}
+        .tt strong{color:var(--t1);font-weight:600}
+        .tt code{font-family:'JetBrains Mono',monospace;font-size:11px;padding:1px 5px;background:rgba(108,158,255,.07);border-radius:3px;color:var(--blue)}
+        .tid{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;padding:2px 7px;border-radius:3px;flex-shrink:0;white-space:nowrap}
+        .dep{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--t3);padding:2px 6px;background:rgba(107,104,112,.1);border-radius:3px;white-space:nowrap;flex-shrink:0}
+
+        .bg{background:rgba(91,224,160,.08);color:var(--green)}
+        .bb{background:rgba(108,158,255,.08);color:var(--blue)}
+        .bp{background:rgba(199,139,255,.08);color:var(--purple)}
+        .bo{background:rgba(255,184,108,.08);color:var(--orange)}
+        .br{background:rgba(255,107,107,.08);color:var(--red)}
+        .bc{background:rgba(91,196,224,.08);color:var(--cyan)}
+        .bk{background:rgba(255,107,172,.08);color:var(--pink)}
+        .bm{background:rgba(107,104,112,.08);color:var(--t3)}
+        .ba{background:rgba(232,168,73,.08);color:var(--amber)}
+
+        /* NOTE */
+        .note{padding:14px 18px;background:var(--card);border:1px solid var(--line);border-radius:8px;margin:12px 0;font-size:13px;color:var(--t2)}
+        .note strong{color:var(--amber)}
+
+        footer{padding:40px 0;text-align:center;border-top:1px solid var(--line)}
+        footer p{font-size:12px;color:var(--t3)}
+    </style>
+</head>
+<body>
+
+<nav class="nav">
+    <div class="nav-i">
+        <div class="nav-b">TAVP <s>Milestone Checklist v2</s></div>
+        <div class="nav-l">
+            <a href="#ms010">0.1.0</a>
+            <a href="#ms020">0.2.0</a>
+            <a href="#ms030">0.3.0</a>
+            <a href="#ms040">0.4.0</a>
+            <a href="#ms050">0.5.0</a>
+            <a href="#ms060">0.6.0</a>
+            <a href="#ms070">0.7.0</a>
+            <a href="#ms080">0.8.0</a>
+            <a href="#ms090">0.9.0</a>
+            <a href="#ms100">1.0.0</a>
+        </div>
+    </div>
+</nav>
+
+<div class="hdr">
+    <div class="container">
+        <h1><em>TAVP</em> Milestone Checklist</h1>
+        <p class="sub">v2 — Updated with all decisions from the Bible. Every task. Every milestone. Track progress. Ship with confidence.</p>
+        <div class="stats">
+            <div class="st"><div class="v" style="color:var(--green)" id="dDone">0</div><div class="l">Done</div></div>
+            <div class="st"><div class="v" style="color:var(--t2)" id="dTotal">0</div><div class="l">Total</div></div>
+            <div class="st"><div class="v" style="color:var(--blue)" id="dPct">0%</div><div class="l">Complete</div></div>
+            <div class="st"><div class="v" style="color:var(--purple)">10</div><div class="l">Milestones</div></div>
+        </div>
+        <div class="prog-bar"><div class="prog-fill" id="gProg" style="width:0%"></div></div>
+    </div>
+</div>
+
+<!-- ════════════════════════════════════════════ -->
+<!-- 0.1.0 GENESIS -->
+<!-- ════════════════════════════════════════════ -->
+<section id="ms010"><div class="container">
+
+<div class="ms-hdr">
+    <div class="ms-ver" style="background:rgba(91,224,160,.1);color:var(--green)">0.1.0</div>
+    <div><h3>Genesis</h3><div class="sub">Core + CLI + Env Adapters + Auto-installer + Basic TAVPid + Deploy + Git abstraction</div></div>
+    <div class="ms-pct" style="color:var(--green)" data-ms="010">0%</div>
+</div>
+<div class="ms-bar"><div class="ms-bar-f" data-prog="010" style="width:0%;background:var(--green)"></div></div>
+
+<!-- PROJECT SETUP -->
+<div class="ws" data-ws="010-setup">
+<div class="ws-h" onclick="tw(this)"><div class="ws-ico" style="background:rgba(91,224,160,.08);color:var(--green)">📁</div><h4>Project Setup &amp; Infrastructure</h4><span class="ws-cnt" data-wc="010-setup">0/14</span><span class="ws-arrow">▼</span></div>
+<div class="ws-body"><div class="tasks">
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid bg">SET-001</span><span class="tt">Create GitHub organization <code>tavp</code></span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid bg">SET-002</span><span class="tt">Create repo <code>tavp/core</code> — main framework repo</span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid bg">SET-003</span><span class="tt">Create repo <code>tavp/starter</code> — project scaffolding template</span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid bg">SET-004</span><span class="tt">Setup <code>composer.json</code> — PSR-4 autoload, Phalcon 5.x dependency, PHP 8.1+</span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid bg">SET-005</span><span class="tt">Setup <code>package.json</code> — Tailwind CSS 3.x, Alpine.js 3.x, Vite 5.x</span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid bg">SET-006</span><span class="tt">Create <code>.env.example</code> with all config keys documented</span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid bg">SET-007</span><span class="tt">Setup PHPUnit 10.x with <code>phpunit.xml</code>, test directories (Unit, Feature, Integration)</span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid bg">SET-008</span><span class="tt">Setup PHP-CS-Fixer with <code>.php-cs-fixer.php</code></span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid bg">SET-009</span><span class="tt">Setup PHPStan at level 6 (increase to 8 by 0.4.0)</span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid bg">SET-010</span><span class="tt">Create <code>.gitignore</code> (vendor, node_modules, storage, .env, build, .tavp.json local overrides)</span></label>
+<label class="task"><input type="checkbox" data-ms="010"><span class="tid bg">SET-011</span><span class="tt">Create GitHub Actions CI: tests + PHPStan + CS-Fixer on push</span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid bg">SET-012</span><span class="tt">Create <code>README.md</code> with project overview, install instructions, badges</span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid bg">SET-013</span><span class="tt">Create canonical folder structure: app/, core/, modules/, resources/, config/, routes/, database/, public/, storage/, tests/</span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid bg">SET-014</span><span class="tt">Create <code>.tavp.json</code> schema (name, version, template, env, php, phalcon, modules, created)</span></label>
+</div></div></div>
+
+<!-- PHALCON BOOTSTRAP -->
+<div class="ws" data-ws="010-boot">
+<div class="ws-h" onclick="tw(this)"><div class="ws-ico" style="background:rgba(255,184,108,.08);color:var(--orange)">🔧</div><h4>Phalcon Bootstrap &amp; Service Container</h4><span class="ws-cnt" data-wc="010-boot">0/10</span><span class="ws-arrow">▼</span></div>
+<div class="ws-body"><div class="tasks">
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid bo">BOOT-001</span><span class="tt">Create <code>Application</code> class — main entry point, boots Phalcon</span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid bo">BOOT-002</span><span class="tt">Create <code>Kernel</code> class — request lifecycle (boot → handle → respond)</span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid bo">BOOT-003</span><span class="tt">Setup DI container — register core services (db, session, cookie, flash, view, url, request, response)</span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid bo">BOOT-004</span><span class="tt">Create <code>Config</code> loader — load PHP config files from config/</span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid bo">BOOT-005</span><span class="tt">Create <code>.env</code> loader — parse .env, expose via <code>env()</code> helper</span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid bo">BOOT-006</span><span class="tt">Create <code>public/index.php</code> entry point</span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid bo">BOOT-007</span><span class="tt">Create <code>public/.htaccess</code> — Apache rewrite to index.php</span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid bo">BOOT-008</span><span class="tt">Setup environment detection (APP_ENV: local/staging/production)</span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid bo">BOOT-009</span><span class="tt">Create storage/ directory structure with write permissions check</span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid bo">BOOT-010</span><span class="tt">Create config files: app.php, database.php, session.php, cache.php</span></label>
+</div></div></div>
+
+<!-- ROUTING -->
+<div class="ws" data-ws="010-route">
+<div class="ws-h" onclick="tw(this)"><div class="ws-ico" style="background:rgba(108,158,255,.08);color:var(--blue)">🗺️</div><h4>Routing</h4><span class="ws-cnt" data-wc="010-route">0/9</span><span class="ws-arrow">▼</span></div>
+<div class="ws-body"><div class="tasks">
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid bb">RT-001</span><span class="tt">Create <code>Router</code> — <code>Route::get()</code>, <code>post()</code>, <code>put()</code>, <code>delete()</code>, <code>patch()</code></span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid bb">RT-002</span><span class="tt">Route groups: <code>Route::prefix('admin')->group(fn)</code></span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid bb">RT-003</span><span class="tt">Route middleware: <code>Route::middleware(['auth'])->group(fn)</code></span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid bb">RT-004</span><span class="tt">Controller-based: <code>Route::get('/posts', [PostController::class, 'index'])</code></span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid bb">RT-005</span><span class="tt">Resource routes: <code>Route::resource('posts', PostController::class)</code></span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid bb">RT-006</span><span class="tt">Named routes: <code>->name('home')</code></span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid bb">RT-007</span><span class="tt">Route loading: auto-load routes/web.php, routes/admin.php, routes/api/*.php</span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid bb">RT-008</span><span class="tt">Create routes/web.php with default routes (home, about, contact)</span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid bb">RT-009</span><span class="tt">Unit tests: all routing methods, groups, named routes, resource routes</span></label>
+</div></div></div>
+
+<!-- CONTROLLER -->
+<div class="ws" data-ws="010-ctrl">
+<div class="ws-h" onclick="tw(this)"><div class="ws-ico" style="background:rgba(199,139,255,.08);color:var(--purple)">🎮</div><h4>Controller System</h4><span class="ws-cnt" data-wc="010-ctrl">0/7</span><span class="ws-arrow">▼</span></div>
+<div class="ws-body"><div class="tasks">
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid bp">CTL-001</span><span class="tt">Create <code>BaseController</code> — auto-inject DI, <code>view()</code>, <code>json()</code>, <code>redirect()</code>, <code>back()</code></span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid bp">CTL-002</span><span class="tt">Create <code>Request</code> wrapper — <code>input()</code>, <code>only()</code>, <code>except()</code>, <code>has()</code>, <code>validate()</code></span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid bp">CTL-003</span><span class="tt">Create <code>Response</code> wrapper — <code>json()</code>, <code>view()</code>, <code>redirect()</code>, status codes</span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid bp">CTL-004</span><span class="tt">Auto-resolution: DI auto-resolves controller constructor dependencies</span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid bp">CTL-005</span><span class="tt">Create <code>ApiController</code> base — default JSON responses, API error format</span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid bp">CTL-006</span><span class="tt">Create example <code>PageController</code> — home, about, contact</span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid bp">CTL-007</span><span class="tt">Unit tests: controller resolution, request helpers, response formats</span></label>
+</div></div></div>
+
+<!-- VOLT -->
+<div class="ws" data-ws="010-volt">
+<div class="ws-h" onclick="tw(this)"><div class="ws-ico" style="background:rgba(108,158,255,.08);color:var(--blue)">📄</div><h4>Volt Template Engine</h4><span class="ws-cnt" data-wc="010-volt">0/10</span><span class="ws-arrow">▼</span></div>
+<div class="ws-body"><div class="tasks">
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid bb">VLT-001</span><span class="tt">Setup Volt compiler — register in DI, compiled path (storage/compiled/)</span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid bb">VLT-002</span><span class="tt">Template inheritance: <code>{% extends %}</code>, <code>{% block %}</code></span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid bb">VLT-003</span><span class="tt">Partials: <code>{% partial "name" with { key: val } %}</code></span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid bb">VLT-004</span><span class="tt">Component macros: reusable UI macros</span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid bb">VLT-005</span><span class="tt">CMS helpers: <code>cms_block('key')</code>, <code>cms_collection('key')</code></span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid bb">VLT-006</span><span class="tt">Auto-escaping: all <code>{{ output }}</code> HTML-escaped by default</span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid bb">VLT-007</span><span class="tt">Create base layout: layouts/main.volt (HTML5, Tailwind, Alpine.js, block content)</span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid bb">VLT-008</span><span class="tt">Create error layouts: errors/404.volt, errors/500.volt</span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid bb">VLT-009</span><span class="tt">Volt caching: configurable cache lifetime, manual clear</span></label>
+<label class="task"><input type="checkbox" data-ms="010"><span class="tid bb">VLT-010</span><span class="tt">Tests: rendering, inheritance, partials, macros, escaping</span></label>
+</div></div></div>
+
+<!-- ORM -->
+<div class="ws" data-ws="010-orm">
+<div class="ws-h" onclick="tw(this)"><div class="ws-ico" style="background:rgba(91,196,224,.08);color:var(--cyan)">🗃️</div><h4>ORM Wrapper</h4><span class="ws-cnt" data-wc="010-orm">0/10</span><span class="ws-arrow">▼</span></div>
+<div class="ws-body"><div class="tasks">
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid bc">ORM-001</span><span class="tt">Create <code>Model</code> base — <code>$fillable</code>, <code>$casts</code>, <code>$table</code>, <code>$primaryKey</code></span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid bc">ORM-002</span><span class="tt">Query builder: <code>Model::query()->where()->orderBy()->paginate()</code></span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid bc">ORM-003</span><span class="tt">Relationships: <code>belongsTo()</code>, <code>hasMany()</code>, <code>belongsToMany()</code>, <code>hasOne()</code></span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid bc">ORM-004</span><span class="tt">Mass assignment protection via $fillable</span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid bc">ORM-005</span><span class="tt">Attribute casting: datetime, boolean, json</span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid bc">ORM-006</span><span class="tt">Timestamps: auto-manage created_at, updated_at, soft delete</span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid bc">ORM-007</span><span class="tt">Pagination: <code>->paginate(15)</code> with links, current page, total</span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid bc">ORM-008</span><span class="tt">Scopes: reusable query constraints</span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid bc">ORM-009</span><span class="tt">Database connection: register in DI, support MySQL + PostgreSQL + SQLite</span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid bc">ORM-010</span><span class="tt">Unit tests: CRUD, relationships, casting, pagination, scopes</span></label>
+</div></div></div>
+
+<!-- MIGRATION -->
+<div class="ws" data-ws="010-mig">
+<div class="ws-h" onclick="tw(this)"><div class="ws-ico" style="background:rgba(232,168,73,.08);color:var(--amber)">📦</div><h4>Migration System</h4><span class="ws-cnt" data-wc="010-mig">0/8</span><span class="ws-arrow">▼</span></div>
+<div class="ws-body"><div class="tasks">
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid ba">MIG-001</span><span class="tt">Create <code>Migration</code> base — <code>up()</code>, <code>down()</code>, schema builder</span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid ba">MIG-002</span><span class="tt">Column types: string, text, integer, bigInteger, boolean, date, datetime, timestamp, decimal, json, enum</span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid ba">MIG-003</span><span class="tt">Column modifiers: nullable, default, unique, index, unsigned</span></label>
+<label class="task"><input type="checkbox" data-ms="010"><span class="tid ba">MIG-004</span><span class="tt">Foreign keys with cascade options</span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid ba">MIG-005</span><span class="tt">Migration tracking table</span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid ba">MIG-006</span><span class="tt">CLI: <code>tavp migrate</code>, <code>migrate:rollback</code>, <code>migrate:status</code>, <code>migrate:fresh</code></span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid ba">MIG-007</span><span class="tt">Seeder system: Seeder base, <code>tavp db:seed</code></span></label>
+<label class="task"><input type="checkbox" data-ms="010"><span class="tid ba">MIG-008</span><span class="tt">Tests: migration up/down, rollback, fresh, column types, foreign keys</span></label>
+</div></div></div>
+
+<!-- MIDDLEWARE + VALIDATION + EXCEPTION -->
+<div class="ws" data-ws="010-mw">
+<div class="ws-h" onclick="tw(this)"><div class="ws-ico" style="background:rgba(255,107,107,.08);color:var(--red)">🛡️</div><h4>Middleware, Validation &amp; Exception Handling</h4><span class="ws-cnt" data-wc="010-mw">0/17</span><span class="ws-arrow">▼</span></div>
+<div class="ws-body"><div class="tasks">
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid br">MW-001</span><span class="tt">Create <code>Middleware</code> interface — <code>handle(request, next)</code></span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid br">MW-002</span><span class="tt">Middleware pipeline: before/after, route-level, group-level, global</span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid br">MW-003</span><span class="tt">Create <code>CsrfMiddleware</code></span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid br">MW-004</span><span class="tt">Create <code>SessionMiddleware</code></span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid br">MW-005</span><span class="tt">Create <code>Authenticate</code> middleware</span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid br">MW-006</span><span class="tt">Create <code>RedirectIfAuthenticated</code> middleware</span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid br">MW-007</span><span class="tt">Create <code>ThrottleMiddleware</code> — per-IP rate limiting</span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid br">MW-008</span><span class="tt">Create <code>FormRequest</code> base — rules(), messages(), auto-validation</span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid br">MW-009</span><span class="tt">Validation rules: required, string, email, max, min, numeric, in, unique, confirmed, date, boolean</span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid br">MW-010</span><span class="tt">Create <code>ExceptionHandler</code> — catch all, render HTML/JSON</span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid br">MW-011</span><span class="tt">API error format: <code>{ success:false, error:{ code, message, errors } }</code></span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid br">MW-012</span><span class="tt">Custom exceptions: NotFoundException(401), Unauthorized(401), Forbidden(403), Validation(422)</span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid br">MW-013</span><span class="tt">Error pages: 404, 403, 419, 429, 500, 503</span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid br">MW-014</span><span class="tt">Helpers: asset(), url(), route(), redirect(), csrf_token(), csrf_field(), old(), session(), flash()</span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid br">MW-015</span><span class="tt">Flash messages: <code>flash('success', 'msg')</code>, display in Volt</span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid br">MW-016</span><span class="tt">Maintenance mode: <code>tavp down</code> / <code>tavp up</code>, 503 page</span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid br">MW-017</span><span class="tt">Tests: CSRF, session, auth guard, validation, rate limiting, exceptions</span></label>
+</div></div></div>
+
+<!-- CLI -->
+<div class="ws" data-ws="010-cli">
+<div class="ws-h" onclick="tw(this)"><div class="ws-ico" style="background:rgba(91,224,160,.08);color:var(--green)">⌨️</div><h4>CLI (tavp command)</h4><span class="ws-cnt" data-wc="010-cli">0/14</span><span class="ws-arrow">▼</span></div>
+<div class="ws-body"><div class="tasks">
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid bg">CLI-001</span><span class="tt">Create <code>bin/tavp</code> entry point — Symfony Console bootstrap</span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid bg">CLI-002</span><span class="tt">Create <code>tavp new</code> — interactive wizard (template, env, modules, database)</span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid bg">CLI-003</span><span class="tt">Create <code>tavp serve</code> — auto-detect environment, start dev server</span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid bg">CLI-004</span><span class="tt">Create <code>tavp make:model</code></span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid bg">CLI-005</span><span class="tt">Create <code>tavp make:controller</code> (web/api/resource)</span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid bg">CLI-006</span><span class="tt">Create <code>tavp make:migration</code></span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid bg">CLI-007</span><span class="tt">Create <code>tavp make:view</code></span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid bg">CLI-008</span><span class="tt">Create <code>tavp migrate</code>, <code>migrate:rollback</code>, <code>db:seed</code></span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid bg">CLI-009</span><span class="tt">Create <code>tavp key:generate</code> — APP_KEY + JWT_SECRET</span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid bg">CLI-010</span><span class="tt">Create <code>tavp env:switch [env]</code> — switch environment adapter</span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid bg">CLI-011</span><span class="tt">Create <code>tavp env:add [env]</code> — add additional adapter</span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid bg">CLI-012</span><span class="tt">Create <code>tavp env:list</code> — show configured adapters</span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid bg">CLI-013</span><span class="tt">Create <code>tavp down</code> / <code>tavp up</code> — maintenance mode</span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid bg">CLI-014</span><span class="tt">Tests: all CLI commands produce expected output and side effects</span></label>
+</div></div></div>
+
+<!-- ENVIRONMENT ADAPTERS -->
+<div class="ws" data-ws="010-env">
+<div class="ws-h" onclick="tw(this)"><div class="ws-ico" style="background:rgba(199,139,255,.08);color:var(--purple)">🌐</div><h4>Environment Adapters (NEW — from Bible)</h4><span class="ws-cnt" data-wc="010-env">0/16</span><span class="ws-arrow">▼</span></div>
+<div class="ws-body"><div class="tasks">
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid bp">ENV-001</span><span class="tt"><strong>Docker adapter:</strong> Create <code>docker-compose.yml</code> template (PHP 8.3 + Phalcon + MySQL 8 + Redis + Node.js)</span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid bp">ENV-002</span><span class="tt"><strong>Docker adapter:</strong> Create <code>Dockerfile</code> with Phalcon pre-installed</span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid bp">ENV-003</span><span class="tt"><strong>Docker adapter:</strong> Create docker/php.ini + docker/nginx.conf</span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid bp">ENV-004</span><span class="tt"><strong>Lando adapter:</strong> Create <code>.lando.yml</code> template with Phalcon build-as-root</span></label>
+<label class="task"><input type="checkbox" data-ms="010"><span class="tid bp">ENV-005</span><span class="tt"><strong>Laragon adapter:</strong> Create <code>scripts/setup-laragon.bat</code> — auto-download php_phalcon.dll, copy to ext, edit php.ini</span></label>
+<label class="task"><input type="checkbox" data-ms="010"><span class="tid bp">ENV-006</span><span class="tt"><strong>XAMPP adapter:</strong> Create <code>scripts/setup-xampp.bat</code> — auto-download DLL, configure php.ini</span></label>
+<label class="task"><input type="checkbox" data-ms="010"><span class="tid bp">ENV-007</span><span class="tt"><strong>WAMP adapter:</strong> Create <code>scripts/setup-wamp.bat</code></span></label>
+<label class="task"><input type="checkbox" data-ms="010"><span class="tid bp">ENV-008</span><span class="tt"><strong>DDEV adapter:</strong> Create <code>.ddev/config.yaml</code> template</span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid bp">ENV-009</span><span class="tt"><strong>DevContainer adapter:</strong> Create <code>.devcontainer/devcontainer.json</code></span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid bp">ENV-010</span><span class="tt"><strong>Native adapter:</strong> Detect existing PHP + Phalcon, use directly</span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid bp">ENV-011</span><span class="tt">Auto-detection logic: detect installed tools, score, recommend, ask developer</span></label>
+<label class="task"><input type="checkbox" data-ms="010"><span class="tid bp">ENV-012</span><span class="tt">Clean generation: generate ONLY chosen adapter files at creation (no unused files)</span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid bp">ENV-013</span><span class="tt">.tavp.json: write env choice + project metadata on creation</span></label>
+<label class="task"><input type="checkbox" data-ms="010"><span class="tid bp">ENV-014</span><span class="tt">README auto-update: generate environment-specific instructions in README.md</span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid bp">ENV-015</span><span class="tt">Phalcon DLL/SO auto-download: fetch correct binary for Windows (DLL) from packages.tavp.dev</span></label>
+<label class="task"><input type="checkbox" data-ms="010"><span class="tid bp">ENV-016</span><span class="tt">Tests: each adapter generates correct files, <code>tavp serve</code> works with each</span></label>
+</div></div></div>
+
+<!-- AUTO INSTALLER + DEPLOY -->
+<div class="ws" data-ws="010-deploy">
+<div class="ws-h" onclick="tw(this)"><div class="ws-ico" style="background:rgba(255,107,107,.08);color:var(--red)">🚀</div><h4>Production Installer &amp; Deploy (NEW — from Bible)</h4><span class="ws-cnt" data-wc="010-deploy">0/14</span><span class="ws-arrow">▼</span></div>
+<div class="ws-body"><div class="tasks">
+<label class="task"><input type="checkbox" data-ms="010"><span class="tid br">DEP-001</span><span class="tt">Integrate existing HestiaCP script as foundation for TAVP server installer</span></label>
+<label class="task"><input type="checkbox" data-ms="010"><span class="tid br">DEP-002</span><span class="tt">Refactor script: add TAVP-specific post-install steps (web server config, database setup)</span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid br">DEP-003</span><span class="tt">Create <code>tavp deploy</code> command — interactive deployment wizard</span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid br">DEP-004</span><span class="tt"><strong>HestiaCP adapter:</strong> SSH + auto-detect HestiaCP + install Phalcon + setup nginx per domain</span></label>
+<label class="task"><input type="checkbox" data-ms="010"><span class="tid br">DEP-005</span><span class="tt"><strong>HestiaCP adapter:</strong> Create database via HestiaCP API/CLI, configure .env</span></label>
+<label class="task"><input type="checkbox" data-ms="010"><span class="tid br">DEP-006</span><span class="tt"><strong>cPanel/WHM adapter:</strong> SSH + auto-detect cPanel + install via WHM terminal</span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid br">DEP-007</span><span class="tt"><strong>Docker deploy adapter:</strong> SSH + docker compose up -d on server</span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid br">DEP-008</span><span class="tt"><strong>Generic VPS adapter:</strong> Universal install script (no panel detection)</span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid br">DEP-009</span><span class="tt">Post-deploy: run migrations, seed, optimize, setup cron</span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid br">DEP-010</span><span class="tt">Post-deploy: verify website accessible, health check endpoint</span></label>
+<label class="task"><input type="checkbox" data-ms="010"><span class="tid br">DEP-011</span><span class="tt">Deploy config: <code>.tavp-deploy.yml</code> — save server details for repeat deploys</span></label>
+<label class="task"><input type="checkbox" data-ms="010"><span class="tid br">DEP-012</span><span class="tt"><code>tavp deploy --redeploy</code> — quick redeploy using saved config</span></label>
+<label class="task"><input type="checkbox" data-ms="010"><span class="tid br">DEP-013</span><span class="tt">Publish packages.tavp.dev: pre-compiled Phalcon .deb for Ubuntu 22.04/24.04 + Debian 12</span></label>
+<label class="task"><input type="checkbox" data-ms="010"><span class="tid br">DEP-014</span><span class="tt">Tests: deploy flow on clean HestiaCP VPS, verify all 8 steps</span></label>
+</div></div></div>
+
+<!-- GIT ABSTRACTION -->
+<div class="ws" data-ws="010-git">
+<div class="ws-h" onclick="tw(this)"><div class="ws-ico" style="background:rgba(91,196,224,.08);color:var(--cyan)">🔄</div><h4>Git Abstraction (NEW — from Bible)</h4><span class="ws-cnt" data-wc="010-git">0/6</span><span class="ws-arrow">▼</span></div>
+<div class="ws-body"><div class="tasks">
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid bc">GIT-001</span><span class="tt">Create <code>tavp push</code> — abstracted git add + commit + push (asks for commit message)</span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid bc">GIT-002</span><span class="tt">Create <code>tavp pull</code> — abstracted git pull + composer install + migrate</span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid bc">GIT-003</span><span class="tt">Create <code>tavp init</code> — initialize git repo + .gitignore + first commit</span></label>
+<label class="task"><input type="checkbox" data-ms="010"><span class="tid bc">GIT-004</span><span class="tt">Auto-detect: Git installed? If not, show friendly install instructions</span></label>
+<label class="task"><input type="checkbox" data-ms="010"><span class="tid bc">GIT-005</span><span class="tt">Remote setup: <code>tavp remote:add [github-url]</code> — configure remote</span></label>
+<label class="task"><input type="checkbox" data-ms="010"><span class="tid bc">GIT-006</span><span class="tt">Tests: init, push, pull commands work correctly</span></label>
+</div></div></div>
+
+<!-- TAVPID BASIC -->
+<div class="ws" data-ws="010-auth">
+<div class="ws-h" onclick="tw(this)"><div class="ws-ico" style="background:rgba(91,196,224,.08);color:var(--cyan)">🪪</div><h4>TAVPid — Basic Auth (OTP + Session + JWT)</h4><span class="ws-cnt" data-wc="010-auth">0/14</span><span class="ws-arrow">▼</span></div>
+<div class="ws-body"><div class="tasks">
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid bc">AUTH-001</span><span class="tt">Create <code>users</code> migration (id, name, email, phone, email_verified_at)</span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid bc">AUTH-002</span><span class="tt">Create <code>otp_codes</code> migration (id, identifier, code_hash, channel, expires_at, attempts)</span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid bc">AUTH-003</span><span class="tt">Create <code>user_sessions</code> migration (id, user_id, token, device, ip, last_active)</span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid bc">AUTH-004</span><span class="tt">Create <code>OTPService</code>: 6-digit, SHA-256, 5-min TTL, max 5 attempts</span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid bc">AUTH-005</span><span class="tt">Create <code>TokenService</code>: JWT encode/decode, access (15 min) + refresh (30 day)</span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid bc">AUTH-006</span><span class="tt">Create <code>AuthService</code>: login(OTP), register, logout, current user</span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid bc">AUTH-007</span><span class="tt">Create <code>AuthController</code> (Web): login, send OTP, verify OTP, logout, register</span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid bc">AUTH-008</span><span class="tt">Create <code>AuthApiController</code>: POST /api/v1/auth/send-otp, verify-otp, refresh</span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid bc">AUTH-009</span><span class="tt">Create auth views: login.volt, otp.volt, register.volt</span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid bc">AUTH-010</span><span class="tt">Alpine.js OTP form: auto-advance, countdown, loading states</span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid bc">AUTH-011</span><span class="tt">Rate limiting: OTP 5/hour, login 10/min per IP</span></label>
+<label class="task"><input type="checkbox" data-ms="010"><span class="tid bc">AUTH-012</span><span class="tt">Admin seeder: default admin user for first login</span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid bc">AUTH-013</span><span class="tt">Config: config/auth.php (OTP channels, expiry, JWT secret, TTLs)</span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid bc">AUTH-014</span><span class="tt">Tests: OTP generation, hashing, verification, expiry, rate limit, JWT, login flow</span></label>
+</div></div></div>
+
+<!-- FRONTEND -->
+<div class="ws" data-ws="010-fe">
+<div class="ws-h" onclick="tw(this)"><div class="ws-ico" style="background:rgba(91,196,224,.08);color:#06b6d4">🎨</div><h4>Frontend: Tailwind + Alpine.js + Vite</h4><span class="ws-cnt" data-wc="010-fe">0/8</span><span class="ws-arrow">▼</span></div>
+<div class="ws-body"><div class="tasks">
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid bc">FE-001</span><span class="tt">Setup <code>tailwind.config.js</code> — content paths, theme, plugins</span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid bc">FE-002</span><span class="tt">Create <code>resources/assets/css/app.css</code> — Tailwind directives</span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid bc">FE-003</span><span class="tt">Setup <code>vite.config.js</code> — Tailwind + Alpine + HMR</span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid bc">FE-004</span><span class="tt">Create <code>resources/assets/js/app.js</code> — Alpine.start()</span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid bc">FE-005</span><span class="tt">Vite integration in Volt: <code>{{ vite(['css/app.css','js/app.js']) }}</code></span></label>
+<label class="task"><input type="checkbox" data-ms="010"><span class="tid bc">FE-006</span><span class="tt">Hot reload: Vite dev server + tavp serve proxy for HMR</span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid bc">FE-007</span><span class="tt">Production build: <code>npm run build</code> → public/build/ with hashed filenames</span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid bc">FE-008</span><span class="tt">Create base layout: responsive navbar, footer, mobile menu (Alpine.js)</span></label>
+</div></div></div>
+
+<!-- TIER TEMPLATES -->
+<div class="ws" data-ws="010-tpl">
+<div class="ws-h" onclick="tw(this)"><div class="ws-ico" style="background:rgba(199,139,255,.08);color:var(--purple)">📋</div><h4>Tier Templates (Website / App / Enterprise)</h4><span class="ws-cnt" data-wc="010-tpl">0/6</span><span class="ws-arrow">▼</span></div>
+<div class="ws-body"><div class="tasks">
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid bp">TPL-001</span><span class="tt">Create <strong>Website</strong> template: PageController, basic views, no DB</span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid bp">TPL-002</span><span class="tt">Create <strong>Application</strong> template: Website + TAVPid + TAVPhub skeleton + DB</span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid bp">TPL-003</span><span class="tt">Create <strong>Enterprise</strong> template: Application + API + JWT + Docker + deploy configs</span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid bp">TPL-004</span><span class="tt">Template selection in <code>tavp new</code> wizard: interactive choice</span></label>
+<label class="task done"><input type="checkbox" data-ms="010" checked><span class="tid bp">TPL-005</span><span class="tt">Each template includes: composer.json, package.json, .env.example, README.md</span></label>
+<label class="task"><input type="checkbox" data-ms="010"><span class="tid bp">TPL-006</span><span class="tt">Smoke test: each template installs, migrates, serves without errors</span></label>
+</div></div></div>
+
+<!-- DOCS -->
+<div class="ws" data-ws="010-docs">
+<div class="ws-h" onclick="tw(this)"><div class="ws-ico" style="background:rgba(107,104,112,.08);color:var(--t3)">📖</div><h4>Documentation (0.1.0)</h4><span class="ws-cnt" data-wc="010-docs">0/8</span><span class="ws-arrow">▼</span></div>
+<div class="ws-body"><div class="tasks">
+<label class="task"><input type="checkbox" data-ms="010"><span class="tid bm">DOC-001</span><span class="tt">Setup docs site: docs.tavp.dev (VitePress or Docusaurus)</span></label>
+<label class="task"><input type="checkbox" data-ms="010"><span class="tid bm">DOC-002</span><span class="tt"><strong>Getting Started</strong> — install, create project, first request (&lt;5 min)</span></label>
+<label class="task"><input type="checkbox" data-ms="010"><span class="tid bm">DOC-003</span><span class="tt"><strong>CLI Reference</strong> — every command with examples</span></label>
+<label class="task"><input type="checkbox" data-ms="010"><span class="tid bm">DOC-004</span><span class="tt"><strong>Environment Guide</strong> — how to use Docker, Lando, Laragon, XAMPP with TAVP</span></label>
+<label class="task"><input type="checkbox" data-ms="010"><span class="tid bm">DOC-005</span><span class="tt"><strong>Authentication Guide</strong> — OTP flow, JWT, session</span></label>
+<label class="task"><input type="checkbox" data-ms="010"><span class="tid bm">DOC-006</span><span class="tt"><strong>Deployment Guide</strong> — HestiaCP, Docker, cPanel, generic VPS</span></label>
+<label class="task"><input type="checkbox" data-ms="010"><span class="tid bm">DOC-007</span><span class="tt"><strong>Routing Guide</strong> — all routing methods, groups, middleware</span></label>
+<label class="task"><input type="checkbox" data-ms="010"><span class="tid bm">DOC-008</span><span class="tt"><strong>Configuration Guide</strong> — .env, config files, .tavp.json</span></label>
+</div></div></div>
+
+</div></section>
+
+<!-- ════════════════════════════════════════════ -->
+<!-- 0.2.0 — 1.0.0 CONDENSED -->
+<!-- ════════════════════════════════════════════ -->
+
+<section id="ms020"><div class="container">
+<div class="ms-hdr">
+    <div class="ms-ver" style="background:rgba(108,158,255,.1);color:var(--blue)">0.2.0</div>
+    <div><h3>Tools</h3><div class="sub">CLI expansion, TAVPblocks (15), Events, Mail, Weave, Debug toolbar, Expanded auth</div></div>
+    <div class="ms-pct" style="color:var(--blue)" data-ms="020">0%</div>
+</div>
+<div class="ms-bar"><div class="ms-bar-f" data-prog="020" style="width:0%;background:var(--blue)"></div></div>
+<div class="tasks">
+<label class="task done"><input type="checkbox" data-ms="020" checked><span class="tid bb">CLI-015</span><span class="tt"><code>tavp make:scaffold</code> — full CRUD generation</span></label>
+<label class="task done"><input type="checkbox" data-ms="020" checked><span class="tid bb">CLI-016</span><span class="tt"><code>tavp make:middleware</code>, <code>make:seeder</code>, <code>make:event</code>, <code>make:listener</code></span></label>
+<label class="task done"><input type="checkbox" data-ms="020" checked><span class="tid bb">CLI-017</span><span class="tt"><code>tavp migrate:fresh --seed</code></span></label>
+<label class="task done"><input type="checkbox" data-ms="020" checked><span class="tid bb">CLI-018</span><span class="tt"><code>tavp weave:enable</code> — register Fiber async helpers</span></label>
+<label class="task done"><input type="checkbox" data-ms="020" checked><span class="tid bb">EVT-001</span><span class="tt">EventDispatcher: dispatch(), listen(), auto-discovery</span></label>
+<label class="task done"><input type="checkbox" data-ms="020" checked><span class="tid bb">EVT-002</span><span class="tt">Manual registration: config/events.php</span></label>
+<label class="task done"><input type="checkbox" data-ms="020" checked><span class="tid bb">MAIL-001</span><span class="tt">Mailer abstraction: SMTP, Mailgun, SES, Log driver</span></label>
+<label class="task done"><input type="checkbox" data-ms="020" checked><span class="tid bb">MAIL-002</span><span class="tt">Mailable base class, OtpMail, Volt email templates</span></label>
+<label class="task done"><input type="checkbox" data-ms="020" checked><span class="tid bb">BLK-001</span><span class="tt">TAVPblocks setup: component directory, Volt macros</span></label>
+<label class="task done"><input type="checkbox" data-ms="020" checked><span class="tid bb">BLK-002</span><span class="tt">Components: Button, Input, Select, Textarea, Toggle</span></label>
+<label class="task done"><input type="checkbox" data-ms="020" checked><span class="tid bb">BLK-003</span><span class="tt">Components: Modal, Dropdown, Toast, Card, Badge</span></label>
+<label class="task done"><input type="checkbox" data-ms="020" checked><span class="tid bb">BLK-004</span><span class="tt">Components: Avatar, Datatable, Pagination, Alert, Skeleton, EmptyState</span></label>
+<label class="task done"><input type="checkbox" data-ms="020" checked><span class="tid bb">AUTH-015</span><span class="tt">OTP via SMS + WhatsApp (Twilio), auto channel detection</span></label>
+<label class="task done"><input type="checkbox" data-ms="020" checked><span class="tid bb">AUTH-016</span><span class="tt">RBAC: roles + permissions + middleware guards</span></label>
+<label class="task done"><input type="checkbox" data-ms="020" checked><span class="tid bb">WEAVE-001</span><span class="tt">Async class: Async::all(), Async::race(), Async::sleep()</span></label>
+<label class="task done"><input type="checkbox" data-ms="020" checked><span class="tid bb">WEAVE-002</span><span class="tt">Fiber integration in fetchAll(), parallel DB queries</span></label>
+<label class="task done"><input type="checkbox" data-ms="020" checked><span class="tid bb">DBG-001</span><span class="tt">Debug toolbar: request info, DB queries, timeline, memory</span></label>
+<label class="task done"><input type="checkbox" data-ms="020" checked><span class="tid bb">DBG-002</span><span class="tt">Hot reload: Vite HMR + .volt file watcher</span></label>
+<label class="task done"><input type="checkbox" data-ms="020" checked><span class="tid bb">DOC-009</span><span class="tt">Docs: TAVPblocks Guide, Events, Mail, Weave, RBAC</span></label>
+</div></div></section>
+
+<section id="ms030"><div class="container">
+<div class="ms-hdr">
+    <div class="ms-ver" style="background:rgba(199,139,255,.1);color:var(--purple)">0.3.0</div>
+    <div><h3>Ecosystem</h3><div class="sub">Module system, TAVPhub, TAVPkit, Infrastructure, OAuth, TOTP, Tier upgrade</div></div>
+    <div class="ms-pct" style="color:var(--purple)" data-ms="030">0%</div>
+</div>
+<div class="ms-bar"><div class="ms-bar-f" data-prog="030" style="width:0%;background:var(--purple)"></div></div>
+<div class="note"><strong>Biggest milestone.</strong> Break into sprints: Module System → TAVPhub → TAVPkit → Infrastructure.</div>
+<div class="tasks">
+<label class="task done"><input type="checkbox" data-ms="030" checked><span class="tid bp">MOD-001</span><span class="tt">ModuleRegistry: scan Composer packages type tavpkit-module</span></label>
+<label class="task done"><input type="checkbox" data-ms="030" checked><span class="tid bp">MOD-002</span><span class="tt">ModuleServiceProvider base: register(), boot(), loadRoutes/Migrations/Views</span></label>
+<label class="task done"><input type="checkbox" data-ms="030" checked><span class="tid bp">MOD-003</span><span class="tt">Dependency resolution: topological sort, circular detection</span></label>
+<label class="task done"><input type="checkbox" data-ms="030" checked><span class="tid bp">MOD-004</span><span class="tt">Lifecycle: module:install, module:uninstall, module:enable, module:disable</span></label>
+<label class="task done"><input type="checkbox" data-ms="030" checked><span class="tid bp">MOD-005</span><span class="tt">module.json spec + installed.json tracking + make:module scaffolding</span></label>
+<label class="task done"><input type="checkbox" data-ms="030" checked><span class="tid bp">HUB-001</span><span class="tt">Admin layout: sidebar + topbar + content + responsive mobile</span></label>
+<label class="task done"><input type="checkbox" data-ms="030" checked><span class="tid bp">HUB-002</span><span class="tt">Sidebar nav builder, dashboard page with widgets</span></label>
+<label class="task done"><input type="checkbox" data-ms="030" checked><span class="tid bp">HUB-003</span><span class="tt">Resource base: model, columns, form schema, sidebar nav</span></label>
+<label class="task done"><input type="checkbox" data-ms="030" checked><span class="tid bp">HUB-004</span><span class="tt">Table builder: columns, sortable, searchable, filters, bulk actions</span></label>
+<label class="task done"><input type="checkbox" data-ms="030" checked><span class="tid bp">HUB-005</span><span class="tt">Form builder: field types, validation, file upload</span></label>
+<label class="task done"><input type="checkbox" data-ms="030" checked><span class="tid bp">HUB-006</span><span class="tt">CRUD views: auto-generated index, create, edit, delete</span></label>
+<label class="task done"><input type="checkbox" data-ms="030" checked><span class="tid bp">HUB-007</span><span class="tt"><code>tavp hub:install</code> + <code>tavp hub:make:resource</code></span></label>
+<label class="task done"><input type="checkbox" data-ms="030" checked><span class="tid bp">KIT-001</span><span class="tt"><code>tavp kit:install</code> — teams, API, profile, 2FA, session management</span></label>
+<label class="task done"><input type="checkbox" data-ms="030" checked><span class="tid bp">KIT-002</span><span class="tt"><code>tavp upgrade --to=app</code> / <code>--to=enterprise</code></span></label>
+<label class="task done"><input type="checkbox" data-ms="030" checked><span class="tid bp">INF-001</span><span class="tt">Cache abstraction: Redis, File, APCu, Memcached</span></label>
+<label class="task done"><input type="checkbox" data-ms="030" checked><span class="tid bp">INF-002</span><span class="tt">Queue abstraction: Redis, Database, Job base, tavp queue:work</span></label>
+<label class="task done"><input type="checkbox" data-ms="030" checked><span class="tid bp">INF-003</span><span class="tt">Storage abstraction: Local, S3, MinIO, file upload + thumbnails</span></label>
+<label class="task done"><input type="checkbox" data-ms="030" checked><span class="tid bp">INF-004</span><span class="tt">Scheduled tasks: Kernel::schedule(), tavp schedule:run</span></label>
+<label class="task done"><input type="checkbox" data-ms="030" checked><span class="tid bp">AUTH-017</span><span class="tt">Social OAuth: Google, Apple, GitHub + social_accounts table</span></label>
+<label class="task done"><input type="checkbox" data-ms="030" checked><span class="tid bp">AUTH-018</span><span class="tt">TOTP: QR code, setup flow, recovery codes</span></label>
+<label class="task done"><input type="checkbox" data-ms="030" checked><span class="tid bp">AUTH-019</span><span class="tt">Device tokens: FCM/APNs, push notification service</span></label>
+<label class="task done"><input type="checkbox" data-ms="030" checked><span class="tid bp">DEP-015</span><span class="tt">cPanel adapter: one-click plugin installer via WHM</span></label>
+<label class="task done"><input type="checkbox" data-ms="030" checked><span class="tid bp">DOC-010</span><span class="tt">Docs: Module system, TAVPhub, TAVPkit, Infrastructure guides</span></label>
+</div></div></section>
+
+<section id="ms040"><div class="container">
+<div class="ms-hdr">
+    <div class="ms-ver" style="background:rgba(91,196,224,.1);color:var(--cyan)">0.4.0</div>
+    <div><h3>Polish</h3><div class="sub">TAVPblocks (40+), logging, health, Docker prod, CI/CD, benchmarks, PHPStan L8</div></div>
+    <div class="ms-pct" style="color:var(--cyan)" data-ms="040">0%</div>
+</div>
+<div class="ms-bar"><div class="ms-bar-f" data-prog="040" style="width:0%;background:var(--cyan)"></div></div>
+<div class="tasks">
+<label class="task done"><input type="checkbox" data-ms="040" checked><span class="tid bc">040-001</span><span class="tt">TAVPblocks: expand to 40+ (tabs, accordion, tooltip, breadcrumb, file-upload, rich-editor, date-picker, chart, stat-card, form-group, confirm-dialog, loading-spinner)</span></label>
+<label class="task done"><input type="checkbox" data-ms="040" checked><span class="tid bc">040-002</span><span class="tt">Structured logging: JSON formatter, request ID, File + Stdout + Sentry</span></label>
+<label class="task done"><input type="checkbox" data-ms="040" checked><span class="tid bc">040-003</span><span class="tt">Health checks: /health endpoint (DB, Redis, Queue, Storage)</span></label>
+<label class="task done"><input type="checkbox" data-ms="040" checked><span class="tid bc">040-004</span><span class="tt"><code>tavp optimize</code>: config cache, route cache, view cache, autoloader</span></label>
+<label class="task done"><input type="checkbox" data-ms="040" checked><span class="tid bc">040-005</span><span class="tt">Docker production: Dockerfile (&lt;50MB), docker-compose.prod.yml, nginx</span></label>
+<label class="task done"><input type="checkbox" data-ms="040" checked><span class="tid bc">040-006</span><span class="tt">CI/CD: GitHub Actions templates (test, build, deploy staging/prod)</span></label>
+<label class="task done"><input type="checkbox" data-ms="040" checked><span class="tid bc">040-007</span><span class="tt">k6 load test suite + published reproducible benchmarks</span></label>
+<label class="task done"><input type="checkbox" data-ms="040" checked><span class="tid bc">040-008</span><span class="tt">OpenAPI: auto-generate API docs from controller attributes</span></label>
+<label class="task done"><input type="checkbox" data-ms="040" checked><span class="tid bc">040-009</span><span class="tt">PHPStan level 8: zero errors</span></label>
+<label class="task done"><input type="checkbox" data-ms="040" checked><span class="tid bc">040-010</span><span class="tt">Test coverage: 90%+ Unit + Feature + Integration</span></label>
+</div></div></section>
+
+<section id="ms050"><div class="container">
+<div class="ms-hdr">
+    <div class="ms-ver" style="background:rgba(255,184,108,.1);color:var(--orange)">0.5.0</div>
+    <div><h3>Coil</h3><div class="sub">Swoole runtime, hosting integrations, search, broadcasting, CMS module</div></div>
+    <div class="ms-pct" style="color:var(--orange)" data-ms="050">0%</div>
+</div>
+<div class="ms-bar"><div class="ms-bar-f" data-prog="050" style="width:0%;background:var(--orange)"></div></div>
+<div class="tasks">
+<label class="task done"><input type="checkbox" data-ms="050" checked><span class="tid bo">050-001</span><span class="tt">TAVP Coil: Swoole bootstrap, workerStart Phalcon boot, request handler</span></label>
+<label class="task done"><input type="checkbox" data-ms="050" checked><span class="tid bo">050-002</span><span class="tt">RequestCleanup: reset DI, close connections, clear state, force GC</span></label>
+<label class="task done"><input type="checkbox" data-ms="050" checked><span class="tid bo">050-003</span><span class="tt">Connection pooling: MySQL + Redis pool</span></label>
+<label class="task done"><input type="checkbox" data-ms="050" checked><span class="tid bo">050-004</span><span class="tt"><code>tavp coil:start</code> --workers, --port, --max-coroutine, --daemonize</span></label>
+<label class="task done"><input type="checkbox" data-ms="050" checked><span class="tid bo">050-005</span><span class="tt">HestiaCP plugin: one-click installer for end users</span></label>
+<label class="task done"><input type="checkbox" data-ms="050" checked><span class="tid bo">050-006</span><span class="tt">cPanel plugin: Softaculous-style installer</span></label>
+<label class="task done"><input type="checkbox" data-ms="050" checked><span class="tid bo">050-007</span><span class="tt">Search abstraction: Meilisearch + Elasticsearch + Database fallback</span></label>
+<label class="task done"><input type="checkbox" data-ms="050" checked><span class="tid bo">050-008</span><span class="tt">Broadcasting: Soketi + Pusher + Redis, private/presence channels</span></label>
+<label class="task done"><input type="checkbox" data-ms="050" checked><span class="tid bo">050-009</span><span class="tt">CMS module: blocks, collections, menus, media, admin CRUD</span></label>
+<label class="task done"><input type="checkbox" data-ms="050" checked><span class="tid bo">050-010</span><span class="tt">Non-programmer: CMS content editor in admin panel</span></label>
+</div></div></section>
+
+<section id="ms060"><div class="container">
+<div class="ms-hdr">
+    <div class="ms-ver" style="background:rgba(255,107,172,.1);color:var(--pink)">0.6.0</div>
+    <div><h3>Relay</h3><div class="sub">RoadRunner runtime, TAVPhive billing, K8s, Terraform, multi-tenancy</div></div>
+    <div class="ms-pct" style="color:var(--pink)" data-ms="060">0%</div>
+</div>
+<div class="ms-bar"><div class="ms-bar-f" data-prog="060" style="width:0%;background:var(--pink)"></div></div>
+<div class="tasks">
+<label class="task done"><input type="checkbox" data-ms="060" checked><span class="tid bk">060-001</span><span class="tt">TAVP Relay: RoadRunner worker bootstrap, PSR-7 bridge</span></label>
+<label class="task done"><input type="checkbox" data-ms="060" checked><span class="tid bk">060-002</span><span class="tt"><code>tavp relay:start</code> --workers, --relay=http,queue,websocket</span></label>
+<label class="task done"><input type="checkbox" data-ms="060" checked><span class="tid bk">060-003</span><span class="tt">TAVPhive: subscriptions (plans, trials, cancellation, upgrades)</span></label>
+<label class="task done"><input type="checkbox" data-ms="060" checked><span class="tid bk">060-004</span><span class="tt">TAVPhive: payment gateways (Stripe, Midtrans, Xendit, PayPal)</span></label>
+<label class="task done"><input type="checkbox" data-ms="060" checked><span class="tid bk">060-005</span><span class="tt">TAVPhive: invoicing, webhooks, receipt generation</span></label>
+<label class="task done"><input type="checkbox" data-ms="060" checked><span class="tid bk">060-006</span><span class="tt">Kubernetes manifests: deployment, service, ingress, HPA, secrets</span></label>
+<label class="task done"><input type="checkbox" data-ms="060" checked><span class="tid bk">060-007</span><span class="tt">Terraform modules: VPC, RDS, ElastiCache, S3, CloudFront</span></label>
+<label class="task done"><input type="checkbox" data-ms="060" checked><span class="tid bk">060-008</span><span class="tt">Multi-tenancy: database-per-tenant or schema-per-tenant</span></label>
+</div></div></section>
+
+<section id="ms070"><div class="container">
+<div class="ms-hdr">
+    <div class="ms-ver" style="background:rgba(232,168,73,.1);color:var(--amber)">0.7.0</div>
+    <div><h3>Intelligence</h3><div class="sub">AI integration (4 layers), visual builder, theme system</div></div>
+    <div class="ms-pct" style="color:var(--amber)" data-ms="070">0%</div>
+</div>
+<div class="ms-bar"><div class="ms-bar-f" data-prog="070" style="width:0%;background:var(--amber)"></div></div>
+<div class="tasks">
+<label class="task done"><input type="checkbox" data-ms="070" checked><span class="tid ba">070-001</span><span class="tt">AI Manager: multi-driver (OpenAI, Anthropic, Ollama, TAVP Cloud)</span></label>
+<label class="task done"><input type="checkbox" data-ms="070" checked><span class="tid ba">070-002</span><span class="tt">AI Builder: drag-drop → clean .volt templates, CMS blocks auto-created</span></label>
+<label class="task done"><input type="checkbox" data-ms="070" checked><span class="tid ba">070-003</span><span class="tt">AI Assistant: admin panel chatbot for page/content/module generation</span></label>
+<label class="task done"><input type="checkbox" data-ms="070" checked><span class="tid ba">070-004</span><span class="tt">AI Coder: <code>tavp ai "description"</code> → generate module files</span></label>
+<label class="task done"><input type="checkbox" data-ms="070" checked><span class="tid ba">070-005</span><span class="tt">AI Content: improve, translate, shorten, SEO per CMS block</span></label>
+<label class="task done"><input type="checkbox" data-ms="070" checked><span class="tid ba">070-006</span><span class="tt">Theme system: filesystem-based, theme.json metadata</span></label>
+<label class="task done"><input type="checkbox" data-ms="070" checked><span class="tid ba">070-007</span><span class="tt">Theme customizer: admin panel (colors, fonts, layout, section toggles)</span></label>
+</div></div></section>
+
+<section id="ms080"><div class="container">
+<div class="ms-hdr">
+    <div class="ms-ver" style="background:rgba(255,107,107,.1);color:var(--red)">0.8.0</div>
+    <div><h3>Marketplace</h3><div class="sub">Module + Theme marketplace, revenue system, community launch</div></div>
+    <div class="ms-pct" style="color:var(--red)" data-ms="080">0%</div>
+</div>
+<div class="ms-bar"><div class="ms-bar-f" data-prog="080" style="width:0%;background:var(--red)"></div></div>
+<div class="tasks">
+<label class="task done"><input type="checkbox" data-ms="080" checked><span class="tid br">080-001</span><span class="tt">Module marketplace: tavp.dev/marketplace</span></label>
+<label class="task done"><input type="checkbox" data-ms="080" checked><span class="tid br">080-002</span><span class="tt">Theme marketplace: tavp.dev/themes</span></label>
+<label class="task done"><input type="checkbox" data-ms="080" checked><span class="tid br">080-003</span><span class="tt">CLI: <code>tavp module:publish</code>, <code>tavp theme:publish</code></span></label>
+<label class="task done"><input type="checkbox" data-ms="080" checked><span class="tid br">080-004</span><span class="tt">Revenue system: developer dashboard, sales tracking, 80/20 payout</span></label>
+<label class="task done"><input type="checkbox" data-ms="080" checked><span class="tid br">080-005</span><span class="tt">Community: CONTRIBUTING.md, code of conduct, issue templates</span></label>
+<label class="task done"><input type="checkbox" data-ms="080" checked><span class="tid br">080-006</span><span class="tt">"Built with TAVP" showcase page</span></label>
+<label class="task done"><input type="checkbox" data-ms="080" checked><span class="tid br">080-007</span><span class="tt">Ambassador program: community leader recognition</span></label>
+</div></div></section>
+
+<section id="ms090"><div class="container">
+<div class="ms-hdr">
+    <div class="ms-ver" style="background:rgba(91,224,160,.1);color:var(--green)">0.9.0</div>
+    <div><h3>Maturity</h3><div class="sub">Security audit, docs finalization, API freeze, migration guides, TAVP Cloud beta</div></div>
+    <div class="ms-pct" style="color:var(--green)" data-ms="090">0%</div>
+</div>
+<div class="ms-bar"><div class="ms-bar-f" data-prog="090" style="width:0%;background:var(--green)"></div></div>
+<div class="tasks">
+<label class="task done"><input type="checkbox" data-ms="090" checked><span class="tid bg">090-001</span><span class="tt">Security audit: OWASP Top 10, dependency scanning</span></label>
+<label class="task done"><input type="checkbox" data-ms="090" checked><span class="tid bg">090-002</span><span class="tt">Performance certification: published, reproducible, third-party verified</span></label>
+<label class="task done"><input type="checkbox" data-ms="090" checked><span class="tid bg">090-003</span><span class="tt">Documentation: 100+ pages, auto-generated API ref, full-text search</span></label>
+<label class="task done"><input type="checkbox" data-ms="090" checked><span class="tid bg">090-004</span><span class="tt">Migration guides: Laravel → TAVP, WordPress → TAVP</span></label>
+<label class="task done"><input type="checkbox" data-ms="090" checked><span class="tid bg">090-005</span><span class="tt">Flutter integration guide with complete example app</span></label>
+<label class="task done"><input type="checkbox" data-ms="090" checked><span class="tid bg">090-006</span><span class="tt">API freeze announcement: all public interfaces documented</span></label>
+<label class="task done"><input type="checkbox" data-ms="090" checked><span class="tid bg">090-007</span><span class="tt">Deprecation warnings for planned removals in 1.0</span></label>
+<label class="task done"><input type="checkbox" data-ms="090" checked><span class="tid bg">090-008</span><span class="tt">Enterprise support tier pricing published</span></label>
+<label class="task done"><input type="checkbox" data-ms="090" checked><span class="tid bg">090-009</span><span class="tt">TAVP Cloud beta launch</span></label>
+</div></div></section>
+
+<section id="ms100"><div class="container">
+<div class="ms-hdr">
+    <div class="ms-ver" style="background:linear-gradient(135deg,rgba(108,158,255,.15),rgba(199,139,255,.15));color:var(--blue)">1.0.0</div>
+    <div><h3>Stable Release</h3><div class="sub">Public API locked. SemVer. LTS. Production-ready.</div></div>
+    <div class="ms-pct" style="color:var(--blue)" data-ms="100">0%</div>
+</div>
+<div class="ms-bar"><div class="ms-bar-f" data-prog="100" style="width:0%;background:linear-gradient(90deg,var(--blue),var(--purple))"></div></div>
+<div class="tasks">
+<label class="task done"><input type="checkbox" data-ms="100" checked><span class="tid bb">100-001</span><span class="tt">All 0.9.0 acceptance criteria met</span></label>
+<label class="task done"><input type="checkbox" data-ms="100" checked><span class="tid bb">100-002</span><span class="tt">Core: 90%+ test coverage, zero critical bugs</span></label>
+<label class="task done"><input type="checkbox" data-ms="100" checked><span class="tid bb">100-003</span><span class="tt">All ecosystem tools stable: TAVPkit, TAVPid, TAVPhub, TAVPblocks, TAVPhive</span></label>
+<label class="task done"><input type="checkbox" data-ms="100" checked><span class="tid bb">100-004</span><span class="tt">All three runtimes stable: PHP-FPM, Coil, Relay</span></label>
+<label class="task done"><input type="checkbox" data-ms="100" checked><span class="tid bb">100-005</span><span class="tt">Module system API stable: 10+ community modules working</span></label>
+<label class="task done"><input type="checkbox" data-ms="100" checked><span class="tid bb">100-006</span><span class="tt">Hosting: 3+ providers support TAVP</span></label>
+<label class="task done"><input type="checkbox" data-ms="100" checked><span class="tid bb">100-007</span><span class="tt">Marketplace live with modules and themes</span></label>
+<label class="task done"><input type="checkbox" data-ms="100" checked><span class="tid bb">100-008</span><span class="tt">Benchmarks published, reproducible, third-party verified</span></label>
+<label class="task done"><input type="checkbox" data-ms="100" checked><span class="tid bb">100-009</span><span class="tt">CHANGELOG.md complete from 0.1.0 to 1.0.0</span></label>
+<label class="task done"><input type="checkbox" data-ms="100" checked><span class="tid bb">100-010</span><span class="tt">Post-1.0 LTS plan: 2-year security patches per major version</span></label>
+</div></div></section>
+
+<footer><div class="container">
+    <p><strong style="color:var(--t1)">TAVP Milestone Checklist v2</strong> — Updated with all Bible decisions</p>
+    <p>Environment adapters, deployment adapters, Git abstraction, clean generation — all reflected.</p>
+    <p style="margin-top:8px">tavp.dev — Open Source (MIT)</p>
+</div></footer>
+
+<script>
+function tw(h){const b=h.nextElementSibling,a=h.querySelector('.ws-arrow');b.classList.toggle('collapsed');a.textContent=b.classList.collapsed?'▶':'▼'}
+function load(){try{const s=JSON.parse(localStorage.getItem('tavp-cl-v2')||'{}');document.querySelectorAll('.task input[type=checkbox]').forEach((c,i)=>{if(s[i]){c.checked=true;c.closest('.task').classList.add('done')}})}catch(e){}}
+function save(){const s={};document.querySelectorAll('.task input[type=checkbox]').forEach((c,i)=>{if(c.checked)s[i]=true});localStorage.setItem('tavp-cl-v2',JSON.stringify(s))}
+function counts(){document.querySelectorAll('[data-ws]').forEach(ws=>{const id=ws.dataset.ws,cb=ws.querySelectorAll('input[type=checkbox]'),d=Array.from(cb).filter(c=>c.checked).length,t=cb.length;const el=document.querySelector(`[data-wc="${id}"]`);if(el)el.textContent=`${d}/${t}`});const ms=['010','020','030','040','050','060','070','080','090','100'];let td=0,tt=0;ms.forEach(m=>{const cb=document.querySelectorAll(`input[data-ms="${m}"]`),d=Array.from(cb).filter(c=>c.checked).length,t=cb.length;td+=d;tt+=t;const p=t>0?Math.round(d/t*100):0;const pe=document.querySelector(`[data-ms="${m}"].ms-pct`);if(pe)pe.textContent=p+'%';const be=document.querySelector(`[data-prog="${m}"]`);if(be)be.style.width=p+'%'});const gp=tt>0?Math.round(td/tt*100):0;document.getElementById('dDone').textContent=td;document.getElementById('dTotal').textContent=tt;document.getElementById('dPct').textContent=gp+'%';document.getElementById('gProg').style.width=gp+'%'}
+document.addEventListener('DOMContentLoaded',()=>{load();counts();document.querySelectorAll('.task input[type=checkbox]').forEach(cb=>{cb.addEventListener('change',()=>{cb.closest('.task').classList.toggle('done',cb.checked);save();counts()})})});
+</script>
+</body>
+</html>

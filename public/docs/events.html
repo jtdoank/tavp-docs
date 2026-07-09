@@ -1,0 +1,112 @@
+# Event System Guide
+
+> Working with events in TAVP Stack.
+
+## Overview
+
+Events allow you to decouple your application logic. Use events when:
+- Multiple actions should happen after a single action
+- You want to notify external services
+- You want to log activity
+
+## Defining Events
+
+```php
+namespace App\Events;
+
+use Tavp\Events\Event;
+
+class UserRegistered extends Event
+{
+    public $user;
+    
+    public function __construct($user)
+    {
+        $this->user = $user;
+    }
+}
+```
+
+## Defining Listeners
+
+```php
+namespace App\Listeners;
+
+use App\Events\UserRegistered;
+
+class SendWelcomeEmail
+{
+    public function handle(UserRegistered $event): void
+    {
+        // Send email to user
+        Mail::to($event->user->email)->send(new WelcomeEmail($event->user));
+    }
+}
+```
+
+## Registering Events
+
+```php
+// config/events.php
+return [
+    \App\Events\UserRegistered::class => [
+        \App\Listeners\SendWelcomeEmail::class,
+        \App\Listeners\LogRegistration::class,
+    ],
+];
+```
+
+## Dispatching Events
+
+```php
+use App\Events\UserRegistered;
+
+// Dispatch event
+event(new UserRegistered($user));
+
+// Or use the dispatcher directly
+$dispatcher = $di->getShared('events');
+$dispatcher->dispatch(new UserRegistered($user));
+```
+
+## Event Listeners
+
+```php
+namespace App\Listeners;
+
+use App\Events\UserRegistered;
+
+class SendWelcomeEmail
+{
+    public function handle(UserRegistered $event): void
+    {
+        // Send email
+    }
+    
+    public function failed(\Throwable $exception): void
+    {
+        // Log failure
+        logger()->error('Failed to send welcome email', [
+            'user_id' => $event->user->id,
+            'error' => $exception->getMessage(),
+        ]);
+    }
+}
+```
+
+## Queued Listeners
+
+```php
+namespace App\Listeners;
+
+use App\Events\UserRegistered;
+use Tavp\Queue\ShouldQueue;
+
+class SendWelcomeEmail implements ShouldQueue
+{
+    public function handle(UserRegistered $event): void
+    {
+        // This runs in a queue worker
+    }
+}
+```

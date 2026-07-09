@@ -1,0 +1,121 @@
+# Performance Guide
+
+> Optimizing TAVP Stack applications.
+
+## PHP-FPM Optimization
+
+```ini
+; /etc/php/8.3/fpm/pool.d/www.conf
+pm = dynamic
+pm.max_children = 50
+pm.start_servers = 5
+pm.min_spare_servers = 5
+pm.max_spare_servers = 35
+pm.max_requests = 500
+```
+
+## Nginx Optimization
+
+```nginx
+# /etc/nginx/nginx.conf
+worker_processes auto;
+worker_rlimit_nofile 65535;
+
+events {
+    worker_connections 4096;
+    multi_accept on;
+    use epoll;
+}
+
+http {
+    sendfile on;
+    tcp_nopush on;
+    tcp_nodelay on;
+    keepalive_timeout 65;
+    
+    # Gzip
+    gzip on;
+    gzip_vary on;
+    gzip_min_length 1024;
+    gzip_types text/plain text/css application/json application/javascript text/xml application/xml;
+}
+```
+
+## Caching
+
+```php
+// config/cache.php
+'default' => 'redis',
+
+// Use cache for database queries
+$users = Cache::remember('users', 3600, function () {
+    return User::all();
+});
+```
+
+## Route Caching
+
+```bash
+# Cache routes
+tavp optimize
+
+# Clear cache
+tavp optimize:clear
+```
+
+## Database Optimization
+
+```php
+// Add indexes
+Schema::table('users', function (Blueprint $table) {
+    $table->index('email');
+    $table->index(['status', 'created_at']);
+});
+
+// Use eager loading
+$users = User::with(['posts', 'roles'])->get();
+
+// Select only needed columns
+$users = User::select('id', 'name', 'email')->get();
+```
+
+## Frontend Optimization
+
+```bash
+# Build for production
+npm run build
+
+# Analyze bundle
+npm run build -- --analyze
+```
+
+## TAVP Coil (Swoole) Optimization
+
+```bash
+# Start with optimal settings
+tavp coil:start \
+    --workers=4 \
+    --max-coroutine=1000 \
+    --max-connections=10000
+```
+
+## Benchmarking
+
+```bash
+# Run benchmarks
+tavp benchmark:run
+
+# HTTP benchmark
+ab -n 10000 -c 100 http://localhost:8000/
+```
+
+## Performance Checklist
+
+- [ ] Enable OPcache
+- [ ] Use Redis for cache/sessions
+- [ ] Enable gzip compression
+- [ ] Optimize database queries
+- [ ] Use CDN for static assets
+- [ ] Enable HTTP/2
+- [ ] Use TAVP Coil for high traffic
+- [ ] Monitor with health checks

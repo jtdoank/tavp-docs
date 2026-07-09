@@ -1,0 +1,92 @@
+# Helper Functions
+
+> Built-in helper functions in TAVP Stack.
+
+## String Helpers
+
+```php
+// Capitalize first letter
+ucfirst('hello') // Hello
+
+// Convert to camelCase
+camel_case('hello_world') // helloWorld
+
+// Convert to snake_case
+snake_case('helloWorld') // hello_world
+
+// Convert to kebab-case
+kebab_case('helloWorld') // hello-world
+
+// Random string
+str_random(16) // aBcDeFgHiJkLmNoP
+
+// Check string contains
+str_contains('hello world', 'world') // true
+
+// Limit string
+str_limit('hello world', 5) // hello...
+
+// Pluralize
+str_plural('user') // users
+
+// Singularize
+str_singular('users') // user
+```
+
+## Array Helpers
+
+```php
+// Array first element
+arr_first([1, 2, 3]) // 1
+
+// Array last element
+arr_last([1, 2, 3]) // 3
+
+// Array flatten
+arr_flatten([1, [2, 3]]) // [1, 2, 3]
+
+// Array pluck
+arr_pluck([['name' => 'John']], 'name') // ['John']
+
+// Array only
+arr_only(['name' => 'John', 'age' => 25], ['name']) // ['name' => 'John']
+
+// Array except
+arr_except(['name' => 'John', 'age' => 25], ['age']) // ['name' => 'John']
+```
+
+## File Helpers
+
+```php
+// Get file extension
+file_extension('file.txt') // txt
+
+// Read file
+file_get('file.txt') // contents
+
+// Write file
+file_put('file.txt', 'contents')
+```
+
+## URL Helpers
+
+```php
+// Generate URL
+url('users') // http://localhost/users
+
+// Current URL
+current_url() // http://localhost/users/1
+
+// Asset URL
+asset('css/app.css') // http://localhost/css/app.css
+```
+
+## Number Helpers
+
+```php
+// Format number
+number_format(1234.56, 2) // 1,234.56
+
+// Random number
+random_number(100) // 42
+```

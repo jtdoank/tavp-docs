@@ -1,3 +1,18 @@
+# OS / Editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+
+# Logs
+*.log
+
+# Build artifacts
 node_modules/
 docs/.vitepress/dist/
-.DS_Store
+dist/
+.build/
+
+# Jangan ikut ke publik
+internal/

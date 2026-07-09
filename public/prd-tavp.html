@@ -1,0 +1,1350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TAVP — Product Requirements Document</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0b0f1a;
+            --bg-secondary: #0f1424;
+            --bg-card: #141a2e;
+            --bg-card-hover: #1a2240;
+            --accent-blue: #4f8ff7;
+            --accent-purple: #8b5cf6;
+            --accent-cyan: #22d3ee;
+            --accent-green: #34d399;
+            --accent-orange: #fb923c;
+            --accent-pink: #ec4899;
+            --accent-red: #ef4444;
+            --accent-yellow: #fbbf24;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --border: #1e293b;
+            --border-light: #334155;
+            --gradient-blue: linear-gradient(135deg, #4f8ff7, #8b5cf6);
+            --gradient-green: linear-gradient(135deg, #34d399, #22d3ee);
+        }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.7;
+        }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+        /* ═══ NAV ═══ */
+        .topnav {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+            background: rgba(11,15,26,0.85); backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border); padding: 0 24px;
+        }
+        .topnav .nav-inner {
+            max-width: 1200px; margin: 0 auto;
+            display: flex; align-items: center; justify-content: space-between;
+            height: 56px;
+        }
+        .topnav .nav-brand {
+            font-size: 18px; font-weight: 800;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--accent-blue);
+        }
+        .topnav .nav-brand span { color: var(--text-muted); font-weight: 400; font-size: 13px; margin-left: 8px; }
+        .topnav .nav-links { display: flex; gap: 4px; overflow-x: auto; }
+        .topnav .nav-links a {
+            color: var(--text-muted); text-decoration: none;
+            font-size: 12px; font-weight: 600; padding: 6px 12px;
+            border-radius: 6px; transition: all 0.2s ease; white-space: nowrap;
+        }
+        .topnav .nav-links a:hover { color: var(--text-primary); background: rgba(79,143,247,0.08); }
+        body { padding-top: 56px; }
+
+        /* ═══ HERO ═══ */
+        .hero {
+            padding: 80px 0 60px;
+            background: linear-gradient(135deg, #0b0f1a 0%, #1a1040 50%, #0b0f1a 100%);
+            position: relative; overflow: hidden;
+        }
+        .hero::before {
+            content:'';position:absolute;inset:0;
+            background-image:
+                linear-gradient(rgba(79,143,247,0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(79,143,247,0.03) 1px, transparent 1px);
+            background-size: 60px 60px;
+            mask-image: radial-gradient(ellipse at center, black 30%, transparent 70%);
+        }
+        .hero-content { position: relative; text-align: center; }
+        .hero-badge {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 6px 16px; background: rgba(79,143,247,0.1);
+            border: 1px solid rgba(79,143,247,0.2); border-radius: 100px;
+            font-size: 13px; font-weight: 600; color: var(--accent-blue);
+            margin-bottom: 24px; letter-spacing: 0.5px;
+        }
+        .hero h1 {
+            font-size: clamp(36px,5vw,56px); font-weight: 900;
+            line-height: 1.1; margin-bottom: 12px; letter-spacing: -1px;
+        }
+        .hero h1 .g { background: var(--gradient-blue); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+        .hero .subtitle { font-size: 18px; color: var(--text-secondary); max-width: 700px; margin: 0 auto 24px; }
+        .hero-meta {
+            display: flex; justify-content: center; gap: 32px; flex-wrap: wrap;
+        }
+        .hero-meta .hm {
+            padding: 10px 20px; background: var(--bg-card);
+            border: 1px solid var(--border); border-radius: 10px;
+            text-align: center;
+        }
+        .hero-meta .hm .v { font-size: 16px; font-weight: 800; font-family: 'JetBrains Mono', monospace; color: var(--accent-blue); }
+        .hero-meta .hm .l { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+
+        /* ═══ SECTIONS ═══ */
+        section { padding: 80px 0; }
+        .section-hdr { margin-bottom: 48px; }
+        .section-hdr .tag {
+            display: inline-block; padding: 4px 12px;
+            background: rgba(79,143,247,0.08); border: 1px solid rgba(79,143,247,0.15);
+            border-radius: 100px; font-size: 11px; font-weight: 700;
+            color: var(--accent-blue); text-transform: uppercase;
+            letter-spacing: 1.5px; margin-bottom: 16px;
+        }
+        .section-hdr h2 {
+            font-size: clamp(28px,3.5vw,40px); font-weight: 800;
+            line-height: 1.2; letter-spacing: -0.5px; margin-bottom: 12px;
+        }
+        .section-hdr p { font-size: 16px; color: var(--text-secondary); max-width: 700px; }
+        .divider { height: 1px; background: linear-gradient(90deg, transparent, var(--border-light), transparent); }
+
+        /* ═══ CARDS ═══ */
+        .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+        .card {
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: 14px; padding: 28px; transition: all 0.3s ease;
+        }
+        .card:hover { border-color: rgba(79,143,247,0.3); transform: translateY(-2px); }
+        .card h4 { font-size: 17px; font-weight: 700; margin-bottom: 8px; }
+        .card p, .card li { font-size: 14px; color: var(--text-secondary); }
+        .card .ci { font-size: 28px; margin-bottom: 14px; }
+
+        .card-accent { border-left: 3px solid; }
+        .card-accent.green { border-left-color: var(--accent-green); }
+        .card-accent.blue { border-left-color: var(--accent-blue); }
+        .card-accent.purple { border-left-color: var(--accent-purple); }
+        .card-accent.orange { border-left-color: var(--accent-orange); }
+        .card-accent.red { border-left-color: var(--accent-red); }
+        .card-accent.pink { border-left-color: var(--accent-pink); }
+        .card-accent.yellow { border-left-color: var(--accent-yellow); }
+        .card-accent.cyan { border-left-color: var(--accent-cyan); }
+
+        /* ═══ TABLES ═══ */
+        .tbl { width: 100%; border-collapse: collapse; font-size: 14px; margin: 16px 0; }
+        .tbl th {
+            padding: 12px 16px; text-align: left; background: var(--bg-card);
+            border-bottom: 2px solid var(--border-light); font-weight: 700;
+            font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px;
+            color: var(--text-muted);
+        }
+        .tbl td { padding: 12px 16px; border-bottom: 1px solid var(--border); color: var(--text-secondary); }
+        .tbl tr:hover td { background: rgba(79,143,247,0.03); }
+
+        /* ═══ BADGES ═══ */
+        .b { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 700; }
+        .b-green{background:rgba(52,211,153,0.15);color:var(--accent-green)}
+        .b-blue{background:rgba(79,143,247,0.15);color:var(--accent-blue)}
+        .b-purple{background:rgba(139,92,246,0.15);color:var(--accent-purple)}
+        .b-orange{background:rgba(251,146,60,0.15);color:var(--accent-orange)}
+        .b-red{background:rgba(239,68,68,0.15);color:var(--accent-red)}
+        .b-yellow{background:rgba(251,191,36,0.15);color:var(--accent-yellow)}
+        .b-muted{background:rgba(100,116,139,0.15);color:var(--text-muted)}
+        .b-cyan{background:rgba(34,211,238,0.15);color:var(--accent-cyan)}
+        .b-pink{background:rgba(236,72,153,0.15);color:var(--accent-pink)}
+
+        /* ═══ CODE ═══ */
+        .cb {
+            background: var(--bg-primary); border: 1px solid var(--border);
+            border-radius: 10px; padding: 16px 20px;
+            font-family: 'JetBrains Mono', monospace; font-size: 13px;
+            line-height: 1.8; overflow-x: auto; margin: 12px 0;
+        }
+        .cb .c{color:var(--text-muted)}.cb .k{color:var(--accent-purple)}
+        .cb .s{color:var(--accent-green)}.cb .f{color:var(--accent-blue)}
+        .cb .v{color:var(--accent-cyan)}.cb .p{color:var(--accent-green)}
+        .cb .fl{color:var(--accent-orange)}.cb .t{color:var(--accent-yellow)}
+
+        /* ═══ MILESTONE ═══ */
+        .ms-track { position: relative; padding-left: 60px; }
+        .ms-track::before {
+            content:'';position:absolute;left:23px;top:0;bottom:0;
+            width:2px;background:linear-gradient(to bottom,var(--accent-blue),var(--accent-purple),var(--accent-green),var(--accent-orange),var(--accent-pink));
+            border-radius:1px;
+        }
+        .ms-item { position: relative; padding-bottom: 48px; }
+        .ms-item:last-child { padding-bottom: 0; }
+        .ms-dot {
+            position: absolute; left: -48px; top: 0;
+            width: 34px; height: 34px; border-radius: 50%;
+            background: var(--bg-primary); border: 3px solid var(--accent-blue);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 10px; font-weight: 800; font-family: 'JetBrains Mono', monospace;
+        }
+        .ms-ver {
+            display: inline-block; padding: 4px 12px; border-radius: 6px;
+            font-size: 18px; font-weight: 800; font-family: 'JetBrains Mono', monospace;
+            margin-bottom: 8px;
+        }
+        .ms-name { font-size: 24px; font-weight: 800; margin-bottom: 4px; }
+        .ms-sub { font-size: 14px; color: var(--text-muted); margin-bottom: 16px; }
+        .ms-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        @media(max-width:768px){.ms-grid{grid-template-columns:1fr;}}
+        .ms-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
+        .ms-card h5 { font-size: 14px; font-weight: 700; margin-bottom: 10px; }
+        .ms-card ul { list-style: none; display: flex; flex-direction: column; gap: 4px; }
+        .ms-card ul li { font-size: 13px; color: var(--text-secondary); padding-left: 14px; position: relative; }
+        .ms-card ul li::before { content:'→';position:absolute;left:0;color:var(--text-muted); }
+        .ms-accept { margin-top: 16px; }
+        .ms-accept h5 { font-size: 13px; font-weight: 700; margin-bottom: 8px; color: var(--accent-cyan); }
+        .ms-accept ul { list-style: none; display: flex; flex-direction: column; gap: 4px; }
+        .ms-accept ul li { font-size: 13px; color: var(--text-secondary); padding-left: 18px; position: relative; }
+        .ms-accept ul li::before { content:'☐';position:absolute;left:0;color:var(--accent-cyan);font-size:12px; }
+
+        /* ═══ FLOW ═══ */
+        .flow-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; justify-content: center; margin: 20px 0; }
+        .flow-box {
+            padding: 10px 20px; border-radius: 10px; font-size: 13px;
+            font-weight: 600; border: 1px solid var(--border);
+            background: var(--bg-card); text-align: center; min-width: 100px;
+        }
+        .flow-arrow { color: var(--text-muted); font-size: 18px; }
+
+        /* ═══ TOC SIDEBAR (OPTIONAL FLOAT) ═══ */
+        .checklist { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+        .checklist li { display: flex; align-items: flex-start; gap: 8px; font-size: 14px; color: var(--text-secondary); }
+        .checklist li .ck { flex-shrink: 0; width: 16px; height: 16px; border-radius: 4px; border: 1px solid var(--border-light); display: flex; align-items: center; justify-content: center; font-size: 10px; margin-top: 3px; }
+
+        .info-box {
+            padding: 20px 24px; background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: 12px; margin: 16px 0;
+        }
+        .info-box h4 { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+        .info-box p { font-size: 14px; color: var(--text-secondary); }
+
+        footer { padding: 48px 0; text-align: center; border-top: 1px solid var(--border); }
+        footer .f-brand{font-size:24px;font-weight:900;margin-bottom:6px}
+        footer .f-sub{color:var(--text-muted);font-size:14px;margin-bottom:16px}
+        footer .f-copy{font-size:12px;color:var(--text-muted);margin-top:24px}
+
+        /* ═══ TREE ═══ */
+        .tree { font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 2; color: var(--text-secondary); }
+        .tree .dir { color: var(--accent-blue); font-weight: 600; }
+        .tree .file { color: var(--text-secondary); }
+        .tree .desc { color: var(--text-muted); font-style: italic; }
+    </style>
+</head>
+<body>
+
+<!-- ═══ TOP NAV ═══ -->
+<nav class="topnav">
+    <div class="nav-inner">
+        <div class="nav-brand">TAVP <span>PRD v1.0</span></div>
+        <div class="nav-links">
+            <a href="#overview">Overview</a>
+            <a href="#goals">Goals</a>
+            <a href="#audience">Audience</a>
+            <a href="#features">Features</a>
+            <a href="#architecture">Architecture</a>
+            <a href="#concurrency">Concurrency</a>
+            <a href="#versioning">Versioning</a>
+            <a href="#milestones">Milestones</a>
+            <a href="#nfr">NFR</a>
+            <a href="#risks">Risks</a>
+        </div>
+    </div>
+</nav>
+
+<!-- ═══ HERO ═══ -->
+<section class="hero">
+    <div class="container hero-content">
+        <div class="hero-badge">Product Requirements Document</div>
+        <h1><span class="g">TAVP</span> — PRD</h1>
+        <p class="subtitle">Comprehensive requirements for building the TAVP tech stack from zero to mature product, versioned with ZeroVer (0-based versioning).</p>
+        <div class="hero-meta">
+            <div class="hm"><div class="v">0.x.y</div><div class="l">ZeroVer Versioning</div></div>
+            <div class="hm"><div class="v">2025-07</div><div class="l">Document Date</div></div>
+            <div class="hm"><div class="v">Draft</div><div class="l">Status</div></div>
+            <div class="hm"><div class="v">tavp.dev</div><div class="l">Domain</div></div>
+        </div>
+    </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ═══ 1. OVERVIEW ═══ -->
+<section id="overview">
+    <div class="container">
+        <div class="section-hdr">
+            <div class="tag">1. Overview</div>
+            <h2>Product Overview</h2>
+        </div>
+
+        <div class="card-grid">
+            <div class="card card-accent blue">
+                <div class="ci">📋</div>
+                <h4>What is TAVP?</h4>
+                <p>TAVP is a curated tech stack integrating <strong>Tailwind CSS + Alpine.js + Volt + Phalcon</strong> into one cohesive developer experience. Phalcon (C-extension) is the engine. TAVP is the car.</p>
+            </div>
+            <div class="card card-accent green">
+                <div class="ci">🎯</div>
+                <h4>Product Purpose</h4>
+                <p>This PRD defines every requirement needed to build TAVP from initial commit to a mature, self-sustaining ecosystem with community adoption and marketplace revenue.</p>
+            </div>
+            <div class="card card-accent purple">
+                <div class="ci">📐</div>
+                <h4>Versioning Strategy</h4>
+                <p>ZeroVer: <strong>0.MINOR.PATCH</strong>. Stay at 0.x during active development. Minor version = breaking changes. Patch version = backward-compatible fixes. 1.0.0 = stable, production-ready, no more breaking changes.</p>
+            </div>
+            <div class="card card-accent orange">
+                <div class="ci">💡</div>
+                <h4>Core Philosophy</h4>
+                <p>Developer experience first. Performance as bonus. Modular architecture. Open source (MIT). No features locked behind paywall. Community-driven growth.</p>
+            </div>
+        </div>
+
+        <div class="info-box" style="margin-top:24px;">
+            <h4>ZeroVer Reference</h4>
+            <p>Per <strong>0ver.org</strong>: "Software with major version zero is under initial development. Anything MAY change at any time. The public API SHOULD NOT be considered stable." TAVP follows this strictly — we stay at 0.x.y until the API is locked, tested, and documented for long-term stability.</p>
+        </div>
+    </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ═══ 2. GOALS ═══ -->
+<section id="goals">
+    <div class="container">
+        <div class="section-hdr">
+            <div class="tag">2. Goals &amp; Success Metrics</div>
+            <h2>Measurable Objectives</h2>
+        </div>
+
+        <div class="card-grid">
+            <div class="card card-accent green">
+                <h4>🎯 Primary Goals</h4>
+                <ul style="list-style:none;display:flex;flex-direction:column;gap:8px;">
+                    <li><span class="b b-green">G1</span> Make TAVP the easiest PHP stack to start with (install to running &lt; 60s)</li>
+                    <li><span class="b b-green">G2</span> Achieve 8x RAM efficiency vs WordPress (15-30MB vs 256MB per site)</li>
+                    <li><span class="b b-green">G3</span> OTP-first auth as default (not password-first)</li>
+                    <li><span class="b b-green">G4</span> Three concurrency models (Coil, Relay, Weave) available</li>
+                    <li><span class="b b-green">G5</span> Modular ecosystem via Composer packages</li>
+                </ul>
+            </div>
+            <div class="card card-accent blue">
+                <h4>📊 Success Metrics (at 1.0)</h4>
+                <ul style="list-style:none;display:flex;flex-direction:column;gap:8px;">
+                    <li><span class="b b-blue">M1</span> GitHub: 1,000+ stars</li>
+                    <li><span class="b b-blue">M2</span> Community packages: 50+</li>
+                    <li><span class="b b-blue">M3</span> Hosting providers: 10+ support TAVP</li>
+                    <li><span class="b b-blue">M4</span> Marketplace: 20+ modules/themes listed</li>
+                    <li><span class="b b-blue">M5</span> Documentation: 100+ pages, fully searchable</li>
+                    <li><span class="b b-blue">M6</span> Response time: &lt;5ms P99 for standard requests</li>
+                    <li><span class="b b-blue">M7</span> Install success rate: &gt;95% across Linux/macOS</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ═══ 3. AUDIENCE ═══ -->
+<section id="audience">
+    <div class="container">
+        <div class="section-hdr">
+            <div class="tag">3. Target Audience</div>
+            <h2>Who Will Use TAVP</h2>
+        </div>
+
+        <div class="card-grid">
+            <div class="card card-accent blue">
+                <div class="ci">👩‍💻</div>
+                <h4>Primary: PHP Developers</h4>
+                <p>Freelancers, small agencies, indie developers who want fast performance + good DX. Already familiar with Laravel/TALL or willing to learn. Value low hosting costs.</p>
+                <p style="margin-top:8px;"><strong>Need:</strong> Fast framework, good CLI, productive scaffolding, low hosting bill.</p>
+            </div>
+            <div class="card card-accent purple">
+                <div class="ci">🏢</div>
+                <h4>Secondary: Web Hosting Providers</h4>
+                <p>Shared hosting companies, VPS providers, managed hosting. They benefit from Phalcon's low RAM footprint — more sites per server = more revenue.</p>
+                <p style="margin-top:8px;"><strong>Need:</strong> Pre-compiled Phalcon packages, easy installer, zero-cost integration.</p>
+            </div>
+            <div class="card card-accent green">
+                <div class="ci">🧑‍🎨</div>
+                <h4>Tertiary: Non-Programmers</h4>
+                <p>Small business owners, content creators, people who want a website but can't code. Use TAVP via visual builder + AI assistant + CMS.</p>
+                <p style="margin-top:8px;"><strong>Need:</strong> One-click install, visual editor, AI content generation, theme marketplace.</p>
+            </div>
+            <div class="card card-accent orange">
+                <div class="ci">📱</div>
+                <h4>Extended: Mobile Developers</h4>
+                <p>Flutter/React Native developers who need a lightweight, fast backend API. TAVP's JWT + versioned API is their entry point.</p>
+                <p style="margin-top:8px;"><strong>Need:</strong> Clean REST API, JWT auth, OpenAPI docs, push notifications.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ═══ 4. FEATURES ═══ -->
+<section id="features">
+    <div class="container">
+        <div class="section-hdr">
+            <div class="tag">4. Feature Requirements</div>
+            <h2>Complete Feature Breakdown</h2>
+            <p>Every feature organized by layer with priority and milestone mapping.</p>
+        </div>
+
+        <!-- F1: Core Framework -->
+        <h3 style="font-size:22px;font-weight:700;margin-bottom:20px;">4.1 TAVP Core Framework</h3>
+        <table class="tbl">
+            <thead><tr><th>ID</th><th>Feature</th><th>Description</th><th>Priority</th><th>Milestone</th></tr></thead>
+            <tbody>
+                <tr><td><span class="b b-blue">F-C01</span></td><td>Phalcon Bootstrap</td><td>Auto-load Phalcon, configure DI container, register services</td><td><span class="b b-red">P0</span></td><td>0.1.0</td></tr>
+                <tr><td><span class="b b-blue">F-C02</span></td><td>Router</td><td>Expressive routing: Route::get/post/put/delete, groups, middleware, resource</td><td><span class="b b-red">P0</span></td><td>0.1.0</td></tr>
+                <tr><td><span class="b b-blue">F-C03</span></td><td>Controller System</td><td>Base controller, auto-resolution, request/response abstraction</td><td><span class="b b-red">P0</span></td><td>0.1.0</td></tr>
+                <tr><td><span class="b b-blue">F-C04</span></td><td>Volt Engine (Enhanced)</td><td>Template inheritance, components, macros, CMS helpers (cms_block, cms_collection)</td><td><span class="b b-red">P0</span></td><td>0.1.0</td></tr>
+                <tr><td><span class="b b-blue">F-C05</span></td><td>ORM Wrapper</td><td>Eloquent-like syntax on top of Phalcon Models: fillable, casts, relationships</td><td><span class="b b-red">P0</span></td><td>0.1.0</td></tr>
+                <tr><td><span class="b b-blue">F-C06</span></td><td>Migration System</td><td>Laravel-style migrations: up/down, rollback, fresh, status</td><td><span class="b b-red">P0</span></td><td>0.1.0</td></tr>
+                <tr><td><span class="b b-blue">F-C07</span></td><td>Validation</td><td>FormRequest classes, rule-based validation, custom messages</td><td><span class="b b-blue">P1</span></td><td>0.1.0</td></tr>
+                <tr><td><span class="b b-blue">F-C08</span></td><td>Middleware Pipeline</td><td>Before/after middleware, route-level, group-level, global</td><td><span class="b b-red">P0</span></td><td>0.1.0</td></tr>
+                <tr><td><span class="b b-blue">F-C09</span></td><td>Service Container (DI)</td><td>Bind, singleton, auto-resolution, contextual binding</td><td><span class="b b-red">P0</span></td><td>0.1.0</td></tr>
+                <tr><td><span class="b b-blue">F-C10</span></td><td>Events &amp; Listeners</td><td>Event dispatching, listener registration, queued listeners</td><td><span class="b b-blue">P1</span></td><td>0.2.0</td></tr>
+                <tr><td><span class="b b-blue">F-C11</span></td><td>Exception Handling</td><td>Global exception handler, custom error pages, JSON API errors</td><td><span class="b b-red">P0</span></td><td>0.1.0</td></tr>
+                <tr><td><span class="b b-blue">F-C12</span></td><td>Config System</td><td>.env loading, config caching, environment detection</td><td><span class="b b-red">P0</span></td><td>0.1.0</td></tr>
+                <tr><td><span class="b b-blue">F-C13</span></td><td>Helpers</td><td>Utility functions: asset(), url(), redirect(), session(), flash(), csrf()</td><td><span class="b b-red">P0</span></td><td>0.1.0</td></tr>
+            </tbody>
+        </table>
+
+        <!-- F2: CLI -->
+        <h3 style="font-size:22px;font-weight:700;margin:40px 0 20px;">4.2 CLI (tavp command)</h3>
+        <table class="tbl">
+            <thead><tr><th>ID</th><th>Command</th><th>Description</th><th>Priority</th><th>Milestone</th></tr></thead>
+            <tbody>
+                <tr><td><span class="b b-green">F-L01</span></td><td><code style="color:var(--accent-cyan);">tavp new</code></td><td>Interactive project wizard: template, modules, database, mail, OTP config</td><td><span class="b b-red">P0</span></td><td>0.1.0</td></tr>
+                <tr><td><span class="b b-green">F-L02</span></td><td><code style="color:var(--accent-cyan);">tavp serve</code></td><td>Local dev server with hot reload</td><td><span class="b b-red">P0</span></td><td>0.1.0</td></tr>
+                <tr><td><span class="b b-green">F-L03</span></td><td><code style="color:var(--accent-cyan);">tavp make:model</code></td><td>Generate model file with fillable, casts, relationships</td><td><span class="b b-red">P0</span></td><td>0.1.0</td></tr>
+                <tr><td><span class="b b-green">F-L04</span></td><td><code style="color:var(--accent-cyan);">tavp make:controller</code></td><td>Generate controller (web/api/resource)</td><td><span class="b b-red">P0</span></td><td>0.1.0</td></tr>
+                <tr><td><span class="b b-green">F-L05</span></td><td><code style="color:var(--accent-cyan);">tavp make:migration</code></td><td>Generate migration file</td><td><span class="b b-red">P0</span></td><td>0.1.0</td></tr>
+                <tr><td><span class="b b-green">F-L06</span></td><td><code style="color:var(--accent-cyan);">tavp make:scaffold</code></td><td>Generate model + controller + views + migration + routes in one command</td><td><span class="b b-blue">P1</span></td><td>0.2.0</td></tr>
+                <tr><td><span class="b b-green">F-L07</span></td><td><code style="color:var(--accent-cyan);">tavp migrate</code></td><td>Run/rollback/fresh/seed migrations</td><td><span class="b b-red">P0</span></td><td>0.1.0</td></tr>
+                <tr><td><span class="b b-green">F-L08</span></td><td><code style="color:var(--accent-cyan);">tavp module:install</code></td><td>Install Composer-based module, run migrations, publish assets</td><td><span class="b b-blue">P1</span></td><td>0.3.0</td></tr>
+                <tr><td><span class="b b-green">F-L09</span></td><td><code style="color:var(--accent-cyan);">tavp coil:start</code></td><td>Start Swoole server</td><td><span class="b b-orange">P2</span></td><td>0.5.0</td></tr>
+                <tr><td><span class="b b-green">F-L10</span></td><td><code style="color:var(--accent-cyan);">tavp relay:start</code></td><td>Start RoadRunner server</td><td><span class="b b-orange">P2</span></td><td>0.6.0</td></tr>
+                <tr><td><span class="b b-green">F-L11</span></td><td><code style="color:var(--accent-cyan);">tavp weave:enable</code></td><td>Enable PHP Fibers support (zero config)</td><td><span class="b b-blue">P1</span></td><td>0.2.0</td></tr>
+                <tr><td><span class="b b-green">F-L12</span></td><td><code style="color:var(--accent-cyan);">tavp upgrade</code></td><td>Upgrade tier (website → app → enterprise)</td><td><span class="b b-blue">P1</span></td><td>0.3.0</td></tr>
+                <tr><td><span class="b b-green">F-L13</span></td><td><code style="color:var(--accent-cyan);">tavp ai</code></td><td>AI-powered code/module generation from natural language</td><td><span class="b b-orange">P2</span></td><td>0.7.0</td></tr>
+                <tr><td><span class="b b-green">F-L14</span></td><td><code style="color:var(--accent-cyan);">tavp optimize</code></td><td>Production optimization: cache config, routes, views, autoloader</td><td><span class="b b-blue">P1</span></td><td>0.4.0</td></tr>
+            </tbody>
+        </table>
+
+        <!-- F3: Auto Installer -->
+        <h3 style="font-size:22px;font-weight:700;margin:40px 0 20px;">4.3 Auto Phalcon Installer</h3>
+        <table class="tbl">
+            <thead><tr><th>ID</th><th>Feature</th><th>Description</th><th>Priority</th><th>Milestone</th></tr></thead>
+            <tbody>
+                <tr><td><span class="b b-purple">F-I01</span></td><td>OS Detection</td><td>Detect Linux distro (Ubuntu/Debian/CentOS/Rocky/Arch), macOS, Windows WSL</td><td><span class="b b-red">P0</span></td><td>0.1.0</td></tr>
+                <tr><td><span class="b b-purple">F-I02</span></td><td>PHP Version Detection</td><td>Detect PHP 8.1/8.2/8.3, architecture (x86_64, aarch64)</td><td><span class="b b-red">P0</span></td><td>0.1.0</td></tr>
+                <tr><td><span class="b b-purple">F-I03</span></td><td>TAVP Repository</td><td>Pre-compiled .deb/.rpm packages at packages.tavp.dev for all supported PHP versions</td><td><span class="b b-red">P0</span></td><td>0.1.0</td></tr>
+                <tr><td><span class="b b-purple">F-I04</span></td><td>Fallback Installers</td><td>PPA (ondrej/php), Remi repository, PECL as fallback chain</td><td><span class="b b-red">P0</span></td><td>0.1.0</td></tr>
+                <tr><td><span class="b b-purple">F-I05</span></td><td>php.ini Configuration</td><td>Auto-add extension=phalcon.so, restart PHP-FPM</td><td><span class="b b-red">P0</span></td><td>0.1.0</td></tr>
+                <tr><td><span class="b b-purple">F-I06</span></td><td>Error Recovery</td><td>Clear, actionable error messages with suggested fixes and doc links</td><td><span class="b b-red">P0</span></td><td>0.1.0</td></tr>
+                <tr><td><span class="b b-purple">F-I07</span></td><td>cPanel Plugin</td><td>One-click installer for cPanel (Softaculous-style)</td><td><span class="b b-orange">P2</span></td><td>0.5.0</td></tr>
+                <tr><td><span class="b b-purple">F-I08</span></td><td>HestiaCP Integration</td><td>CLI plugin for HestiaCP hosting panel</td><td><span class="b b-orange">P2</span></td><td>0.5.0</td></tr>
+                <tr><td><span class="b b-purple">F-I09</span></td><td>Universal Server Script</td><td>curl | bash script that makes any Linux server TAVP-ready</td><td><span class="b b-blue">P1</span></td><td>0.3.0</td></tr>
+            </tbody>
+        </table>
+
+        <!-- F4: Auth (TAVPid) -->
+        <h3 style="font-size:22px;font-weight:700;margin:40px 0 20px;">4.4 Authentication — TAVPid</h3>
+        <table class="tbl">
+            <thead><tr><th>ID</th><th>Feature</th><th>Description</th><th>Priority</th><th>Milestone</th></tr></thead>
+            <tbody>
+                <tr><td><span class="b b-cyan">F-A01</span></td><td>OTP via Email</td><td>6-digit code, 5-min expiry, SHA-256 hashed storage, max 5 attempts</td><td><span class="b b-red">P0</span></td><td>0.1.0</td></tr>
+                <tr><td><span class="b b-cyan">F-A02</span></td><td>OTP via SMS</td><td>Twilio integration, auto-detect phone number format</td><td><span class="b b-blue">P1</span></td><td>0.2.0</td></tr>
+                <tr><td><span class="b b-cyan">F-A03</span></td><td>OTP via WhatsApp</td><td>Twilio WhatsApp API integration</td><td><span class="b b-blue">P1</span></td><td>0.2.0</td></tr>
+                <tr><td><span class="b b-cyan">F-A04</span></td><td>TOTP (Authenticator)</td><td>Google Authenticator / Authy compatible, QR code generation</td><td><span class="b b-blue">P1</span></td><td>0.3.0</td></tr>
+                <tr><td><span class="b b-cyan">F-A05</span></td><td>Session Auth (Web)</td><td>Server-side sessions, CSRF tokens, cookie-based</td><td><span class="b b-red">P0</span></td><td>0.1.0</td></tr>
+                <tr><td><span class="b b-cyan">F-A06</span></td><td>JWT Auth (API/Mobile)</td><td>Access token (short-lived) + refresh token (long-lived), device tracking</td><td><span class="b b-red">P0</span></td><td>0.1.0</td></tr>
+                <tr><td><span class="b b-cyan">F-A07</span></td><td>Role &amp; Permission</td><td>RBAC: roles (admin, user, editor), permissions (create-post, edit-user), middleware guards</td><td><span class="b b-blue">P1</span></td><td>0.2.0</td></tr>
+                <tr><td><span class="b b-cyan">F-A08</span></td><td>Social OAuth</td><td>Google, Apple, GitHub login via OAuth 2.0</td><td><span class="b b-orange">P2</span></td><td>0.4.0</td></tr>
+                <tr><td><span class="b b-cyan">F-A09</span></td><td>Rate Limiting</td><td>OTP send: max 5/hour per identifier. Login: max 10/min per IP</td><td><span class="b b-red">P0</span></td><td>0.1.0</td></tr>
+                <tr><td><span class="b b-cyan">F-A10</span></td><td>Device Token Registration</td><td>Register FCM/APNs tokens for push notifications (Flutter)</td><td><span class="b b-blue">P1</span></td><td>0.3.0</td></tr>
+            </tbody>
+        </table>
+
+        <!-- F5: Starter Kits -->
+        <h3 style="font-size:22px;font-weight:700;margin:40px 0 20px;">4.5 Ecosystem Tools</h3>
+        <table class="tbl">
+            <thead><tr><th>ID</th><th>Tool</th><th>Features Required</th><th>Priority</th><th>Milestone</th></tr></thead>
+            <tbody>
+                <tr><td><span class="b b-yellow">F-T01</span></td><td><strong>TAVPkit</strong> (Full Starter)</td><td>Auth + Teams + API + Profile + CLI scaffolding</td><td><span class="b b-blue">P1</span></td><td>0.3.0</td></tr>
+                <tr><td><span class="b b-yellow">F-T02</span></td><td><strong>TAVPhub</strong> (Admin Panel)</td><td>CRUD resources, table builder, form builder, dashboard widgets, sidebar nav, role guard</td><td><span class="b b-blue">P1</span></td><td>0.3.0</td></tr>
+                <tr><td><span class="b b-yellow">F-T03</span></td><td><strong>TAVPblocks</strong> (Components)</td><td>40+ UI components: button, input, modal, dropdown, datatable, toast, tabs, accordion, avatar, badge, breadcrumb, pagination, file-upload, rich-editor, date-picker, chart, stat-card, alert, skeleton, empty-state</td><td><span class="b b-blue">P1</span></td><td>0.2.0 (basic 15) → 0.4.0 (full 40+)</td></tr>
+                <tr><td><span class="b b-yellow">F-T04</span></td><td><strong>TAVPhive</strong> (SaaS Billing)</td><td>Subscriptions, invoicing, payment gateways (Stripe, Midtrans, Xendit, PayPal), plan management, webhook handling</td><td><span class="b b-orange">P2</span></td><td>0.6.0</td></tr>
+            </tbody>
+        </table>
+
+        <!-- F6: Infrastructure -->
+        <h3 style="font-size:22px;font-weight:700;margin:40px 0 20px;">4.6 Infrastructure Primitives</h3>
+        <table class="tbl">
+            <thead><tr><th>ID</th><th>Feature</th><th>Description</th><th>Priority</th><th>Milestone</th></tr></thead>
+            <tbody>
+                <tr><td><span class="b b-muted">F-N01</span></td><td>Cache Abstraction</td><td>Drivers: Redis, File, APCu, Memcached. Tag support, cache warmer</td><td><span class="b b-blue">P1</span></td><td>0.3.0</td></tr>
+                <tr><td><span class="b b-muted">F-N02</span></td><td>Queue Abstraction</td><td>Drivers: Redis, Database. Job classes, scheduled tasks, retry logic</td><td><span class="b b-blue">P1</span></td><td>0.3.0</td></tr>
+                <tr><td><span class="b b-muted">F-N03</span></td><td>Storage Abstraction</td><td>Drivers: Local, S3, MinIO, GCS. File upload, optimization, CDN</td><td><span class="b b-blue">P1</span></td><td>0.3.0</td></tr>
+                <tr><td><span class="b b-muted">F-N04</span></td><td>Mail Abstraction</td><td>Drivers: SMTP, Mailgun, SES. Template engine (Volt-based), queueable</td><td><span class="b b-blue">P1</span></td><td>0.2.0</td></tr>
+                <tr><td><span class="b b-muted">F-N05</span></td><td>Search Abstraction</td><td>Drivers: Meilisearch, Elasticsearch, Database (LIKE fallback)</td><td><span class="b b-orange">P2</span></td><td>0.5.0</td></tr>
+                <tr><td><span class="b b-muted">F-N06</span></td><td>Broadcasting</td><td>Drivers: Soketi, Pusher, Redis. Private/presence channels</td><td><span class="b b-orange">P2</span></td><td>0.5.0</td></tr>
+                <tr><td><span class="b b-muted">F-N07</span></td><td>Structured Logging</td><td>JSON formatter, request ID correlation, drivers: File, Stdout, External (Sentry)</td><td><span class="b b-blue">P1</span></td><td>0.4.0</td></tr>
+                <tr><td><span class="b b-muted">F-N08</span></td><td>Health Checks</td><td>/health endpoint: DB, Redis, Queue, Storage, External services</td><td><span class="b b-blue">P1</span></td><td>0.4.0</td></tr>
+            </tbody>
+        </table>
+
+        <!-- F7: AI -->
+        <h3 style="font-size:22px;font-weight:700;margin:40px 0 20px;">4.7 AI Integration</h3>
+        <table class="tbl">
+            <thead><tr><th>ID</th><th>Layer</th><th>Description</th><th>Priority</th><th>Milestone</th></tr></thead>
+            <tbody>
+                <tr><td><span class="b b-pink">F-01</span></td><td>AI Builder (Visual)</td><td>Drag-and-drop page builder, output = clean .volt templates (OctCMS-style)</td><td><span class="b b-orange">P2</span></td><td>0.7.0</td></tr>
+                <tr><td><span class="b b-pink">F-02</span></td><td>AI Assistant (Chat)</td><td>Admin panel chatbot: generate pages, sections, content from natural language</td><td><span class="b b-orange">P2</span></td><td>0.7.0</td></tr>
+                <tr><td><span class="b b-pink">F-03</span></td><td>AI Coder (CLI)</td><td>tavp ai "description" → generate complete module files</td><td><span class="b b-orange">P2</span></td><td>0.7.0</td></tr>
+                <tr><td><span class="b b-pink">F-04</span></td><td>AI Content (CMS)</td><td>Improve, translate, shorten, SEO-optimize content buttons in admin panel</td><td><span class="b b-orange">P2</span></td><td>0.7.0</td></tr>
+                <tr><td><span class="b b-pink">F-05</span></td><td>Multi-Driver AI</td><td>OpenAI, Anthropic, Ollama (self-hosted), TAVP Cloud drivers</td><td><span class="b b-orange">P2</span></td><td>0.7.0</td></tr>
+            </tbody>
+        </table>
+
+        <!-- F8: Module System -->
+        <h3 style="font-size:22px;font-weight:700;margin:40px 0 20px;">4.8 Module System</h3>
+        <table class="tbl">
+            <thead><tr><th>ID</th><th>Feature</th><th>Description</th><th>Priority</th><th>Milestone</th></tr></thead>
+            <tbody>
+                <tr><td><span class="b b-orange">F-M01</span></td><td>Composer Discovery</td><td>Auto-discover packages with type "tavpkit-module"</td><td><span class="b b-blue">P1</span></td><td>0.3.0</td></tr>
+                <tr><td><span class="b b-orange">F-M02</span></td><td>Service Provider</td><td>ModuleServiceProvider: register(), boot(), loadRoutes, loadMigrations, loadViews</td><td><span class="b b-blue">P1</span></td><td>0.3.0</td></tr>
+                <tr><td><span class="b b-orange">F-M03</span></td><td>Dependency Resolution</td><td>Topological sort for boot order, circular dependency detection</td><td><span class="b b-blue">P1</span></td><td>0.3.0</td></tr>
+                <tr><td><span class="b b-orange">F-M04</span></td><td>Module Lifecycle</td><td>Install, uninstall (with/without data), enable, disable</td><td><span class="b b-blue">P1</span></td><td>0.3.0</td></tr>
+                <tr><td><span class="b b-orange">F-M05</span></td><td>Module Marketplace</td><td>tavp.dev/marketplace, search, install, publish, versioning, reviews</td><td><span class="b b-orange">P2</span></td><td>0.8.0</td></tr>
+            </tbody>
+        </table>
+
+        <!-- F9: Non-Programmer -->
+        <h3 style="font-size:22px;font-weight:700;margin:40px 0 20px;">4.9 Non-Programmer Features</h3>
+        <table class="tbl">
+            <thead><tr><th>ID</th><th>Feature</th><th>Description</th><th>Priority</th><th>Milestone</th></tr></thead>
+            <tbody>
+                <tr><td><span class="b b-green">F-NP01</span></td><td>One-Click Hosting Install</td><td>cPanel / HestiaCP plugins for non-technical installation</td><td><span class="b b-orange">P2</span></td><td>0.5.0</td></tr>
+                <tr><td><span class="b b-green">F-NP02</span></td><td>Visual Page Editor</td><td>Edit CMS blocks inline, drag-drop sections (AI Builder)</td><td><span class="b b-orange">P2</span></td><td>0.7.0</td></tr>
+                <tr><td><span class="b b-green">F-NP03</span></td><td>Theme Customizer</td><td>Admin panel: change colors, fonts, layout, toggle sections</td><td><span class="b b-orange">P2</span></td><td>0.8.0</td></tr>
+                <tr><td><span class="b b-green">F-NP04</span></td><td>CMS Content Editor</td><td>Edit all text, images, menus from admin panel without code</td><td><span class="b b-orange">P2</span></td><td>0.5.0</td></tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ═══ 5. ARCHITECTURE ═══ -->
+<section id="architecture">
+    <div class="container">
+        <div class="section-hdr">
+            <div class="tag">5. Architecture</div>
+            <h2>System Architecture</h2>
+        </div>
+
+        <h3 style="font-size:20px;margin-bottom:16px;">5.1 Project Structure</h3>
+        <div class="cb">
+<span class="dir">tavp-project/</span>
+├── <span class="dir">app/</span>
+│   ├── <span class="dir">Domains/</span>                    <span class="desc">← Domain-Driven Design</span>
+│   │   ├── <span class="dir">Auth/</span>                    <span class="desc">← TAVPid module</span>
+│   │   ├── <span class="dir">User/</span>
+│   │   ├── <span class="dir">Notification/</span>
+│   │   ├── <span class="dir">Media/</span>
+│   │   └── <span class="dir">Content/</span>
+│   ├── <span class="dir">Shared/</span>                     <span class="desc">← Cross-domain utilities</span>
+│   │   ├── <span class="dir">Concerns/</span>               <span class="desc">← HasApiResponses, HasPagination</span>
+│   │   ├── <span class="dir">Exceptions/</span>
+│   │   └── <span class="dir">Helpers/</span>
+│   └── <span class="dir">Middleware/</span>
+│       ├── <span class="dir">Web/</span>                    <span class="desc">← CSRF, Session, Locale</span>
+│       └── <span class="dir">Api/</span>                    <span class="desc">← JWT, CORS, RateLimit</span>
+├── <span class="dir">core/</span>                          <span class="desc">← TAVP Core (framework layer)</span>
+│   ├── <span class="dir">Module/</span>                    <span class="desc">← ModuleRegistry, ServiceProvider</span>
+│   ├── <span class="dir">CLI/</span>                       <span class="desc">← CLI commands</span>
+│   ├── <span class="dir">Auth/</span>                      <span class="desc">← OTPService, TokenService</span>
+│   ├── <span class="dir">Coil/</span>                      <span class="desc">← Swoole runtime</span>
+│   ├── <span class="dir">Relay/</span>                     <span class="desc">← RoadRunner runtime</span>
+│   └── <span class="dir">Weave/</span>                     <span class="desc">← PHP Fibers async</span>
+├── <span class="dir">modules/</span>                       <span class="desc">← Installable modules</span>
+│   ├── <span class="dir">auth/</span>                      <span class="desc">← composer: tavp/module-auth</span>
+│   ├── <span class="dir">admin/</span>
+│   └── <span class="dir">custom-module/</span>
+├── <span class="dir">resources/</span>
+│   ├── <span class="dir">views/</span>                     <span class="desc">← .volt templates</span>
+│   │   ├── <span class="dir">layouts/</span>
+│   │   ├── <span class="dir">components/</span>            <span class="desc">← TAVPblocks components</span>
+│   │   ├── <span class="dir">pages/</span>
+│   │   └── <span class="dir">errors/</span>
+│   └── <span class="dir">assets/</span>                    <span class="desc">← CSS, JS, images</span>
+├── <span class="dir">config/</span>
+├── <span class="dir">routes/</span>
+│   ├── <span class="file">web.php</span>
+│   ├── <span class="file">admin.php</span>
+│   └── <span class="dir">api/</span>
+│       ├── <span class="file">v1.php</span>
+│       └── <span class="file">auth.php</span>
+├── <span class="dir">database/</span>
+│   ├── <span class="dir">migrations/</span>
+│   ├── <span class="dir">seeders/</span>
+│   └── <span class="dir">factories/</span>
+├── <span class="dir">public/</span>
+│   ├── <span class="file">index.php</span>                  <span class="desc">← Entry point</span>
+│   └── <span class="dir">build/</span>                     <span class="desc">← Compiled assets</span>
+├── <span class="dir">storage/</span>
+│   ├── <span class="dir">cache/</span>
+│   ├── <span class="dir">compiled/</span>                  <span class="desc">← Volt compiled templates</span>
+│   ├── <span class="dir">logs/</span>
+│   └── <span class="dir">sessions/</span>
+├── <span class="dir">docker/</span>
+├── <span class="dir">tests/</span>
+│   ├── <span class="dir">Unit/</span>
+│   ├── <span class="dir">Feature/</span>
+│   └── <span class="dir">Integration/</span>
+├── <span class="file">composer.json</span>
+├── <span class="file">package.json</span>
+├── <span class="file">.env.example</span>
+└── <span class="file">README.md</span>
+        </div>
+
+        <h3 style="font-size:20px;margin:32px 0 16px;">5.2 Runtime Architecture</h3>
+        <div class="cb">
+<span class="v">┌─────────────────────────────────────────────────────────────────────┐</span>
+<span class="v">│</span>                     <span class="t">TAVP Runtime Layers</span>                           <span class="v">│</span>
+<span class="v">│</span>                                                                     <span class="v">│</span>
+<span class="v">│</span>  <span class="k">Layer 1: Default (PHP-FPM)</span>                                        <span class="v">│</span>
+<span class="v">│</span>  ┌──────────────┐                                                   <span class="v">│</span>
+<span class="v">│</span>  │  <span class="s">PHP-FPM</span>      │ ← Traditional, shared hosting compatible         <span class="v">│</span>
+<span class="v">│</span>  │  + <span class="f">Phalcon</span>    │ ← C-extension loaded once at FPM start          <span class="v">│</span>
+<span class="v">│</span>  │  + <span class="t">TAVP Weave</span> │ ← PHP Fibers for lightweight async              <span class="v">│</span>
+<span class="v">│</span>  └──────────────┘                                                   <span class="v">│</span>
+<span class="v">│</span>                                                                     <span class="v">│</span>
+<span class="v">│</span>  <span class="k">Layer 2: High-Performance (TAVP Coil)</span>                             <span class="v">│</span>
+<span class="v">│</span>  ┌──────────────┐                                                   <span class="v">│</span>
+<span class="v">│</span>  │  <span class="f">Swoole</span>       │ ← Long-lived server, 10K coroutines              <span class="v">│</span>
+<span class="v">│</span>  │  + <span class="s">Phalcon</span>    │ ← Booted once, stays in memory                  <span class="v">│</span>
+<span class="v">│</span>  │  + <span class="t">Coroutines</span> │ ← Async I/O, connection pooling                 <span class="v">│</span>
+<span class="v">│</span>  └──────────────┘                                                   <span class="v">│</span>
+<span class="v">│</span>                                                                     <span class="v">│</span>
+<span class="v">│</span>  <span class="k">Layer 3: Enterprise (TAVP Relay)</span>                                  <span class="v">│</span>
+<span class="v">│</span>  ┌──────────────┐  ┌──────────────┐                                 <span class="v">│</span>
+<span class="v">│</span>  │  <span class="p">Go (RoadRunner)</span>│──│  <span class="s">PHP Workers</span>  │ ← Process isolation           <span class="v">│</span>
+<span class="v">│</span>  │  HTTP, Queue,  │  │  <span class="s">Phalcon</span>      │ ← Booted once per worker      <span class="v">│</span>
+<span class="v">│</span>  │  WS, gRPC,     │  │  Business     │ ← Only handles logic          <span class="v">│</span>
+<span class="v">│</span>  │  Metrics       │  │  Logic        │                               <span class="v">│</span>
+<span class="v">│</span>  └──────────────┘  └──────────────┘                                 <span class="v">│</span>
+<span class="v">│</span>                                                                     <span class="v">│</span>
+<span class="v">│</span>  <span class="fl">All three layers share the same application code.</span>                   <span class="v">│</span>
+<span class="v">│</span>  <span class="fl">Only the runtime changes. Zero code rewrite required.</span>               <span class="v">│</span>
+<span class="v">└─────────────────────────────────────────────────────────────────────┘</span>
+        </div>
+
+        <h3 style="font-size:20px;margin:32px 0 16px;">5.3 Tech Stack</h3>
+        <table class="tbl">
+            <thead><tr><th>Layer</th><th>Technology</th><th>Version</th><th>Role</th></tr></thead>
+            <tbody>
+                <tr><td>Framework</td><td>Phalcon</td><td>5.x</td><td>MVC C-extension engine</td></tr>
+                <tr><td>Template</td><td>Volt</td><td>(bundled with Phalcon)</td><td>Server-side rendering</td></tr>
+                <tr><td>CSS</td><td>Tailwind CSS</td><td>3.x / 4.x</td><td>Utility-first styling</td></tr>
+                <tr><td>JavaScript</td><td>Alpine.js</td><td>3.x</td><td>Client-side reactivity</td></tr>
+                <tr><td>Runtime (default)</td><td>PHP-FPM</td><td>8.1+</td><td>Standard PHP runtime</td></tr>
+                <tr><td>Runtime (perf)</td><td>Swoole</td><td>5.x / 6.x</td><td>Coroutine-based async server</td></tr>
+                <tr><td>Runtime (enterprise)</td><td>RoadRunner</td><td>2024.x</td><td>Go-based application server</td></tr>
+                <tr><td>Asset Build</td><td>Vite</td><td>5.x / 6.x</td><td>Tailwind + Alpine.js compilation</td></tr>
+                <tr><td>Database</td><td>MySQL / PostgreSQL / SQLite</td><td>-</td><td>Supported via Phalcon ORM</td></tr>
+                <tr><td>Cache</td><td>Redis / APCu / File</td><td>-</td><td>Multi-driver cache</td></tr>
+                <tr><td>Package</td><td>Composer</td><td>2.x</td><td>PHP dependency management</td></tr>
+                <tr><td>Testing</td><td>PHPUnit</td><td>10.x / 11.x</td><td>Unit + Feature + Integration</td></tr>
+                <tr><td>Static Analysis</td><td>PHPStan / Psalm</td><td>-</td><td>Code quality enforcement</td></tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ═══ 6. CONCURRENCY ═══ -->
+<section id="concurrency">
+    <div class="container">
+        <div class="section-hdr">
+            <div class="tag">6. Concurrency</div>
+            <h2>Three Concurrency Models</h2>
+        </div>
+
+        <div class="card-grid">
+            <div class="card card-accent blue">
+                <h4>TAVP Coil (Swoole)</h4>
+                <ul style="list-style:none;display:flex;flex-direction:column;gap:6px;margin-top:8px;">
+                    <li>Native coroutines via Swoole C-extension</li>
+                    <li>Async I/O: hooks all blocking PHP functions</li>
+                    <li>Persistent memory: Phalcon booted once per worker</li>
+                    <li>10,000+ concurrent coroutines per worker</li>
+                    <li>Connection pooling (MySQL, Redis, HTTP)</li>
+                    <li>Built-in: timer, task queue, WebSocket server</li>
+                    <li><strong>Requires:</strong> Swoole extension + VPS/dedicated server</li>
+                    <li><strong>Risks:</strong> Memory leaks, state pollution, debug difficulty — all mitigated by RequestCleanup mechanism</li>
+                </ul>
+            </div>
+            <div class="card card-accent purple">
+                <h4>TAVP Relay (RoadRunner)</h4>
+                <ul style="list-style:none;display:flex;flex-direction:column;gap:6px;margin-top:8px;">
+                    <li>Go-based application server handles HTTP, Queue, WebSocket, gRPC, Metrics</li>
+                    <li>Process isolation: PHP crash does not take down Go server</li>
+                    <li>Automatic worker restart on failure</li>
+                    <li>Built-in job pipeline (no external queue needed)</li>
+                    <li>Prometheus metrics export</li>
+                    <li>Single Go binary — no external dependencies</li>
+                    <li><strong>Requires:</strong> RoadRunner binary + VPS/dedicated server</li>
+                    <li><strong>Inspired by:</strong> Spiral Framework (5-10x faster than Laravel/Symfony)</li>
+                </ul>
+            </div>
+            <div class="card card-accent green">
+                <h4>TAVP Weave (PHP Fibers)</h4>
+                <ul style="list-style:none;display:flex;flex-direction:column;gap:6px;margin-top:8px;">
+                    <li>Cooperative multitasking built into PHP 8.1+</li>
+                    <li>Zero external dependencies (no extensions needed)</li>
+                    <li>Works on shared hosting (PHP-FPM compatible)</li>
+                    <li>Parallel I/O: HTTP calls, DB queries in one request</li>
+                    <li>Synchronous-looking syntax (no callback hell)</li>
+                    <li><strong>Limitation:</strong> Cannot hook blocking functions (not true non-blocking)</li>
+                    <li><strong>Best for:</strong> Shared hosting, lightweight parallel operations</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="info-box" style="margin-top:24px;">
+            <h4>Coexistence</h4>
+            <p>All three models share the same application code. A single project can use TAVP Relay as production server, TAVP Weave for parallel I/O inside controllers, and fall back to PHP-FPM on shared hosting. Only the runtime changes.</p>
+        </div>
+    </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ═══ 7. ZEROVER ═══ -->
+<section id="versioning">
+    <div class="container">
+        <div class="section-hdr">
+            <div class="tag">7. Versioning Strategy</div>
+            <h2>ZeroVer: 0-Based Versioning</h2>
+            <p>Per 0ver.org: "Software with major version zero is under initial development. Anything MAY change at any time."</p>
+        </div>
+
+        <div class="cb">
+<span class="t">ZeroVer Rules for TAVP:</span>
+
+<span class="f">Format:</span>  <span class="s">0.MINOR.PATCH</span>
+
+<span class="f">MINOR</span> (second number):
+  <span class="v">Increment when:</span> breaking changes, new major features, new ecosystem tools
+  <span class="v">Examples:</span>
+    0.1.0 → 0.2.0  (new features, possible breaking API changes)
+    0.2.0 → 0.3.0  (TAVPkit/TAVPhub launch, breaking module API)
+
+<span class="f">PATCH</span> (third number):
+  <span class="v">Increment when:</span> bug fixes, documentation updates, backward-compatible changes
+  <span class="v">Examples:</span>
+    0.1.0 → 0.1.1  (bug fix in CLI installer)
+    0.1.1 → 0.1.2  (documentation update)
+
+<span class="f">When does TAVP reach 1.0.0?</span>
+  <span class="v">When ALL of these are true:</span>
+  <span class="fl">  ☐ Public API is locked (no more breaking changes without major version bump)</span>
+  <span class="fl">  ☐ Core framework passes 90%+ test coverage</span>
+  <span class="fl">  ☐ All ecosystem tools (TAVPkit, TAVPid, TAVPhub, TAVPblocks) are stable</span>
+  <span class="fl">  ☐ Documentation is complete (100+ pages)</span>
+  <span class="fl">  ☐ Module system API is stable (no breaking changes in module contracts)</span>
+  <span class="fl">  ☐ At least 10 community modules exist and work without modification</span>
+  <span class="fl">  ☐ At least 3 hosting providers support TAVP</span>
+  <span class="fl">  ☐ Performance benchmarks are published and reproducible</span>
+
+<span class="f">Post-1.0 Rules:</span>
+  <span class="v">Follow strict SemVer (MAJOR.MINOR.PATCH)</span>
+  MAJOR = breaking changes (rare, planned well in advance)
+  MINOR = new features (backward-compatible)
+  PATCH = bug fixes
+        </div>
+    </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ═══ 8. MILESTONES ═══ -->
+<section id="milestones">
+    <div class="container">
+        <div class="section-hdr">
+            <div class="tag">8. Milestones</div>
+            <h2>ZeroVer Milestone Roadmap</h2>
+            <p>Each milestone maps to a ZeroVer minor version. Features are locked per milestone — no scope creep between versions.</p>
+        </div>
+
+        <div class="ms-track">
+
+            <!-- 0.1.0 -->
+            <div class="ms-item">
+                <div class="ms-dot" style="border-color:var(--accent-green);color:var(--accent-green);">01</div>
+                <div class="ms-ver" style="background:rgba(52,211,153,0.1);color:var(--accent-green);">0.1.0</div>
+                <div class="ms-name">Genesis</div>
+                <div class="ms-sub">Core framework + CLI + Auto-installer + Basic auth. The foundation that everything else builds on.</div>
+                <div class="ms-grid">
+                    <div class="ms-card">
+                        <h5>Deliverables</h5>
+                        <ul>
+                            <li>TAVP Core: Router, Controller, Volt, ORM, Migration, Validation, Middleware, DI, Config, Exception Handler, Helpers</li>
+                            <li>CLI: tavp new, tavp serve, make:model, make:controller, make:migration, migrate</li>
+                            <li>Auto Phalcon Installer: OS detection, PHP detection, packages.tavp.dev repository, fallback chain, php.ini config</li>
+                            <li>TAVPid (basic): OTP via Email, Session auth, JWT auth, rate limiting</li>
+                            <li>3 Tier Templates: website, app, enterprise (skeleton only)</li>
+                            <li>Basic documentation site (docs.tavp.dev)</li>
+                        </ul>
+                    </div>
+                    <div class="ms-card">
+                        <h5>Acceptance Criteria</h5>
+                        <ul>
+                            <li><code style="color:var(--accent-cyan);">tavp new my-app</code> completes in &lt; 60 seconds</li>
+                            <li>Phalcon auto-installs on Ubuntu 22.04/24.04, Debian 12, macOS 14+</li>
+                            <li><code style="color:var(--accent-cyan);">tavp serve</code> starts dev server at localhost:8080</li>
+                            <li>OTP login flow works: email → code → login → dashboard</li>
+                            <li>JWT auth works: /api/v1/auth/send-otp → verify → token</li>
+                            <li>All CLI commands produce correct output</li>
+                            <li>Unit tests: 70%+ coverage on core framework</li>
+                            <li>Documentation: Getting Started + CLI Reference + Auth Guide</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="ms-accept">
+                    <h5>Definition of Done</h5>
+                    <ul>
+                        <li>Developer can install TAVP, create app, add auth, run dev server — all in under 5 minutes</li>
+                        <li>Works on fresh Ubuntu/macOS without manual Phalcon compilation</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 0.2.0 -->
+            <div class="ms-item">
+                <div class="ms-dot" style="border-color:var(--accent-blue);color:var(--accent-blue);">02</div>
+                <div class="ms-ver" style="background:rgba(79,143,247,0.1);color:var(--accent-blue);">0.2.0</div>
+                <div class="ms-name">Tools</div>
+                <div class="ms-sub">Developer tools, expanded auth, basic components, events, mail. The "it feels good to use" milestone.</div>
+                <div class="ms-grid">
+                    <div class="ms-card">
+                        <h5>Deliverables</h5>
+                        <ul>
+                            <li>CLI: make:scaffold (full CRUD generation), tavp weave:enable, tavp migrate:fresh --seed</li>
+                            <li>TAVPid expanded: OTP via SMS + WhatsApp, Role & Permission system, Magic Link auth</li>
+                            <li>TAVPblocks basic: 15 essential components (button, input, select, modal, dropdown, toast, card, badge, avatar, datatable, pagination, form-group, alert, skeleton, empty-state)</li>
+                            <li>Events & Listeners system</li>
+                            <li>Mail abstraction (SMTP, Mailgun, SES)</li>
+                            <li>Flash messages, form validation patterns</li>
+                            <li>Debug toolbar (dev mode)</li>
+                            <li>Hot reload dev server</li>
+                            <li>IDE support: VS Code extension (syntax highlighting, snippets)</li>
+                        </ul>
+                    </div>
+                    <div class="ms-card">
+                        <h5>Acceptance Criteria</h5>
+                        <ul>
+                            <li><code style="color:var(--accent-cyan);">tavp make:scaffold Post --fields="title:string,body:text"</code> generates Model, Controller, Views, Migration, Routes</li>
+                            <li>TAVPblocks components render correctly in Volt templates</li>
+                            <li>OTP via SMS/WhatsApp works with Twilio credentials</li>
+                            <li>Role/Permission middleware blocks unauthorized access</li>
+                            <li>Events fire and listeners execute correctly</li>
+                            <li>Mail sends via SMTP without errors</li>
+                            <li>Unit tests: 80%+ coverage</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 0.3.0 -->
+            <div class="ms-item">
+                <div class="ms-dot" style="border-color:var(--accent-purple);color:var(--accent-purple);">03</div>
+                <div class="ms-ver" style="background:rgba(139,92,246,0.1);color:var(--accent-purple);">0.3.0</div>
+                <div class="ms-name">Ecosystem</div>
+                <div class="ms-sub">TAVPkit, TAVPhub, module system, infrastructure primitives. The "build real apps" milestone.</div>
+                <div class="ms-grid">
+                    <div class="ms-card">
+                        <h5>Deliverables</h5>
+                        <ul>
+                            <li>TAVPkit (full starter): teams, API, profile, 2FA, session management</li>
+                            <li>TAVPhub (admin panel): CRUD resources, table builder, form builder, dashboard widgets, sidebar nav</li>
+                            <li>Module system: Composer discovery, ServiceProviders, dependency resolution, lifecycle management</li>
+                            <li>Infrastructure: Cache (Redis, File, APCu), Queue (Redis, Database), Storage (Local, S3)</li>
+                            <li>tavp module:install / disable / uninstall commands</li>
+                            <li>tavp upgrade --to=app / --to=enterprise</li>
+                            <li>TAVPid: Social OAuth (Google, Apple), TOTP, Device token registration</li>
+                            <li>Universal server installer script</li>
+                            <li>Starter templates: 5 (Blog, SaaS, Portfolio, Admin Dashboard, API Backend)</li>
+                        </ul>
+                    </div>
+                    <div class="ms-card">
+                        <h5>Acceptance Criteria</h5>
+                        <ul>
+                            <li><code style="color:var(--accent-cyan);">tavp kit:install --teams</code> generates full team management app</li>
+                            <li><code style="color:var(--accent-cyan);">tavp hub:make:resource Post</code> creates admin CRUD</li>
+                            <li>Custom module install via Composer works end-to-end</li>
+                            <li><code style="color:var(--accent-cyan);">tavp upgrade --to=enterprise</code> adds missing modules without breaking existing code</li>
+                            <li>Cache driver swap (Redis → File) works without code change</li>
+                            <li>Unit + Feature tests: 85%+ coverage</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 0.4.0 -->
+            <div class="ms-item">
+                <div class="ms-dot" style="border-color:var(--accent-cyan);color:var(--accent-cyan);">04</div>
+                <div class="ms-ver" style="background:rgba(34,211,238,0.1);color:var(--accent-cyan);">0.4.0</div>
+                <div class="ms-name">Polish</div>
+                <div class="ms-sub">Full component library, logging, health checks, optimization, testing infrastructure. The "production-ready" milestone.</div>
+                <div class="ms-grid">
+                    <div class="ms-card">
+                        <h5>Deliverables</h5>
+                        <ul>
+                            <li>TAVPblocks full: 40+ components (all from product brief)</li>
+                            <li>Structured logging (JSON, request ID, Sentry integration)</li>
+                            <li>Health check endpoints (DB, Redis, Queue, Storage)</li>
+                            <li>Production optimization: tavp optimize (config cache, route cache, view cache, autoloader)</li>
+                            <li>Docker: production Dockerfile, docker-compose.prod.yml</li>
+                            <li>CI/CD: GitHub Actions templates (test, build, deploy)</li>
+                            <li>Performance benchmark suite (k6 load tests)</li>
+                            <li>Static analysis: PHPStan/Psalm configuration</li>
+                            <li>API documentation generator (OpenAPI)</li>
+                        </ul>
+                    </div>
+                    <div class="ms-card">
+                        <h5>Acceptance Criteria</h5>
+                        <ul>
+                            <li>All 40+ TAVPblocks components pass visual regression tests</li>
+                            <li>Health check endpoint returns structured JSON with pass/fail per service</li>
+                            <li>Docker production build: &lt; 50MB image size</li>
+                            <li>k6 load test: 5000+ req/s on standard VPS (2 core, 4GB)</li>
+                            <li>PHPStan level 8: zero errors</li>
+                            <li>Unit + Feature + Integration tests: 90%+ coverage</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 0.5.0 -->
+            <div class="ms-item">
+                <div class="ms-dot" style="border-color:var(--accent-orange);color:var(--accent-orange);">05</div>
+                <div class="ms-ver" style="background:rgba(251,146,60,0.1);color:var(--accent-orange);">0.5.0</div>
+                <div class="ms-name">Coil</div>
+                <div class="ms-sub">Swoole runtime, hosting integrations, search, broadcasting. The "high-performance" milestone.</div>
+                <div class="ms-grid">
+                    <div class="ms-card">
+                        <h5>Deliverables</h5>
+                        <ul>
+                            <li>TAVP Coil: Swoole-based runtime with coroutines, connection pool, RequestCleanup</li>
+                            <li>tavp coil:start CLI command with worker/coroutine configuration</li>
+                            <li>cPanel plugin (one-click installer)</li>
+                            <li>HestiaCP integration</li>
+                            <li>Search abstraction: Meilisearch + Elasticsearch + Database fallback</li>
+                            <li>Broadcasting: Soketi + Pusher + Redis drivers</li>
+                            <li>CMS module (optional, open source): CMS blocks, collections, menus, media</li>
+                            <li>Non-programmer: CMS content editor in admin panel</li>
+                        </ul>
+                    </div>
+                    <div class="ms-card">
+                        <h5>Acceptance Criteria</h5>
+                        <ul>
+                            <li><code style="color:var(--accent-cyan);">tavp coil:start</code> boots Swoole server, loads Phalcon once, handles concurrent requests</li>
+                            <li>RequestCleanup: zero state pollution between requests (verified by test)</li>
+                            <li>cPanel plugin: one-click install completes without SSH access</li>
+                            <li>Search: switching from Database to Meilisearch requires only config change</li>
+                            <li>WebSocket broadcast: message sent from controller received by client within 100ms</li>
+                            <li>CMS: admin can edit all text on frontend without touching code</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 0.6.0 -->
+            <div class="ms-item">
+                <div class="ms-dot" style="border-color:var(--accent-pink);color:var(--accent-pink);">06</div>
+                <div class="ms-ver" style="background:rgba(236,72,153,0.1);color:var(--accent-pink);">0.6.0</div>
+                <div class="ms-name">Relay</div>
+                <div class="ms-sub">RoadRunner runtime, TAVPhive SaaS billing, Kubernetes deployment. The "enterprise" milestone.</div>
+                <div class="ms-grid">
+                    <div class="ms-card">
+                        <h5>Deliverables</h5>
+                        <ul>
+                            <li>TAVP Relay: RoadRunner-based runtime with process isolation</li>
+                            <li>tavp relay:start CLI command with worker/service configuration</li>
+                            <li>TAVPhive: subscription management, invoicing, payment gateways (Stripe, Midtrans, Xendit, PayPal)</li>
+                            <li>Webhook handling for payment providers</li>
+                            <li>Kubernetes manifests (deployment, service, ingress, HPA, configmap, secrets, cronjob)</li>
+                            <li>Terraform modules (VPC, RDS, ElastiCache, S3, CloudFront)</li>
+                            <li>Multi-tenancy support (database-per-tenant or schema-per-tenant)</li>
+                        </ul>
+                    </div>
+                    <div class="ms-card">
+                        <h5>Acceptance Criteria</h5>
+                        <ul>
+                            <li><code style="color:var(--accent-cyan);">tavp relay:start</code> boots RoadRunner with PHP workers, handles concurrent requests</li>
+                            <li>PHP worker crash does not take down the server (auto-restart verified)</li>
+                            <li>Stripe checkout flow: plan selection → payment → subscription active</li>
+                            <li>K8s deployment: pods auto-scale based on CPU/memory</li>
+                            <li>Terraform: <code style="color:var(--accent-cyan);">terraform apply</code> creates full infrastructure</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 0.7.0 -->
+            <div class="ms-item">
+                <div class="ms-dot" style="border-color:var(--accent-yellow);color:var(--accent-yellow);">07</div>
+                <div class="ms-ver" style="background:rgba(251,191,36,0.1);color:var(--accent-yellow);">0.7.0</div>
+                <div class="ms-name">Intelligence</div>
+                <div class="ms-sub">AI integration, visual builder, non-programmer features. The "AI-powered" milestone.</div>
+                <div class="ms-grid">
+                    <div class="ms-card">
+                        <h5>Deliverables</h5>
+                        <ul>
+                            <li>AI Manager: multi-driver support (OpenAI, Anthropic, Ollama, TAVP Cloud)</li>
+                            <li>AI Builder (Visual): drag-drop page builder, output = clean .volt templates</li>
+                            <li>AI Assistant (Chat): admin panel chatbot for page/content generation</li>
+                            <li>AI Coder (CLI): tavp ai command for module generation</li>
+                            <li>AI Content (CMS): improve, translate, shorten, SEO-optimize buttons</li>
+                            <li>Theme system: filesystem-based themes, theme options in admin</li>
+                            <li>Theme customizer: admin panel color/font/layout/section toggles</li>
+                        </ul>
+                    </div>
+                    <div class="ms-card">
+                        <h5>Acceptance Criteria</h5>
+                        <ul>
+                            <li>AI Builder generates clean .volt templates (not bloated HTML)</li>
+                            <li>AI Assistant generates complete page from natural language description</li>
+                            <li>AI Coder generates runnable module from description</li>
+                            <li>AI Content: translate to 5+ languages, SEO meta generation</li>
+                            <li>Theme switch: admin changes theme → site changes without code</li>
+                            <li>Non-programmer can build complete website in 30-60 minutes</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 0.8.0 -->
+            <div class="ms-item">
+                <div class="ms-dot" style="border-color:var(--accent-red);color:var(--accent-red);">08</div>
+                <div class="ms-ver" style="background:rgba(239,68,68,0.1);color:var(--accent-red);">0.8.0</div>
+                <div class="ms-name">Marketplace</div>
+                <div class="ms-sub">Module & theme marketplace, community launch, revenue system. The "ecosystem" milestone.</div>
+                <div class="ms-grid">
+                    <div class="ms-card">
+                        <h5>Deliverables</h5>
+                        <ul>
+                            <li>Module marketplace: tavp.dev/marketplace (search, install, publish, versioning, reviews)</li>
+                            <li>Theme marketplace: tavp.dev/themes (browse, preview, install, customize)</li>
+                            <li>tavp module:publish command (package & upload to marketplace)</li>
+                            <li>tavp theme:publish command</li>
+                            <li>Revenue system: developer dashboard, sales tracking, payout management</li>
+                            <li>Community launch: GitHub open source, contribution guidelines, code of conduct</li>
+                            <li>Ambassador program: community leaders, early adopter recognition</li>
+                            <li>"Built with TAVP" showcase page</li>
+                        </ul>
+                    </div>
+                    <div class="ms-card">
+                        <h5>Acceptance Criteria</h5>
+                        <ul>
+                            <li>Developer can publish module to marketplace via CLI</li>
+                            <li>User can search, install module from admin panel</li>
+                            <li>Revenue: developer receives 80% of sales</li>
+                            <li>Community: at least 10 community modules published</li>
+                            <li>Showcase: at least 5 apps listed on "Built with TAVP"</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 0.9.0 -->
+            <div class="ms-item">
+                <div class="ms-dot" style="border-color:var(--accent-green);color:var(--accent-green);">09</div>
+                <div class="ms-ver" style="background:rgba(52,211,153,0.1);color:var(--accent-green);">0.9.0</div>
+                <div class="ms-name">Maturity</div>
+                <div class="ms-sub">Security audit, performance certification, documentation finalization, API freeze preparation. The "pre-stable" milestone.</div>
+                <div class="ms-grid">
+                    <div class="ms-card">
+                        <h5>Deliverables</h5>
+                        <ul>
+                            <li>Security audit: OWASP Top 10 review, dependency vulnerability scanning</li>
+                            <li>Performance certification: published benchmarks, reproducible test suite</li>
+                            <li>Documentation: 100+ pages, fully searchable, API reference auto-generated</li>
+                            <li>Migration guide: Laravel → TAVP, WordPress → TAVP</li>
+                            <li>Flutter integration guide with complete example app</li>
+                            <li>API freeze announcement: no more breaking changes in public API</li>
+                            <li>Deprecation warnings for any planned removals in 1.0</li>
+                            <li>Enterprise support tier pricing published</li>
+                            <li>TAVP Cloud beta launch</li>
+                        </ul>
+                    </div>
+                    <div class="ms-card">
+                        <h5>Acceptance Criteria</h5>
+                        <ul>
+                            <li>Security audit: zero critical/high vulnerabilities</li>
+                            <li>Documentation: every public method has docblock + example</li>
+                            <li>Migration guide: tested by 3+ developers unfamiliar with TAVP</li>
+                            <li>API freeze: all public interfaces documented and versioned</li>
+                            <li>Deprecation warnings: present in code, documented in changelog</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 1.0.0 -->
+            <div class="ms-item">
+                <div class="ms-dot" style="border-color:var(--accent-blue);color:var(--accent-blue);width:40px;height:40px;font-size:14px;">1.0</div>
+                <div class="ms-ver" style="background:var(--gradient-blue);color:white;font-size:22px;">1.0.0</div>
+                <div class="ms-name">Stable Release</div>
+                <div class="ms-sub">Public API locked. Production-ready. Long-term support begins. TAVP is now a mature, stable platform.</div>
+                <div class="ms-grid">
+                    <div class="ms-card">
+                        <h5>Requirements</h5>
+                        <ul>
+                            <li>Public API is locked — SemVer rules apply from this point</li>
+                            <li>Core framework: 90%+ test coverage, zero critical bugs</li>
+                            <li>All ecosystem tools stable: TAVPkit, TAVPid, TAVPhub, TAVPblocks, TAVPhive</li>
+                            <li>All three runtimes stable: PHP-FPM, Coil (Swoole), Relay (RoadRunner)</li>
+                            <li>Documentation: complete, tested, searchable (100+ pages)</li>
+                            <li>Module system API: stable, documented, 10+ community modules working</li>
+                            <li>Hosting: 3+ providers support TAVP</li>
+                            <li>Marketplace: live with modules and themes</li>
+                            <li>Performance benchmarks: published, reproducible, third-party verified</li>
+                        </ul>
+                    </div>
+                    <div class="ms-card">
+                        <h5>Post-1.0 Commitments</h5>
+                        <ul>
+                            <li>SemVer: MAJOR.MINOR.PATCH — breaking changes only in MAJOR versions</li>
+                            <li>LTS: each MAJOR version receives 2 years of security patches</li>
+                            <li>Changelog: detailed, per-version, migration guides for breaking changes</li>
+                            <li>Backward compatibility: deprecated features kept for at least 2 minor versions</li>
+                            <li>Community governance: RFC process for major changes</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ═══ 9. NFR ═══ -->
+<section id="nfr">
+    <div class="container">
+        <div class="section-hdr">
+            <div class="tag">9. Non-Functional Requirements</div>
+            <h2>Quality Attributes</h2>
+        </div>
+
+        <div class="card-grid">
+            <div class="card card-accent green">
+                <h4>⚡ Performance</h4>
+                <ul style="list-style:none;display:flex;flex-direction:column;gap:6px;">
+                    <li><span class="b b-green">NFR-P1</span> P99 latency: &lt;5ms for standard CRUD request (PHP-FPM)</li>
+                    <li><span class="b b-green">NFR-P2</span> P99 latency: &lt;2ms for standard CRUD request (Coil)</li>
+                    <li><span class="b b-green">NFR-P3</span> RAM: &lt;15MB per worker (PHP-FPM), &lt;30MB (Coil)</li>
+                    <li><span class="b b-green">NFR-P4</span> Throughput: 5000+ req/s on 2-core VPS (PHP-FPM)</li>
+                    <li><span class="b b-green">NFR-P5</span> Throughput: 15000+ req/s on 2-core VPS (Coil)</li>
+                    <li><span class="b b-green">NFR-P6</span> Install to running: &lt;60 seconds</li>
+                    <li><span class="b b-green">NFR-P7</span> CLI response time: &lt;500ms for any command</li>
+                </ul>
+            </div>
+            <div class="card card-accent blue">
+                <h4>🔒 Security</h4>
+                <ul style="list-style:none;display:flex;flex-direction:column;gap:6px;">
+                    <li><span class="b b-blue">NFR-S1</span> OWASP Top 10: all vulnerabilities addressed</li>
+                    <li><span class="b b-blue">NFR-S2</span> CSRF protection: mandatory for all web forms</li>
+                    <li><span class="b b-blue">NFR-S3</span> XSS prevention: auto-escaping in Volt templates</li>
+                    <li><span class="b b-blue">NFR-S4</span> SQL injection: prevented by ORM parameterized queries</li>
+                    <li><span class="b b-blue">NFR-S5</span> Rate limiting: configurable per-route and per-IP</li>
+                    <li><span class="b b-blue">NFR-S6</span> Dependency scanning: automated in CI/CD pipeline</li>
+                    <li><span class="b b-blue">NFR-S7</span> OTP: hashed storage (SHA-256), max attempts, expiry</li>
+                </ul>
+            </div>
+            <div class="card card-accent purple">
+                <h4>📐 Reliability</h4>
+                <ul style="list-style:none;display:flex;flex-direction:column;gap:6px;">
+                    <li><span class="b b-purple">NFR-R1</span> Test coverage: 90%+ at 1.0</li>
+                    <li><span class="b b-purple">NFR-R2</span> Zero critical bugs at each milestone release</li>
+                    <li><span class="b b-purple">NFR-R3</span> Graceful degradation: missing module does not crash app</li>
+                    <li><span class="b b-purple">NFR-R4</span> Error recovery: actionable error messages, not stack traces</li>
+                    <li><span class="b b-purple">NFR-R5</span> Data integrity: migrations are reversible</li>
+                </ul>
+            </div>
+            <div class="card card-accent orange">
+                <h4>🔧 Maintainability</h4>
+                <ul style="list-style:none;display:flex;flex-direction:column;gap:6px;">
+                    <li><span class="b b-orange">NFR-M1</span> PHPStan level 8: zero errors</li>
+                    <li><span class="b b-orange">NFR-M2</span> Code style: PHP-CS-Fixer enforced in CI</li>
+                    <li><span class="b b-orange">NFR-M3</span> Every public method: docblock with @param, @return, @throws</li>
+                    <li><span class="b b-orange">NFR-M4</span> Changelog: detailed per-version entries</li>
+                    <li><span class="b b-orange">NFR-M5</span> Architecture decision records (ADRs) for major decisions</li>
+                </ul>
+            </div>
+            <div class="card card-accent cyan">
+                <h4>🌍 Compatibility</h4>
+                <ul style="list-style:none;display:flex;flex-direction:column;gap:6px;">
+                    <li><span class="b b-cyan">NFR-C1</span> PHP: 8.1, 8.2, 8.3, 8.4</li>
+                    <li><span class="b b-cyan">NFR-C2</span> OS: Ubuntu 22.04/24.04, Debian 12, CentOS 9, Rocky 9, macOS 14+</li>
+                    <li><span class="b b-cyan">NFR-C3</span> Database: MySQL 8+, PostgreSQL 15+, SQLite 3.35+</li>
+                    <li><span class="b b-cyan">NFR-C4</span> Hosting: shared (PHP-FPM), VPS (Coil), dedicated (Relay)</li>
+                    <li><span class="b b-cyan">NFR-C5</span> Browser: Chrome 90+, Firefox 90+, Safari 15+, Edge 90+</li>
+                </ul>
+            </div>
+            <div class="card card-accent pink">
+                <h4>📖 Documentation</h4>
+                <ul style="list-style:none;display:flex;flex-direction:column;gap:6px;">
+                    <li><span class="b b-pink">NFR-D1</span> Getting Started: &lt;5 minutes to first running app</li>
+                    <li><span class="b b-pink">NFR-D2</span> API Reference: auto-generated from docblocks</li>
+                    <li><span class="b b-pink">NFR-D3</span> Tutorials: 10+ step-by-step guides</li>
+                    <li><span class="b b-pink">NFR-D4</span> Migration guides: Laravel → TAVP, WordPress → TAVP</li>
+                    <li><span class="b b-pink">NFR-D5</span> Searchable: full-text search on docs.tavp.dev</li>
+                    <li><span class="b b-pink">NFR-D6</span> Examples: every feature has working code example</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ═══ 10. RISKS ═══ -->
+<section id="risks">
+    <div class="container">
+        <div class="section-hdr">
+            <div class="tag">10. Risks &amp; Mitigations</div>
+            <h2>Known Risks</h2>
+        </div>
+
+        <table class="tbl">
+            <thead><tr><th>ID</th><th>Risk</th><th>Impact</th><th>Likelihood</th><th>Mitigation</th></tr></thead>
+            <tbody>
+                <tr>
+                    <td><span class="b b-red">R1</span></td>
+                    <td>Phalcon C-extension hard to install on some environments</td>
+                    <td><span class="b b-red">High</span></td>
+                    <td><span class="b b-orange">Medium</span></td>
+                    <td>Auto-installer with fallback chain. Pre-compiled packages at packages.tavp.dev. Universal installer script. cPanel/HestiaCP plugins.</td>
+                </tr>
+                <tr>
+                    <td><span class="b b-red">R2</span></td>
+                    <td>Phalcon project abandoned or development stalls</td>
+                    <td><span class="b b-red">High</span></td>
+                    <td><span class="b b-muted">Low</span></td>
+                    <td>Phalcon has been active since 2012. TAVP provides abstraction layer that could theoretically swap engine. Monitor Phalcon release cadence.</td>
+                </tr>
+                <tr>
+                    <td><span class="b b-orange">R3</span></td>
+                    <td>Small community, slow adoption</td>
+                    <td><span class="b b-orange">Medium</span></td>
+                    <td><span class="b b-orange">Medium</span></td>
+                    <td>Focus on DX first (Laravel-familiar syntax). Performance data as proof. WordPress migration guide. Hosting ecosystem for natural adoption.</td>
+                </tr>
+                <tr>
+                    <td><span class="b b-orange">R4</span></td>
+                    <td>Swoole memory leaks in long-running processes</td>
+                    <td><span class="b b-orange">Medium</span></td>
+                    <td><span class="b b-orange">Medium</span></td>
+                    <td>RequestCleanup mechanism. Stateless service enforcement. Per-coroutine memory tracking in debug mode. TAVP Relay (RoadRunner) as alternative.</td>
+                </tr>
+                <tr>
+                    <td><span class="b b-orange">R5</span></td>
+                    <td>Ecosystem fragmentation (too many competing community modules)</td>
+                    <td><span class="b b-orange">Medium</span></td>
+                    <td><span class="b b-muted">Low</span></td>
+                    <td>Official modules for core features. Module quality guidelines. Review system in marketplace. "Recommended" badges.</td>
+                </tr>
+                <tr>
+                    <td><span class="b b-yellow">R6</span></td>
+                    <td>PHP ecosystem shifts (major PHP changes break Phalcon)</td>
+                    <td><span class="b b-yellow">Low</span></td>
+                    <td><span class="b b-muted">Low</span></td>
+                    <td>Phalcon tracks PHP releases. TAVP supports PHP 8.1-8.4. CI tests on all supported versions.</td>
+                </tr>
+                <tr>
+                    <td><span class="b b-yellow">R7</span></td>
+                    <td>AI integration costs are high for self-hosted users</td>
+                    <td><span class="b b-yellow">Low</span></td>
+                    <td><span class="b b-orange">Medium</span></td>
+                    <td>Ollama driver for free self-hosted AI. TAVP Cloud free tier. AI features are optional, not core dependency.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ═══ 11. GLOSSARY ═══ -->
+<section>
+    <div class="container">
+        <div class="section-hdr">
+            <div class="tag">11. Glossary</div>
+            <h2>Key Terms</h2>
+        </div>
+
+        <table class="tbl">
+            <thead><tr><th>Term</th><th>Definition</th></tr></thead>
+            <tbody>
+                <tr><td><strong>TAVP</strong></td><td>Tech stack: Tailwind CSS + Alpine.js + Volt + Phalcon. Kumpulan komponen terintegrasi dengan framework Phalcon.</td></tr>
+                <tr><td><strong>ZeroVer</strong></td><td>0-based versioning: 0.MINOR.PATCH. Stay at 0.x during active development. 1.0 = stable, API locked.</td></tr>
+                <tr><td><strong>Phalcon</strong></td><td>PHP MVC framework delivered as C-extension. The engine behind TAVP.</td></tr>
+                <tr><td><strong>TAVPid</strong></td><td>Auth starter tool. OTP-first authentication via email, SMS, WhatsApp, TOTP.</td></tr>
+                <tr><td><strong>TAVPkit</strong></td><td>Full starter kit. Auth + Teams + API + Profile.</td></tr>
+                <tr><td><strong>TAVPhub</strong></td><td>Admin panel framework. CRUD, dashboard, datatables, role-based access.</td></tr>
+                <tr><td><strong>TAVPblocks</strong></td><td>Component library. 40+ UI components (Tailwind + Alpine.js + Volt).</td></tr>
+                <tr><td><strong>TAVPhive</strong></td><td>SaaS billing tool. Subscriptions, invoicing, payment gateways.</td></tr>
+                <tr><td><strong>TAVPCoil</strong></td><td>Swoole-based runtime. Coroutines, async I/O, persistent memory.</td></tr>
+                <tr><td><strong>TAVPRelay</strong></td><td>RoadRunner-based runtime. Go infrastructure, process isolation.</td></tr>
+                <tr><td><strong>TAVPWeave</strong></td><td>PHP Fibers-based lightweight async. Zero dependency, shared hosting compatible.</td></tr>
+                <tr><td><strong>Volt</strong></td><td>Phalcon's template engine. Inspired by Jinja2 and Blade.</td></tr>
+                <tr><td><strong>RequestCleanup</strong></td><td>TAVP Coil mechanism that resets state between Swoole coroutine requests.</td></tr>
+                <tr><td><strong>packages.tavp.dev</strong></td><td>TAVP repository hosting pre-compiled Phalcon .deb/.rpm packages.</td></tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ═══ FOOTER ═══ -->
+<footer>
+    <div class="container">
+        <div class="f-brand">TAVP PRD</div>
+        <div class="f-sub">Product Requirements Document — ZeroVer 0.x.y</div>
+        <div style="font-size:13px;color:var(--text-muted);line-height:1.8;">
+            This document defines the complete requirements for building TAVP from zero to mature product.<br>
+            Versioned with ZeroVer (0ver.org): 0.MINOR.PATCH during development, 1.0.0 when stable.
+        </div>
+        <div class="f-copy">tavp.dev — Open Source (MIT License) — Last updated: July 2025</div>
+    </div>
+</footer>
+
+</body>
+</html>

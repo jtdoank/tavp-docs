@@ -1,0 +1,117 @@
+# Cache Guide
+
+> Working with cache in TAVP Stack.
+
+## Overview
+
+Caching improves performance by storing frequently accessed data. Use cache for:
+- Database query results
+- API responses
+- Configuration
+- Sessions
+
+## Configuration
+
+```php
+// config/cache.php
+return [
+    'default' => env('CACHE_DRIVER', 'file'),
+    
+    'stores' => [
+        'file' => [
+            'driver' => 'file',
+            'path' => storage_path('cache'),
+        ],
+        
+        'redis' => [
+            'driver' => 'redis',
+            'connection' => 'default',
+        ],
+        
+        'apcu' => [
+            'driver' => 'apcu',
+        ],
+    ],
+];
+```
+
+## Basic Usage
+
+```php
+use Tavp\Support\Facades\Cache;
+
+// Store item
+Cache::put('key', 'value', now()->addMinutes(30));
+
+// Get item
+$value = Cache::get('key');
+
+// Get with default
+$value = Cache::get('key', 'default');
+
+// Check if exists
+if (Cache::has('key')) {
+    // Item exists
+}
+
+// Delete item
+Cache::forget('key');
+
+// Clear all cache
+Cache::flush();
+```
+
+## Cache Remember
+
+```php
+// Get from cache or store
+$value = Cache::remember('key', now()->addMinutes(30), function () {
+    return expensiveOperation();
+});
+
+// Get from cache or store forever
+$value = Cache::rememberForever('key', function () {
+    return expensiveOperation();
+});
+```
+
+## Cache Tags
+
+```php
+// Store with tags
+Cache::tags(['users', 'admins'])->put('user:1', $user, now()->addHours(2));
+
+// Get with tags
+$user = Cache::tags(['users', 'admins'])->get('user:1');
+
+// Clear by tags
+Cache::tags(['users'])->flush();
+```
+
+## Cache Increment/Decrement
+
+```php
+// Increment
+Cache::increment('counter');
+Cache::increment('counter', 5);
+
+// Decrement
+Cache::decrement('counter');
+Cache::decrement('counter', 5);
+```
+
+## Cache Driver Comparison
+
+| Driver | Speed | Persistence | Distributed |
+|--------|-------|-------------|-------------|
+| file | Medium | Yes | No |
+| redis | Fast | Yes | Yes |
+| apcu | Very Fast | No | No |
+
+## Best Practices
+
+1. **Cache database queries** — Reduces DB load
+2. **Use cache tags** — For logical grouping
+3. **Set expiration** — Prevents stale data
+4. **Handle cache misses** — Graceful fallback
+5. **Monitor cache hit rate** — Optimize usage

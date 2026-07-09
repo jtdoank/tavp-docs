@@ -1,0 +1,132 @@
+<?php
+/**
+ * TAVP ORM Guide
+ */
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ORM Guide — TAVP Docs</title>
+    <link rel="stylesheet" href="https://tavp.dev/css/docs.css">
+</head>
+<body>
+<div class="docs-container">
+    <aside class="docs-sidebar">
+        <h2>TAVP Docs</h2>
+        <nav>
+            <a href="/docs/architecture">Architecture</a>
+            <a href="/docs/database">Database</a>
+            <a href="/docs/orm">ORM Guide</a>
+            <a href="/docs/migrations">Migrations</a>
+            <a href="/docs/validation">Validation</a>
+        </nav>
+    </aside>
+    
+    <main class="docs-content">
+        <h1>ORM Guide</h1>
+        
+        <section>
+            <h2>Defining Models</h2>
+            <pre><code><?php
+namespace App\Models;
+
+use Tavp\Database\Model;
+
+class User extends Model
+{
+    protected $table = 'users';
+    
+    protected $fillable = ['name', 'email', 'password'];
+    
+    protected $hidden = ['password', 'remember_token'];
+    
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+        'is_admin' => 'boolean',
+    ];
+    
+    // Relationships
+    public function posts()
+    {
+        return $this->hasMany(Post::class);
+    }
+    
+    public function roles()
+    {
+        return $this->belongsToMany(Role::class);
+    }
+}</code></pre>
+        </section>
+        
+        <section>
+            <h2>CRUD Operations</h2>
+            <pre><code>// Create
+$user = User::create([
+    'name' => 'John',
+    'email' => 'john@example.com',
+    'password' => bcrypt('secret'),
+]);
+
+// Read
+$user = User::find(1);
+$users = User::where('active', true)->get();
+$user = User::where('email', 'john@example.com')->first();
+
+// Update
+$user->update(['name' => 'Jane']);
+User::where('id', 1)->update(['active' => false]);
+
+// Delete
+$user->delete();
+User::where('id', 1)->delete();</code></pre>
+        </section>
+        
+        <section>
+            <h2>Query Builder</h2>
+            <pre><code>$users = User::query()
+    ->where('active', true)
+    ->where('created_at', '>=', now()->subDays(30))
+    ->orderBy('name', 'asc')
+    ->limit(10)
+    ->get();
+
+// Aggregates
+$count = User::where('active', true)->count();
+$avg = Order::avg('total');
+$sum = Order::sum('total');</code></pre>
+        </section>
+        
+        <section>
+            <h2>Relationships</h2>
+            <pre><code>// hasOne
+public function profile()
+{
+    return $this->hasOne(Profile::class);
+}
+
+// hasMany
+public function posts()
+{
+    return $this->hasMany(Post::class);
+}
+
+// belongsTo
+public function user()
+{
+    return $this->belongsTo(User::class);
+}
+
+// belongsToMany
+public function roles()
+{
+    return $this->belongsToMany(Role::class);
+}
+
+// Eager Loading
+$users = User::with(['posts', 'roles'])->get();</code></pre>
+        </section>
+    </main>
+</div>
+</body>
+</html>

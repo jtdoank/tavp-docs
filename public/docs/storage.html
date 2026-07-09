@@ -1,0 +1,112 @@
+# Storage Guide
+
+> File storage in TAVP Stack.
+
+## Configuration
+
+```php
+// config/filesystems.php
+return [
+    'default' => env('FILESYSTEM_DISK', 'local'),
+    
+    'disks' => [
+        'local' => [
+            'driver' => 'local',
+            'root' => storage_path('app'),
+        ],
+        
+        'public' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public'),
+            'url' => env('APP_URL').'/storage',
+            'visibility' => 'public',
+        ],
+        
+        's3' => [
+            'driver' => 's3',
+            'key' => env('AWS_ACCESS_KEY_ID'),
+            'secret' => env('AWS_SECRET_ACCESS_KEY'),
+            'region' => env('AWS_DEFAULT_REGION'),
+            'bucket' => env('AWS_BUCKET'),
+        ],
+    ],
+];
+```
+
+## Basic Usage
+
+```php
+use Tavp\Support\Facades\Storage;
+
+// Put file
+Storage::put('file.txt', 'contents');
+
+// Get file
+$contents = Storage::get('file.txt');
+
+// Check if exists
+if (Storage::exists('file.txt')) {
+    // File exists
+}
+
+// Delete file
+Storage::delete('file.txt');
+
+// List files
+$files = Storage::files('directory');
+
+// Get file size
+$size = Storage::size('file.txt');
+
+// Get URL (for public disk)
+$url = Storage::url('file.txt');
+```
+
+## File Uploads
+
+```php
+namespace App\Controllers;
+
+use Tavp\Http\Controller;
+use Tavp\Support\Facades\Storage;
+
+class UploadController extends Controller
+{
+    public function store()
+    {
+        $file = $this->request->getUploadedFile('avatar');
+        
+        if ($file) {
+            $path = $file->store('avatars');
+            // or
+            $path = Storage::putFile('avatars', $file);
+            
+            return ['path' => $path];
+        }
+    }
+}
+```
+
+## S3 Compatible Storage
+
+```php
+// config/filesystems.php
+'s3' => [
+    'driver' => 's3',
+    'key' => env('AWS_ACCESS_KEY_ID'),
+    'secret' => env('AWS_SECRET_ACCESS_KEY'),
+    'region' => env('AWS_DEFAULT_REGION'),
+    'bucket' => env('AWS_BUCKET'),
+    'url' => env('AWS_URL'),
+],
+```
+
+## Visibility
+
+```php
+// Set visibility
+Storage::put('file.txt', 'contents', 'public');
+
+// Get visibility
+$visibility = Storage::getVisibility('file.txt');
+```

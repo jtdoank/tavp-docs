@@ -1,0 +1,94 @@
+# Routing Guide
+
+> Defining routes in TAVP Stack.
+
+## Basic Routes
+
+```php
+// routes/web.php
+
+// GET route
+$router->get('/', function () {
+    return view('home');
+});
+
+// POST route
+$router->post('/users', [UserController::class, 'store']);
+
+// PUT route
+$router->put('/users/{id}', [UserController::class, 'update']);
+
+// DELETE route
+$router->delete('/users/{id}', [UserController::class, 'destroy']);
+
+// Any HTTP method
+$router->any('/api/test', [TestController::class, 'handle']);
+```
+
+## Route Parameters
+
+```php
+// Required parameter
+$router->get('/users/{id}', [UserController::class, 'show']);
+
+// Optional parameter
+$router->get('/posts/{id?}', [PostController::class, 'show']);
+
+// Multiple parameters
+$router->get('/posts/{postId}/comments/{commentId}', [CommentController::class, 'show']);
+```
+
+## Route Groups
+
+```php
+$router->group(['prefix' => 'api'], function ($router) {
+    $router->get('/users', [UserController::class, 'index']);
+    $router->post('/users', [UserController::class, 'store']);
+});
+
+$router->group(['middleware' => 'auth'], function ($router) {
+    $router->get('/profile', [ProfileController::class, 'show']);
+    $router->put('/profile', [ProfileController::class, 'update']);
+});
+```
+
+## Named Routes
+
+```php
+$router->get('/users', [UserController::class, 'index'])
+    ->name('users.index');
+
+// Generate URL
+$url = url('users.index');
+```
+
+## Route Model Binding
+
+```php
+// Automatically inject model
+$router->get('/users/{user}', [UserController::class, 'show']);
+
+// Controller
+public function show(User $user)
+{
+    return view('users.show', ['user' => $user]);
+}
+```
+
+## API Routes
+
+```php
+// routes/api.php
+$router->group(['prefix' => 'api', 'middleware' => 'auth:api'], function ($router) {
+    $router->get('/users', [ApiUserController::class, 'index']);
+    $router->get('/users/{id}', [ApiUserController::class, 'show']);
+});
+```
+
+## Route Files
+
+| File | Description |
+|------|-------------|
+| routes/web.php | Web routes |
+| routes/api.php | API routes |
+| routes/console.php | CLI routes |

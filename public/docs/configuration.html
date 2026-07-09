@@ -1,0 +1,93 @@
+# Configuration Guide
+
+> Configuring TAVP Stack applications.
+
+## Environment Variables
+
+```bash
+# .env.example
+APP_NAME=TAVP
+APP_ENV=local
+APP_KEY=
+APP_DEBUG=true
+APP_URL=http://localhost:8000
+
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=tavp
+DB_USERNAME=root
+DB_PASSWORD=
+
+CACHE_DRIVER=file
+QUEUE_CONNECTION=sync
+SESSION_DRIVER=file
+```
+
+## Configuration Files
+
+```php
+// config/app.php
+return [
+    'name' => env('APP_NAME', 'TAVP'),
+    'env' => env('APP_ENV', 'production'),
+    'debug' => env('APP_DEBUG', false),
+    'url' => env('APP_URL', 'http://localhost'),
+    'timezone' => 'UTC',
+    'key' => env('APP_KEY'),
+];
+```
+
+## Accessing Configuration
+
+```php
+use Tavp\Support\Facades\Config;
+
+// Get config value
+$name = Config::get('app.name');
+
+// Get with default
+$name = Config::get('app.name', 'TAVP');
+
+// Set config value
+Config::set('app.name', 'My App');
+```
+
+## Environment Detection
+
+```php
+use Tavp\Support\Facades\App;
+
+if (App::environment('local')) {
+    // Local environment
+}
+
+if (App::environment('production')) {
+    // Production environment
+}
+```
+
+## Configuration Cache
+
+```bash
+# Cache configuration
+tavp optimize
+
+# Clear cache
+tavp optimize:clear
+```
+
+## Available Config Files
+
+| File | Description |
+|------|-------------|
+| app.php | Application settings |
+| auth.php | Authentication settings |
+| cache.php | Cache settings |
+| database.php | Database settings |
+| mail.php | Mail settings |
+| queue.php | Queue settings |
+| session.php | Session settings |
+| filesystems.php | File storage settings |
+| logging.php | Logging settings |
+| broadcasting.php | Broadcasting settings |

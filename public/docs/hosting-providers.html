@@ -1,0 +1,116 @@
+# TAVP Hosting Providers
+
+> Supported hosting providers for TAVP Stack.
+
+## Officially Supported
+
+### 1. TAVP Cloud (Managed)
+- **Type**: Managed Platform
+- **Features**: One-click deploy, auto-scaling, SSL, backups
+- **Pricing**: From $19/month
+- **Status**: Beta
+
+### 2. DigitalOcean
+- **Type**: VPS
+- **Features**: Droplets, Managed Databases, Spaces (S3)
+- **Pricing**: From $5/month
+- **Guide**: [Deploy to DigitalOcean](/docs/deploy-digitalocean)
+
+### 3. Vultr
+- **Type**: VPS
+- **Features**: High Performance Compute, Block Storage
+- **Pricing**: From $5/month
+- **Guide**: [Deploy to Vultr](/docs/deploy-vultr)
+
+### 4. Linode (Akamai)
+- **Type**: VPS
+- **Features**: Dedicated CPU, GPU, Bare Metal
+- **Pricing**: From $5/month
+- **Guide**: [Deploy to Linode](/docs/deploy-linode)
+
+### 5. Hetzner
+- **Type**: VPS
+- **Features**: Cloud Servers, Dedicated Servers
+- **Pricing**: From €4/month
+- **Guide**: [Deploy to Hetzner](/docs/deploy-hetzner)
+
+## Self-Managed
+
+### 6. AWS
+- **Type**: Cloud
+- **Features**: EC2, RDS, S3, CloudFront
+- **Pricing**: Pay-as-you-go
+- **Guide**: [Deploy to AWS](/docs/deploy-aws)
+
+### 7. Google Cloud
+- **Type**: Cloud
+- **Features**: Compute Engine, Cloud SQL, Cloud Storage
+- **Pricing**: Pay-as-you-go
+- **Guide**: [Deploy to GCP](/docs/deploy-gcp)
+
+### 8. Azure
+- **Type**: Cloud
+- **Features**: Virtual Machines, Azure Database, Blob Storage
+- **Pricing**: Pay-as-you-go
+- **Guide**: [Deploy to Azure](/docs/deploy-azure)
+
+## Shared Hosting
+
+### 9. cPanel/WHM
+- **Type**: Shared Hosting
+- **Features**: One-click installer via Softaculous
+- **Pricing**: From $10/month
+- **Guide**: [Deploy to cPanel](/docs/deploy-cpanel)
+
+### 10. HestiaCP
+- **Type**: VPS Control Panel
+- **Features**: One-click installer, built-in Nginx/Apache
+- **Pricing**: Free (self-hosted)
+- **Guide**: [Deploy to HestiaCP](/docs/deploy-hestia)
+
+## Requirements
+
+All hosting providers must support:
+- PHP 8.3+
+- MySQL 8.0+ or PostgreSQL 13+
+- Node.js 18+ (for frontend build)
+- Composer 2.x
+- Nginx or Apache
+
+## Deployment Methods
+
+### Docker
+```bash
+# Build image
+docker build -t my-tavp-app .
+
+# Run container
+docker run -p 8000:8000 my-tavp-app
+```
+
+### Traditional
+```bash
+# Clone repository
+git clone https://github.com/your-org/your-app.git
+
+# Install dependencies
+composer install --optimize-autoloader --no-dev
+
+# Configure environment
+cp .env.example .env
+php artisan key:generate
+
+# Run migrations
+tavp migrate
+
+# Build frontend
+npm install && npm run build
+
+# Set up web server
+# (Nginx or Apache configuration)
+```
+
+## Need Help?
+
+- [TAVP Discord](https://discord.gg/tavp)
+- [GitHub Discussions](https://github.com/tavp-stack/tavp-core/discussions)
