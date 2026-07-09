@@ -1,0 +1,17 @@
+# OS / Editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+
+# Logs
+*.log
+
+# Build artifacts
+node_modules/
+dist/
+.build/
+
+# Jangan ikut ke publik
+internal/

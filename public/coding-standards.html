@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TAVP — Human Style Coding Standards</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg:#faf9f7;--bg2:#f2f0ec;--card:#ffffff;--card-border:#e5e2db;
+            --accent:#1a1a2e;--amber:#c47a20;--green:#2d6a4f;--red:#b63030;
+            --blue:#1d4e89;--purple:#5c4b8a;--text:#1a1a2e;--text2:#4a4640;
+            --text3:#8a857c;--code-bg:#1a1a2e;--code-text:#e8e5de;
+        }
+        *{margin:0;padding:0;box-sizing:border-box}
+        html{scroll-behavior:smooth}
+        body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);line-height:1.8;font-size:15px}
+
+        .nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(250,249,247,.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--card-border)}
+        .nav-i{max-width:1060px;margin:0 auto;padding:0 24px;display:flex;align-items:center;height:50px;gap:16px}
+        .nav-b{font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:600;color:var(--amber);white-space:nowrap}
+        .nav-b s{color:var(--text3);font-weight:400;font-size:11px;text-decoration:none;margin-left:6px}
+        .nav-l{display:flex;gap:1px;overflow-x:auto;flex:1;justify-content:flex-end}
+        .nav-l a{color:var(--text3);text-decoration:none;font-size:10px;font-weight:600;padding:4px 8px;border-radius:4px;transition:.15s;white-space:nowrap}
+        .nav-l a:hover{color:var(--text);background:rgba(196,122,32,.06)}
+        body{padding-top:50px}
+
+        .container{max-width:1060px;margin:0 auto;padding:0 24px}
+
+        .hero{padding:56px 0 40px;border-bottom:1px solid var(--card-border);background:linear-gradient(180deg,rgba(196,122,32,.04),transparent)}
+        .hero h1{font-family:'Instrument Serif',serif;font-size:36px;font-weight:400;margin-bottom:8px}
+        .hero h1 em{font-style:italic;color:var(--amber)}
+        .hero .sub{color:var(--text2);font-size:16px;max-width:700px;margin-bottom:16px}
+
+        section{padding:48px 0;border-bottom:1px solid var(--card-border)}
+        section:last-of-type{border-bottom:none}
+        .sec-num{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;color:var(--amber);letter-spacing:2px;margin-bottom:8px}
+        h2{font-family:'Instrument Serif',serif;font-size:28px;font-weight:400;margin-bottom:8px}
+        h3{font-size:20px;font-weight:700;margin:32px 0 12px}
+        h4{font-size:16px;font-weight:700;margin:20px 0 8px}
+        p{margin-bottom:10px;color:var(--text2)}
+
+        .card{background:var(--card);border:1px solid var(--card-border);border-radius:10px;padding:22px;margin:12px 0}
+        .card-bar{border-left:3px solid}
+        .bar-red{border-left-color:var(--red)}
+        .bar-green{border-left-color:var(--green)}
+
+        .g2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:12px 0}
+        @media(max-width:768px){.g2{grid-template-columns:1fr}}
+
+        .cb{background:var(--code-bg);color:var(--code-text);border-radius:8px;padding:18px 20px;font-family:'JetBrains Mono',monospace;font-size:12.5px;line-height:1.9;overflow-x:auto;margin:12px 0}
+        .cb .k{color:#c792ea}.cb .s{color:#c3e88d}.cb .f{color:#82aaff}
+        .cb .v{color:#89ddff}.cb .c{color:#546e7a}.cb .w{color:#f78c6c}
+        .cb .r{color:#ff5370}.cb .g{color:#c3e88d}.cb .y{color:#ffcb6b}
+
+        table{width:100%;border-collapse:collapse;margin:12px 0;font-size:13px}
+        th{padding:10px 14px;text-align:left;background:var(--bg2);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:var(--text3);border-bottom:2px solid var(--card-border)}
+        td{padding:10px 14px;border-bottom:1px solid var(--card-border);color:var(--text2)}
+        td strong{color:var(--text)}
+
+        .co{padding:16px 20px;border-radius:8px;margin:14px 0;font-size:14px;line-height:1.7}
+        .co-warn{background:rgba(196,122,32,.06);border:1px solid rgba(196,122,32,.2)}
+        .co-warn strong{color:var(--amber)}
+        .co-good{background:rgba(45,106,79,.06);border:1px solid rgba(45,106,79,.2)}
+        .co-good strong{color:var(--green)}
+        .co-bad{background:rgba(182,48,48,.06);border:1px solid rgba(182,48,48,.2)}
+        .co-bad strong{color:var(--red)}
+
+        .vs{display:grid;grid-template-columns:1fr 1fr;gap:0;margin:12px 0;border:1px solid var(--card-border);border-radius:8px;overflow:hidden}
+        .vs-bad{padding:16px 18px;background:rgba(182,48,48,.03);border-right:1px solid var(--card-border)}
+        .vs-good{padding:16px 18px;background:rgba(45,106,79,.03)}
+        .vs-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
+        .vs-bad .vs-label{color:var(--red)}
+        .vs-good .vs-label{color:var(--green)}
+        @media(max-width:768px){.vs{grid-template-columns:1fr}.vs-bad{border-right:none;border-bottom:1px solid var(--card-border)}}
+
+        .rule{display:flex;gap:14px;align-items:flex-start;padding:16px 20px;background:var(--card);border:1px solid var(--card-border);border-radius:8px;margin:10px 0}
+        .rule .n{width:32px;height:32px;border-radius:50%;background:var(--accent);color:var(--bg);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0;font-family:'JetBrains Mono',monospace}
+        .rule h4{margin:0 0 4px;font-size:14px}
+        .rule p{margin:0;font-size:13px}
+
+        footer{padding:40px 0;text-align:center;border-top:1px solid var(--card-border)}
+        footer p{font-size:12px;color:var(--text3)}
+        ul,ol{margin:8px 0 12px 20px;color:var(--text2)}
+        li{margin-bottom:4px}
+        li strong{color:var(--text)}
+        code{font-family:'JetBrains Mono',monospace;font-size:12px;padding:2px 5px;background:rgba(29,78,137,.06);border-radius:3px;color:var(--blue)}
+    </style>
+</head>
+<body>
+
+<nav class="nav">
+    <div class="nav-i">
+        <div class="nav-b">TAVP <s>Human Style Coding Standards</s></div>
+        <div class="nav-l">
+            <a href="#philosophy">Philosophy</a>
+            <a href="#files">Files</a>
+            <a href="#variables">Variables</a>
+            <a href="#functions">Functions</a>
+            <a href="#classes">Classes</a>
+            <a href="#database">Database</a>
+            <a href="#comments">Comments</a>
+            <a href="#errors">Errors</a>
+            <a href="#routes">Routes</a>
+            <a href="#config">Config</a>
+            <a href="#folders">Folders</a>
+            <a href="#summary">Summary</a>
+        </div>
+    </div>
+</nav>
+
+<div class="hero">
+    <div class="container">
+        <h1><em>Human Style</em> Coding Standards</h1>
+        <p class="sub">
+            Every file name, variable name, function name, class name, database table, error message,
+            and comment in TAVP must be readable by a human who has never seen the code before.
+            If a non-programmer can't roughly understand what something does by reading its name, the name is wrong.
+        </p>
+        <div class="co co-warn">
+            <strong>Why this matters:</strong> The founder of TAVP is not a programmer. The AI writes 100% of the code.
+            But the founder reads, reviews, and debugs that code. If the code looks like alien language, the founder
+            can't direct the AI, can't review changes, and can't understand what's happening.
+            Human-style code = the founder stays in control of his own product.
+        </div>
+    </div>
+</div>
+
+<!-- ════════════════════════════════════════════════ -->
+<!-- 1. PHILOSOPHY -->
+<!-- ════════════════════════════════════════════════ -->
+<section id="philosophy">
+<div class="container">
+    <div class="sec-num">01 — PHILOSOPHY</div>
+    <h2>The Core Rule</h2>
+
+    <div class="co co-good" style="font-size:16px;text-align:center;padding:24px">
+        <strong>"If you have to explain the name, the name is wrong."</strong>
+    </div>
+
+    <p>Code is not written for computers. Computers don't care about names. Code is written for <strong>humans</strong> — the person who reads it tomorrow, the person who debugs it at 2am, the non-programmer founder who needs to understand what changed.</p>
+
+    <h3>The Two Tests</h3>
+
+    <div class="g2">
+        <div class="card card-bar bar-green">
+            <h4>Test 1: The Glance Test</h4>
+            <p>Can you understand what this does by glancing at it for 3 seconds?</p>
+            <p><strong>If yes</strong> = human style. <strong>If no</strong> = rewrite it.</p>
+        </div>
+        <div class="card card-bar bar-green">
+            <h4>Test 2: The Non-Programmer Test</h4>
+            <p>Could a non-programmer (with basic English) guess what this does?</p>
+            <p><strong>If yes</strong> = human style. <strong>If no</strong> = rewrite it.</p>
+        </div>
+    </div>
+
+    <h3>What This Applies To</h3>
+    <ul>
+        <li><strong>File names</strong> — every PHP, Volt, JS, CSS, config, migration, seeder, test file</li>
+        <li><strong>Folder names</strong> — every directory in the project</li>
+        <li><strong>Variable names</strong> — every $variable in every file</li>
+        <li><strong>Function/method names</strong> — every function and class method</li>
+        <li><strong>Class names</strong> — every PHP class</li>
+        <li><strong>Database table names</strong> — every table and column</li>
+        <li><strong>Route names and URLs</strong> — every endpoint</li>
+        <li><strong>Config keys</strong> — every key in every config file</li>
+        <li><strong>Error messages</strong> — every message shown to users or in CLI</li>
+        <li><strong>Comments</strong> — every comment in the code</li>
+        <li><strong>CLI output</strong> — every line the tavp command prints</li>
+    </ul>
+</div>
+</section>
+
+<!-- ════════════════════════════════════════════════ -->
+<!-- 2. FILE NAMING -->
+<!-- ════════════════════════════════════════════════ -->
+<section id="files">
+<div class="container">
+    <div class="sec-num">02 — FILE NAMES</div>
+    <h2>File Naming Convention</h2>
+
+    <div class="co co-warn">
+        <strong>Rule:</strong> File names should describe exactly what's inside.
+        A developer opening the file should know what to expect before reading a single line.
+    </div>
+
+    <h3>2.1 PHP Files (Classes)</h3>
+    <p>PSR-4 convention: class name = file name. So the class name IS the file name. Make class names human (see Section 5).</p>
+
+    <div class="vs">
+        <div class="vs-bad">
+            <div class="vs-label">Programmer Style (DON'T)</div>
+            <div class="cb" style="background:#2a1515;border:none;font-size:12px">
+<span class="r">UsrAuthSvc.php</span>           <span class="c">// what's "Svc"?</span>
+<span class="r">OtpDispJob.php</span>            <span class="c">// what's "Disp"?</span>
+<span class="r">UsrPrfCtrl.php</span>            <span class="c">// abbreviations</span>
+<span class="r">MwCsrf.php</span>                <span class="c">// "Mw" = middleware? who knows</span>
+<span class="r">TblUsrMigration.php</span>       <span class="c">// "Tbl" prefix = table?</span>
+<span class="r">AuthRepo.php</span>              <span class="c">// "Repo" = repository?</span>
+            </div>
+        </div>
+        <div class="vs-good">
+            <div class="vs-label">Human Style (DO)</div>
+            <div class="cb" style="background:#152a1f;border:none;font-size:12px">
+<span class="g">AuthenticationService.php</span> <span class="c">// self-explanatory</span>
+<span class="g">SendOtpToEmailJob.php</span>     <span class="c">// describes exactly what it does</span>
+<span class="g">UserProfileController.php</span> <span class="c">// clear, no abbreviation</span>
+<span class="g">VerifyCsrfToken.php</span>       <span class="c">// reads like English</span>
+<span class="g">CreateUsersTable.php</span>      <span class="c">// obvious purpose</span>
+<span class="g">UserRepository.php</span>        <span class="c">// full word, no shortcuts</span>
+            </div>
+        </div>
+    </div>
+
+    <h3>2.2 View Files (.volt)</h3>
+    <div class="vs">
+        <div class="vs-bad">
+            <div class="vs-label">DON'T</div>
+            <div class="cb" style="background:#2a1515;border:none;font-size:12px">
+<span class="r">pg_home.volt</span>              <span class="c">// "pg" prefix?</span>
+<span class="r">usr_dash.volt</span>             <span class="c">// abbreviations</span>
+<span class="r">cmp_btn.volt</span>              <span class="c">// "cmp" = component?</span>
+<span class="r">mod_login.volt</span>            <span class="c">// "mod" = modal?</span>
+<span class="r">p_list.volt</span>               <span class="c">// p = product? post? page?</span>
+            </div>
+        </div>
+        <div class="vs-good">
+            <div class="vs-label">DO</div>
+            <div class="cb" style="background:#152a1f;border:none;font-size:12px">
+<span class="g">home.volt</span>                 <span class="c">// just "home"</span>
+<span class="g">dashboard.volt</span>            <span class="c">// just "dashboard"</span>
+<span class="g">button.volt</span>               <span class="c">// just "button"</span>
+<span class="g">login-modal.volt</span>          <span class="c">// hyphen, descriptive</span>
+<span class="g">product-list.volt</span>         <span class="c">// full words</span>
+            </div>
+        </div>
+    </div>
+
+    <h3>2.3 Migration Files</h3>
+    <div class="vs">
+        <div class="vs-bad">
+            <div class="vs-label">DON'T</div>
+            <div class="cb" style="background:#2a1515;border:none;font-size:12px">
+<span class="r">2025_07_08_043217_create_users_table.php</span>
+<span class="r">2025_07_08_043218_add_col_usr_tbl.php</span>
+<span class="r">2025_07_09_011542_tbl_posts.php</span>
+            </div>
+        </div>
+        <div class="vs-good">
+            <div class="vs-label">DO</div>
+            <div class="cb" style="background:#152a1f;border:none;font-size:12px">
+<span class="g">001_create_users_table.php</span>
+<span class="g">002_create_user_sessions_table.php</span>
+<span class="g">003_create_posts_table.php</span>
+<span class="g">004_add_avatar_to_users_table.php</span>
+<span class="g">005_create_orders_table.php</span>
+            </div>
+        </div>
+    </div>
+
+    <p>Simple sequential numbers (001, 002, 003) instead of timestamps. Easy to read, easy to sort, easy to understand order. Timestamps add nothing for humans.</p>
+
+    <h3>2.4 Config Files</h3>
+    <div class="cb">
+<span class="g">config/app.php</span>                <span class="c">// app settings</span>
+<span class="g">config/database.php</span>            <span class="c">// database connections</span>
+<span class="g">config/mail.php</span>               <span class="c">// email settings</span>
+<span class="g">config/auth.php</span>               <span class="c">// authentication settings</span>
+<span class="g">config/cache.php</span>              <span class="c">// cache settings</span>
+<span class="g">config/queue.php</span>              <span class="c">// queue settings</span>
+<span class="g">config/storage.php</span>            <span class="c">// file storage settings</span>
+<span class="g">config/search.php</span>             <span class="c">// search engine settings</span>
+<span class="g">config/broadcasting.php</span>       <span class="c">// real-time broadcasting settings</span>
+<span class="g">config/phalcon.php</span>            <span class="c">// framework-specific settings</span>
+    </div>
+
+    <h3>2.5 JavaScript Files</h3>
+    <div class="vs">
+        <div class="vs-bad"><div class="vs-label">DON'T</div>
+            <div class="cb" style="background:#2a1515;border:none;font-size:12px"><span class="r">app.min.js</span>  <span class="r">utils.js</span>  <span class="r">u.js</span>  <span class="r">mod.js</span></div>
+        </div>
+        <div class="vs-good"><div class="vs-label">DO</div>
+            <div class="cb" style="background:#152a1f;border:none;font-size:12px"><span class="g">app.js</span>  <span class="g">helpers.js</span>  <span class="g">modal.js</span>  <span class="g">otp-form.js</span>  <span class="g">datatable.js</span></div>
+        </div>
+    </div>
+
+    <h3>2.6 Test Files</h3>
+    <div class="vs">
+        <div class="vs-bad"><div class="vs-label">DON'T</div>
+            <div class="cb" style="background:#2a1515;border:none;font-size:12px"><span class="r">AuthTest.php</span>  <span class="r">OtpTest.php</span>  <span class="r">UsrTest.php</span></div>
+        </div>
+        <div class="vs-good"><div class="vs-label">DO</div>
+            <div class="cb" style="background:#152a1f;border:none;font-size:12px"><span class="g">AuthenticationTest.php</span>  <span class="g">OtpServiceTest.php</span>  <span class="g">UserProfileTest.php</span></div>
+        </div>
+    </div>
+</div>
+</section>
+
+<!-- ════════════════════════════════════════════════ -->
+<!-- 3. VARIABLE NAMES -->
+<!-- ════════════════════════════════════════════════ -->
+<section id="variables">
+<div class="container">
+    <div class="sec-num">03 — VARIABLES</div>
+    <h2>Variable Naming Convention</h2>
+
+    <div class="co co-warn">
+        <strong>Rule:</strong> Variables use <code>snake_case</code>. Full English words. No abbreviations.
+        The name must describe what the variable holds.
+    </div>
+
+    <h3>3.1 General Variables</h3>
+
+    <div class="vs">
+        <div class="vs-bad">
+            <div class="vs-label">DON'T</div>
+            <div class="cb" style="background:#2a1515;border:none;font-size:12px">
+<span class="r">$u</span>                    <span class="c">// user? url? unicorn?</span>
+<span class="r">$em</span>                   <span class="c">// email? error message?</span>
+<span class="r">$tot</span>                  <span class="c">// total? toast?</span>
+<span class="r">$cnt</span>                  <span class="c">// count? content? cent?</span>
+<span class="r">$res</span>                  <span class="c">// result? response? resource?</span>
+<span class="r">$tmp</span>                  <span class="c">// template? temp? temporary?</span>
+<span class="r">$cb</span>                   <span class="c">// callback? checkbox? code block?</span>
+<span class="r">$err</span>                  <span class="c">// lazy abbreviation</span>
+<span class="r">$isAuth</span>               <span class="c">// camelCase (wrong for PHP in TAVP)</span>
+<span class="r">$currentProductPrice</span>  <span class="c">// camelCase (wrong for PHP in TAVP)</span>
+            </div>
+        </div>
+        <div class="vs-good">
+            <div class="vs-label">DO</div>
+            <div class="cb" style="background:#152a1f;border:none;font-size:12px">
+<span class="g">$user</span>                 <span class="c">// clear</span>
+<span class="g">$user_email</span>            <span class="c">// specific</span>
+<span class="g">$total_price</span>           <span class="c">// descriptive</span>
+<span class="g">$post_count</span>            <span class="c">// obvious</span>
+<span class="g">$api_response</span>          <span class="c">// no ambiguity</span>
+<span class="g">$email_template</span>        <span class="c">// full words</span>
+<span class="g">$form_callback</span>         <span class="c">// no confusion</span>
+<span class="g">$error_message</span>         <span class="c">// full word</span>
+<span class="g">$is_authenticated</span>      <span class="c">// snake_case</span>
+<span class="g">$current_product_price</span> <span class="c">// snake_case, full words</span>
+            </div>
+        </div>
+    </div>
+
+    <h3>3.2 Boolean Variables</h3>
+    <p>Booleans MUST start with <code>is_</code>, <code>has_</code>, <code>can_</code>, or <code>should_</code>.</p>
+
+    <div class="vs">
+        <div class="vs-bad"><div class="vs-label">DON'T</div>
+            <div class="cb" style="background:#2a1515;border:none;font-size:12px">
+<span class="r">$active</span>        <span class="c">// is it active? or the active record?</span>
+<span class="r">$verified</span>      <span class="c">// is it verified? or the verified value?</span>
+<span class="r">$auth</span>          <span class="c">// is authenticated? or the auth object?</span>
+            </div>
+        </div>
+        <div class="vs-good"><div class="vs-label">DO</div>
+            <div class="cb" style="background:#152a1f;border:none;font-size:12px">
+<span class="g">$is_active</span>     <span class="c">// clearly boolean</span>
+<span class="g">$is_verified</span>   <span class="c">// clearly boolean</span>
+<span class="g">$is_authenticated</span> <span class="c">// clearly boolean</span>
+<span class="g">$has_posts</span>     <span class="c">// clearly boolean</span>
+<span class="g">$can_edit</span>      <span class="c">// clearly boolean</span>
+<span class="g">$should_redirect</span> <span class="c">// clearly boolean</span>
+            </div>
+        </div>
+    </div>
+
+    <h3>3.3 Collection Variables</h3>
+    <p>Collections (arrays, lists) use <strong>plural</strong> nouns.</p>
+
+    <div class="vs">
+        <div class="vs-bad"><div class="vs-label">DON'T</div>
+            <div class="cb" style="background:#2a1515;border:none;font-size:12px">
+<span class="r">$user</span>          <span class="c">// is it one user or a list?</span>
+<span class="r">$data</span>          <span class="c">// what data? how much?</span>
+<span class="r">$items</span>         <span class="c">// items of what?</span>
+<span class="r">$result</span>        <span class="c">// single or multiple?</span>
+            </div>
+        </div>
+        <div class="vs-good"><div class="vs-label">DO</div>
+            <div class="cb" style="background:#152a1f;border:none;font-size:12px">
+<span class="g">$user</span>          <span class="c">// single user</span>
+<span class="g">$users</span>         <span class="c">// list of users</span>
+<span class="g">$recent_posts</span>  <span class="c">// list of recent posts</span>
+<span class="g">$product_list</span>  <span class="c">// list of products</span>
+<span class="g">$search_results</span> <span class="c">// list of results</span>
+            </div>
+        </div>
+    </div>
+
+    <h3>3.4 Summary Table</h3>
+    <table>
+        <thead><tr><th>Situation</th><th>Wrong</th><th>Right</th><th>Why</th></tr></thead>
+        <tbody>
+            <tr><td>User email</td><td><code>$em</code>, <code>$e</code></td><td><code>$user_email</code></td><td>Full words</td></tr>
+            <tr><td>Post count</td><td><code>$cnt</code>, <code>$pc</code></td><td><code>$post_count</code></td><td>No abbreviation</td></tr>
+            <tr><td>Is logged in?</td><td><code>$auth</code>, <code>$il</code></td><td><code>$is_authenticated</code></td><td>Boolean prefix + full word</td></tr>
+            <tr><td>List of orders</td><td><code>$data</code>, <code>$o</code></td><td><code>$order_list</code></td><td>Descriptive plural</td></tr>
+            <tr><td>Total price</td><td><code>$tot</code>, <code>$tp</code></td><td><code>$total_price</code></td><td>Obvious</td></tr>
+            <tr><td>Error message</td><td><code>$err</code>, <code>$e</code></td><td><code>$error_message</code></td><td>No shortcuts</td></tr>
+            <tr><td>Current page</td><td><code>$pg</code>, <code>$cp</code></td><td><code>$current_page</code></td><td>Clear</td></tr>
+        </tbody>
+    </table>
+</div>
+</section>
+
+<!-- ════════════════════════════════════════════════ -->
+<!-- 4. FUNCTION NAMES -->
+<!-- ════════════════════════════════════════════════ -->
+<section id="functions">
+<div class="container">
+    <div class="sec-num">04 — FUNCTIONS</div>
+    <h2>Function &amp; Method Naming</h2>
+
+    <div class="co co-warn">
+        <strong>Rule:</strong> Functions use <code>snake_case</code>. Name = verb + noun.
+        Must describe WHAT it does and (when relevant) WHAT it does it to.
+    </div>
+
+    <div class="vs">
+        <div class="vs-bad">
+            <div class="vs-label">DON'T</div>
+            <div class="cb" style="background:#2a1515;border:none;font-size:12px">
+<span class="r">function proc($d) {</span>         <span class="c">// proc? process? procedure?</span>
+<span class="r">function handle() {</span>          <span class="c">// handle what?</span>
+<span class="r">function get() {</span>             <span class="c">// get what?</span>
+<span class="r">function send() {</span>            <span class="c">// send what to whom?</span>
+<span class="r">function validate($v) {</span>      <span class="c">// validate what?</span>
+<span class="r">function persist($e) {</span>       <span class="c">// persist what? "e" = entity?</span>
+<span class="r">function dispatchOtp($u) {</span>   <span class="c">// camelCase + abbreviation</span>
+<span class="r">function fetchAll() {</span>        <span class="c">// fetch all what?</span>
+<span class="r">function calc($a, $b) {</span>      <span class="c">// calc what? a and b what?</span>
+            </div>
+        </div>
+        <div class="vs-good">
+            <div class="vs-label">DO</div>
+            <div class="cb" style="background:#152a1f;border:none;font-size:12px">
+<span class="g">function process_payment($payment_data) {</span>
+<span class="g">function handle_login_request($request) {</span>
+<span class="g">function get_user_by_email($email) {</span>
+<span class="g">function send_otp_to_email($email) {</span>
+<span class="g">function validate_user_input($input_data) {</span>
+<span class="g">function save_new_user($user_data) {</span>
+<span class="g">function send_otp_to_phone($phone_number) {</span>
+<span class="g">function get_all_published_posts() {</span>
+<span class="g">function calculate_total_price($items) {</span>
+            </div>
+        </div>
+    </div>
+
+    <h3>4.1 Common Patterns</h3>
+    <table>
+        <thead><tr><th>Action</th><th>Pattern</th><th>Example</th></tr></thead>
+        <tbody>
+            <tr><td>Get one thing</td><td><code>get_[thing]_by_[criteria]</code></td><td><code>get_user_by_email($email)</code></td></tr>
+            <tr><td>Get many things</td><td><code>get_all_[things]</code></td><td><code>get_all_published_posts()</code></td></tr>
+            <tr><td>Create</td><td><code>create_new_[thing]</code></td><td><code>create_new_user($data)</code></td></tr>
+            <tr><td>Update</td><td><code>update_[thing]_[what_changed]</code></td><td><code>update_user_profile($user, $data)</code></td></tr>
+            <tr><td>Delete</td><td><code>delete_[thing]_by_[criteria]</code></td><td><code>delete_post_by_id($post_id)</code></td></tr>
+            <tr><td>Check</td><td><code>is_[condition]</code></td><td><code>is_email_already_registered($email)</code></td></tr>
+            <tr><td>Send</td><td><code>send_[what]_to_[whom]</code></td><td><code>send_welcome_email_to_user($user)</code></td></tr>
+            <tr><td>Process</td><td><code>process_[what]</code></td><td><code>process_payment($payment_data)</code></td></tr>
+            <tr><td>Validate</td><td><code>validate_[what]</code></td><td><code>validate_login_input($request)</code></td></tr>
+            <tr><td>Format</td><td><code>format_[what]_as_[format]</code></td><td><code>format_price_as_currency($price)</code></td></tr>
+        </tbody>
+    </table>
+
+    <h3>4.2 Class Methods (when context is clear)</h3>
+    <p>Inside a class, you can shorten when the subject is obvious from the class name:</p>
+
+    <div class="cb">
+<span class="c">// Inside class AuthenticationService:</span>
+<span class="k">public function</span> <span class="g">send_otp</span>($email)          <span class="c">// OK — "to email" is the parameter</span>
+<span class="k">public function</span> <span class="g">verify_otp</span>($email, $code)   <span class="c">// OK — clear from parameters</span>
+<span class="k">public function</span> <span class="g">login</span>($email, $code)        <span class="c">// OK — simple and clear</span>
+<span class="k">public function</span> <span class="g">logout</span>()                    <span class="c">// OK — obvious</span>
+<span class="k">public function</span> <span class="g">current_user</span>()               <span class="c">// OK — returns current user</span>
+
+<span class="c">// NOT OK (too vague even in context):</span>
+<span class="r">public function</span> <span class="r">handle</span>()                     <span class="c">// handle what?</span>
+<span class="r">public function</span> <span class="r">process</span>()                    <span class="c">// process what?</span>
+<span class="r">public function</span> <span class="r">run</span>()                        <span class="c">// run what?</span>
+    </div>
+</div>
+</section>
+
+<!-- ════════════════════════════════════════════════ -->
+<!-- 5. CLASS NAMES -->
+<!-- ════════════════════════════════════════════════ -->
+<section id="classes">
+<div class="container">
+    <div class="sec-num">05 — CLASSES</div>
+    <h2>Class Naming Convention</h2>
+
+    <div class="co co-warn">
+        <strong>Rule:</strong> Classes use <code>PascalCase</code>. Full English words. No abbreviations.
+        The class name describes WHAT IT IS, not what framework pattern it follows (unless that helps clarity).
+    </div>
+
+    <div class="vs">
+        <div class="vs-bad">
+            <div class="vs-label">DON'T</div>
+            <div class="cb" style="background:#2a1515;border:none;font-size:12px">
+<span class="r">class UsrAuth {}</span>
+<span class="r">class OtpSvc {}</span>
+<span class="r">class PhController {}</span>
+<span class="r">class MwAuth {}</span>
+<span class="r">class RepoUser {}</span>
+<span class="r">class DtoProduct {}</span>
+<span class="r">class VldEmail {}</span>
+            </div>
+        </div>
+        <div class="vs-good">
+            <div class="vs-label">DO</div>
+            <div class="cb" style="background:#152a1f;border:none;font-size:12px">
+<span class="g">class AuthenticationService {}</span>
+<span class="g">class OtpService {}</span>
+<span class="g">class BaseController {}</span>
+<span class="g">class VerifyAuthentication {}</span>
+<span class="g">class UserRepository {}</span>
+<span class="g">class ProductData {}</span>
+<span class="g">class EmailValidator {}</span>
+            </div>
+        </div>
+    </div>
+
+    <h3>5.1 Suffix Conventions</h3>
+    <table>
+        <thead><tr><th>Type</th><th>Suffix</th><th>Example</th><th>Why</th></tr></thead>
+        <tbody>
+            <tr><td>Controller</td><td><code>Controller</code></td><td><code>PageController</code></td><td>Immediately clear it handles HTTP</td></tr>
+            <tr><td>Service</td><td><code>Service</code></td><td><code>PaymentService</code></td><td>Clear it does business logic</td></tr>
+            <tr><td>Model</td><td>(none)</td><td><code>User</code>, <code>Post</code>, <code>Order</code></td><td>Models are nouns, no suffix needed</td></tr>
+            <tr><td>Middleware</td><td>(none or descriptive)</td><td><code>VerifyCsrfToken</code>, <code>RequireLogin</code></td><td>Reads like English instruction</td></tr>
+            <tr><td>Job</td><td><code>Job</code></td><td><code>SendWelcomeEmailJob</code></td><td>Clear it's a queued task</td></tr>
+            <tr><td>Event</td><td><code>Event</code></td><td><code>UserRegisteredEvent</code></td><td>Past tense — something that happened</td></tr>
+            <tr><td>Listener</td><td><code>Listener</code></td><td><code>SendWelcomeEmailListener</code></td><td>Describes what it listens to + does</td></tr>
+            <tr><td>Repository</td><td><code>Repository</code></td><td><code>UserRepository</code></td><td>Data access layer</td></tr>
+            <tr><td>Validator</td><td><code>Validator</code></td><td><code>EmailValidator</code></td><td>Validation logic</td></tr>
+            <tr><td>Exception</td><td><code>Exception</code></td><td><code>UserNotFoundException</code></td><td>Describes what went wrong</td></tr>
+            <tr><td>ServiceProvider</td><td><code>ServiceProvider</code></td><td><code>AuthServiceProvider</code></td><td>Module registration</td></tr>
+        </tbody>
+    </table>
+
+    <h3>5.2 Middleware — Read Like English</h3>
+    <div class="cb">
+<span class="c">// These read like English instructions:</span>
+<span class="g">class VerifyCsrfToken {}</span>         <span class="c">// "Verify CSRF token" ✓</span>
+<span class="g">class RequireAuthentication {}</span>    <span class="c">// "Require authentication" ✓</span>
+<span class="g">class RedirectIfAuthenticated {}</span>  <span class="c">// "Redirect if authenticated" ✓</span>
+<span class="g">class PreventTooManyRequests {}</span>   <span class="c">// "Prevent too many requests" ✓</span>
+<span class="g">class SetLocale {}</span>                <span class="c">// "Set locale" ✓</span>
+<span class="g">class StartSession {}</span>             <span class="c">// "Start session" ✓</span>
+    </div>
+</div>
+</section>
+
+<!-- ════════════════════════════════════════════════ -->
+<!-- 6. DATABASE -->
+<!-- ════════════════════════════════════════════════ -->
+<section id="database">
+<div class="container">
+    <div class="sec-num">06 — DATABASE</div>
+    <h2>Database Naming Convention</h2>
+
+    <h3>6.1 Table Names</h3>
+    <div class="vs">
+        <div class="vs-bad"><div class="vs-label">DON'T</div>
+            <div class="cb" style="background:#2a1515;border:none;font-size:12px">
+<span class="r">usr</span>                   <span class="c">// abbreviation</span>
+<span class="r">tbl_users</span>             <span class="c">// tbl_ prefix (redundant)</span>
+<span class="r">userTbl</span>               <span class="c">// camelCase + abbreviation</span>
+<span class="r">m_user</span>                <span class="c">// m_ prefix = master?</span>
+<span class="r">phalcon_users</span>         <span class="c">// framework prefix (unnecessary)</span>
+            </div>
+        </div>
+        <div class="vs-good"><div class="vs-label">DO</div>
+            <div class="cb" style="background:#152a1f;border:none;font-size:12px">
+<span class="g">users</span>                 <span class="c">// simple, plural, lowercase</span>
+<span class="g">user_sessions</span>         <span class="c">// descriptive, snake_case</span>
+<span class="g">password_reset_tokens</span> <span class="c">// self-explanatory</span>
+<span class="g">payment_transactions</span>  <span class="c">// full words</span>
+<span class="g">social_accounts</span>       <span class="c">// clear</span>
+            </div>
+        </div>
+    </div>
+
+    <h3>6.2 Column Names</h3>
+    <div class="vs">
+        <div class="vs-bad"><div class="vs-label">DON'T</div>
+            <div class="cb" style="background:#2a1515;border:none;font-size:12px">
+<span class="r">fn</span>                    <span class="c">// first name? full name? function?</span>
+<span class="r">em</span>                    <span class="c">// email? emergency?</span>
+<span class="r">dob</span>                   <span class="c">// date of birth (who knows?)</span>
+<span class="r">ph</span>                    <span class="c">// phone? placeholder? pH level?</span>
+<span class="r">act</span>                   <span class="c">// active? action? account?</span>
+<span class="r">dt_cre</span>                <span class="c">// date created (cryptic)</span>
+<span class="r">flg_del</span>               <span class="c">// flag deleted (old-school)</span>
+            </div>
+        </div>
+        <div class="vs-good"><div class="vs-label">DO</div>
+            <div class="cb" style="background:#152a1f;border:none;font-size:12px">
+<span class="g">first_name</span>            <span class="c">// full words, snake_case</span>
+<span class="g">email</span>                 <span class="c">// just "email"</span>
+<span class="g">date_of_birth</span>         <span class="c">// fully spelled out</span>
+<span class="g">phone_number</span>          <span class="c">// no ambiguity</span>
+<span class="g">is_active</span>             <span class="c">// boolean prefix</span>
+<span class="g">created_at</span>            <span class="c">// standard, clear</span>
+<span class="g">deleted_at</span>            <span class="c">// nullable timestamp (soft delete)</span>
+            </div>
+        </div>
+    </div>
+
+    <h3>6.3 Naming Rules</h3>
+    <table>
+        <thead><tr><th>Rule</th><th>Example</th></tr></thead>
+        <tbody>
+            <tr><td>Tables: <strong>plural, lowercase, snake_case</strong></td><td><code>users</code>, <code>blog_posts</code>, <code>payment_transactions</code></td></tr>
+            <tr><td>Columns: <strong>lowercase, snake_case, full words</strong></td><td><code>first_name</code>, <code>created_at</code>, <code>total_amount</code></td></tr>
+            <tr><td>Booleans: <strong>is_ prefix</strong></td><td><code>is_active</code>, <code>is_verified</code>, <code>is_featured</code></td></tr>
+            <tr><td>Foreign keys: <strong>singular_table_id</strong></td><td><code>user_id</code>, <code>post_id</code>, <code>order_id</code></td></tr>
+            <tr><td>Timestamps: <strong>_at suffix</strong></td><td><code>created_at</code>, <code>updated_at</code>, <code>deleted_at</code>, <code>published_at</code></td></tr>
+            <tr><td>Counts: <strong>_count suffix</strong></td><td><code>view_count</code>, <code>download_count</code>, <code>login_count</code></td></tr>
+            <tr><td>Amounts: <strong>total_ or _amount suffix</strong></td><td><code>total_price</code>, <code>discount_amount</code>, <code>tax_amount</code></td></tr>
+        </tbody>
+    </table>
+</div>
+</section>
+
+<!-- ════════════════════════════════════════════════ -->
+<!-- 7. COMMENTS -->
+<!-- ════════════════════════════════════════════════ -->
+<section id="comments">
+<div class="container">
+    <div class="sec-num">07 — COMMENTS</div>
+    <h2>Comment Style</h2>
+
+    <div class="co co-warn">
+        <strong>Rule:</strong> Comments explain <strong>WHY</strong>, not WHAT.
+        If the code is so unclear that you need to explain WHAT it does, rewrite the code instead.
+    </div>
+
+    <div class="vs">
+        <div class="vs-bad">
+            <div class="vs-label">DON'T (explaining what the code does)</div>
+            <div class="cb" style="background:#2a1515;border:none;font-size:12px">
+<span class="c">// Loop through users</span>
+<span class="k">foreach</span> ($users <span class="k">as</span> $user) { ... }
+
+<span class="c">// Check if email is set</span>
+<span class="k">if</span> ($user_email) { ... }
+
+<span class="c">// Get the total</span>
+$total = $price * $quantity;
+
+<span class="c">// Return the response</span>
+<span class="k">return</span> $response;
+            </div>
+        </div>
+        <div class="vs-good">
+            <div class="vs-label">DO (explaining WHY)</div>
+            <div class="cb" style="background:#152a1f;border:none;font-size:12px">
+<span class="c">// We send OTP to unverified users only — verified users use password login</span>
+<span class="k">foreach</span> ($unverified_users <span class="k">as</span> $user) { ... }
+
+<span class="c">// Email can be empty when user registered via phone number</span>
+<span class="k">if</span> ($user_email) { ... }
+
+<span class="c">// Tax is included in the total for Indonesian customers (PPN 11%)</span>
+$total = $price * $quantity * 1.11;
+
+<span class="c">// 204 = success with no body (used after DELETE operations)</span>
+<span class="k">return</span> $response->setStatusCode(<span class="w">204</span>);
+            </div>
+        </div>
+    </div>
+
+    <h3>7.1 When to Comment</h3>
+    <ul>
+        <li><strong>Business rules</strong> — "Why" a calculation or condition exists</li>
+        <li><strong>Non-obvious decisions</strong> — "Why" we chose this approach over another</li>
+        <li><strong>External dependencies</strong> — "Why" we depend on this specific service/version</li>
+        <li><strong>Edge cases</strong> — "Why" this check exists (what would break without it)</li>
+        <li><strong>TODO markers</strong> — "What" needs to be done later (with context)</li>
+    </ul>
+
+    <h3>7.2 When NOT to Comment</h3>
+    <ul>
+        <li>When the code is self-explanatory (variable/function names are clear)</li>
+        <li>When the comment just restates the code in English</li>
+        <li>When the comment says "TODO" with no context</li>
+    </ul>
+</div>
+</section>
+
+<!-- ════════════════════════════════════════════════ -->
+<!-- 8. ERROR MESSAGES -->
+<!-- ════════════════════════════════════════════════ -->
+<section id="errors">
+<div class="container">
+    <div class="sec-num">08 — ERROR MESSAGES</div>
+    <h2>Error &amp; CLI Message Style</h2>
+
+    <div class="co co-warn">
+        <strong>Rule:</strong> Every error message must tell the user (1) what went wrong, (2) why, and (3) what to do next.
+        A non-programmer must be able to understand and act on every message.
+    </div>
+
+    <h3>8.1 User-Facing Errors</h3>
+    <div class="vs">
+        <div class="vs-bad">
+            <div class="vs-label">DON'T</div>
+            <div class="cb" style="background:#2a1515;border:none;font-size:12px">
+<span class="r">"ValidationException: email.invalid"</span>
+<span class="r">"OTP_EXPIRED"</span>
+<span class="r">"Error 422"</span>
+<span class="r">"Query failed"</span>
+<span class="r">"ERR_AUTH_001"</span>
+<span class="r">"Something went wrong"</span>
+            </div>
+        </div>
+        <div class="vs-good">
+            <div class="vs-label">DO</div>
+            <div class="cb" style="background:#152a1f;border:none;font-size:12px">
+<span class="g">"Please enter a valid email address (example: name@company.com)"</span>
+<span class="g">"Your OTP code has expired. Please request a new one."</span>
+<span class="g">"We couldn't save your information. Please check the highlighted fields."</span>
+<span class="g">"We couldn't load the product list. Please try refreshing the page."</span>
+<span class="g">"Login failed. The OTP code is incorrect. You have 3 attempts remaining."</span>
+<span class="g">"Something went wrong on our end. Our team has been notified. Please try again in a few minutes."</span>
+            </div>
+        </div>
+    </div>
+
+    <h3>8.2 CLI Messages</h3>
+    <div class="vs">
+        <div class="vs-bad">
+            <div class="vs-label">DON'T</div>
+            <div class="cb" style="background:#2a1515;border:none;font-size:12px">
+<span class="r">ERR: Module not found</span>
+<span class="r">FAIL</span>
+<span class="r">PHP Fatal error: Uncaught...</span>
+<span class="r">Process exited with code 1</span>
+            </div>
+        </div>
+        <div class="vs-good">
+            <div class="vs-label">DO</div>
+            <div class="cb" style="background:#152a1f;border:none;font-size:12px">
+<span class="g">✗ Module "tavp/cms" is not installed.</span>
+<span class="g">  Run: tavp module:install tavp/cms</span>
+<span class="g">  Or visit: https://docs.tavp.dev/modules/cms</span>
+
+<span class="g">✗ Installation failed.</span>
+<span class="g">  Phalcon 5.16.0 requires PHP >= 8.1</span>
+<span class="g">  Your server has PHP 7.4 installed.</span>
+<span class="g">  Solution: upgrade PHP or use an older Phalcon version.</span>
+<span class="g">  Guide: https://docs.tavp.dev/install/php-upgrade</span>
+            </div>
+        </div>
+    </div>
+
+    <h3>8.3 Error Message Template</h3>
+    <div class="cb">
+<span class="c">// Every error message follows this structure:</span>
+
+<span class="c">// USER-FACING (shown in browser/app):</span>
+<span class="g">[What went wrong in plain language]</span>
+<span class="g">[What the user should do to fix it]</span>
+
+<span class="c">// CLI-FACING (shown in terminal):</span>
+<span class="g">✗ [What went wrong]</span>
+<span class="g">  [Why it happened — technical but readable]</span>
+<span class="g">  [What to do: command or link]</span>
+
+<span class="c">// API-FACING (returned as JSON):</span>
+{
+  <span class="s">"success"</span>: <span class="k">false</span>,
+  <span class="s">"error"</span>: {
+    <span class="s">"message"</span>: <span class="s">"Please enter a valid email address"</span>,
+    <span class="s">"code"</span>: <span class="s">"invalid_email"</span>,
+    <span class="s">"details"</span>: {
+      <span class="s">"email"</span>: <span class="s">"The value 'not-an-email' is not a valid email"</span>
+    }
+  }
+}
+    </div>
+</div>
+</section>
+
+<!-- ════════════════════════════════════════════════ -->
+<!-- 9. ROUTES -->
+<!-- ════════════════════════════════════════════════ -->
+<section id="routes">
+<div class="container">
+    <div class="sec-num">09 — ROUTES</div>
+    <h2>Route &amp; URL Naming</h2>
+
+    <div class="vs">
+        <div class="vs-bad"><div class="vs-label">DON'T</div>
+            <div class="cb" style="background:#2a1515;border:none;font-size:12px">
+<span class="r">/api/v1/usr/otp/dispatch</span>
+<span class="r">/admin/usrmgmt</span>
+<span class="r">/api/v1/auth/vld</span>
+<span class="r">/adm/posts/edt/1</span>
+            </div>
+        </div>
+        <div class="vs-good"><div class="vs-label">DO</div>
+            <div class="cb" style="background:#152a1f;border:none;font-size:12px">
+<span class="g">/api/v1/auth/send-otp</span>
+<span class="g">/admin/users</span>
+<span class="g">/api/v1/auth/verify-otp</span>
+<span class="g">/admin/posts/1/edit</span>
+            </div>
+        </div>
+    </div>
+
+    <h3>9.1 URL Rules</h3>
+    <ul>
+        <li><strong>lowercase</strong> — always</li>
+        <li><strong>kebab-case</strong> — <code>send-otp</code> not <code>send_otp</code> or <code>sendOtp</code></li>
+        <li><strong>plural nouns</strong> — <code>/users</code>, <code>/posts</code>, <code>/products</code></li>
+        <li><strong>verbs for actions</strong> — <code>/send-otp</code>, <code>/verify-email</code>, <code>/publish</code></li>
+        <li><strong>no abbreviations</strong> — <code>/users</code> not <code>/usr</code>, <code>/products</code> not <code>/prd</code></li>
+    </ul>
+
+    <h3>9.2 Route Names</h3>
+    <div class="cb">
+<span class="c">// Route names use dot notation, descriptive:</span>
+Route::get(<span class="s">'/login'</span>)->name(<span class="s">'auth.login'</span>)
+Route::post(<span class="s">'/send-otp'</span>)->name(<span class="s">'auth.send_otp'</span>)
+Route::get(<span class="s">'/dashboard'</span>)->name(<span class="s">'admin.dashboard'</span>)
+Route::resource(<span class="s">'/posts'</span>)->name(<span class="s">'admin.posts'</span>)
+Route::get(<span class="s">'/api/v1/products'</span>)->name(<span class="s">'api.v1.products.index'</span>)
+    </div>
+</div>
+</section>
+
+<!-- ════════════════════════════════════════════════ -->
+<!-- 10. CONFIG -->
+<!-- ════════════════════════════════════════════════ -->
+<section id="config">
+<div class="container">
+    <div class="sec-num">10 — CONFIG</div>
+    <h2>Config Key Naming</h2>
+
+    <div class="vs">
+        <div class="vs-bad"><div class="vs-label">DON'T</div>
+            <div class="cb" style="background:#2a1515;border:none;font-size:12px">
+<span class="r">'otp_exp'</span>             <span class="c">// abbreviation</span>
+<span class="r">'jwt_ttl'</span>             <span class="c">// TTL = time to live (jargon)</span>
+<span class="r">'mail_drv'</span>            <span class="c">// abbreviation</span>
+<span class="r">'db_host'</span>             <span class="c">// acceptable but...</span>
+<span class="r">'CACHE_DRIVER'</span>        <span class="c">// SCREAMING_CASE (wrong convention)</span>
+            </div>
+        </div>
+        <div class="vs-good"><div class="vs-label">DO</div>
+            <div class="cb" style="background:#152a1f;border:none;font-size:12px">
+<span class="g">'otp_expiry_minutes'</span>  <span class="c">// descriptive, unit included</span>
+<span class="g">'jwt_access_lifetime'</span> <span class="c">// full words, clear meaning</span>
+<span class="g">'mail_driver'</span>         <span class="c">// full word</span>
+<span class="g">'database_host'</span>       <span class="c">// full word</span>
+<span class="g">'cache_driver'</span>        <span class="c">// snake_case, lowercase</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="cb">
+<span class="c">// Example config/auth.php — fully human-readable:</span>
+<span class="k">return</span> [
+    <span class="s">'otp'</span> => [
+        <span class="s">'expiry_minutes'</span>      => <span class="w">5</span>,
+        <span class="s">'max_attempts'</span>        => <span class="w">5</span>,
+        <span class="s">'code_length'</span>         => <span class="w">6</span>,
+        <span class="s">'max_sends_per_hour'</span>  => <span class="w">5</span>,
+    ],
+    <span class="s">'jwt'</span> => [
+        <span class="s">'secret'</span>              => env(<span class="s">'JWT_SECRET'</span>),
+        <span class="s">'access_token_lifetime'</span> => <span class="w">15</span>,   <span class="c">// minutes</span>
+        <span class="s">'refresh_token_lifetime'</span> => <span class="w">43200</span>, <span class="c">// minutes (30 days)</span>
+    ],
+    <span class="s">'allowed_channels'</span> => [<span class="s">'email'</span>, <span class="s">'sms'</span>, <span class="s">'whatsapp'</span>],
+    <span class="s">'default_channel'</span>  => <span class="s">'email'</span>,
+];
+    </div>
+</div>
+</section>
+
+<!-- ════════════════════════════════════════════════ -->
+<!-- 11. FOLDERS -->
+<!-- ════════════════════════════════════════════════ -->
+<section id="folders">
+<div class="container">
+    <div class="sec-num">11 — FOLDERS</div>
+    <h2>Folder Naming</h2>
+
+    <div class="vs">
+        <div class="vs-bad"><div class="vs-label">DON'T</div>
+            <div class="cb" style="background:#2a1515;border:none;font-size:12px">
+<span class="r">app/Domains/Auth/Controllers/AuthCtrl.php</span>
+<span class="r">app/Domains/User/Svcs/UsrSvc.php</span>
+<span class="r">core/CLI/Cmds/NewCmd.php</span>
+<span class="r">resources/views/ui/cmps/modal.volt</span>
+<span class="r">database/migrations/001_tbl_usr.php</span>
+            </div>
+        </div>
+        <div class="vs-good"><div class="vs-label">DO</div>
+            <div class="cb" style="background:#152a1f;border:none;font-size:12px">
+<span class="g">app/Domains/Auth/Controllers/AuthenticationController.php</span>
+<span class="g">app/Domains/User/Services/UserService.php</span>
+<span class="g">core/CLI/Commands/CreateNewProject.php</span>
+<span class="g">resources/views/components/modal.volt</span>
+<span class="g">database/migrations/001_create_users_table.php</span>
+            </div>
+        </div>
+    </div>
+
+    <h3>11.1 Folder Rules</h3>
+    <table>
+        <thead><tr><th>Level</th><th>Convention</th><th>Example</th></tr></thead>
+        <tbody>
+            <tr><td>Top-level</td><td>lowercase</td><td><code>app/</code>, <code>config/</code>, <code>routes/</code></td></tr>
+            <tr><td>Domains</td><td>PascalCase</td><td><code>Auth/</code>, <code>User/</code>, <code>Content/</code></td></tr>
+            <tr><td>Layers inside domain</td><td>PascalCase</td><td><code>Controllers/</code>, <code>Models/</code>, <code>Services/</code></td></tr>
+            <tr><td>Resources</td><td>lowercase</td><td><code>views/</code>, <code>assets/</code>, <code>layouts/</code></td></tr>
+            <tr><td>Components</td><td>lowercase</td><td><code>components/</code>, <code>partials/</code></td></tr>
+        </tbody>
+    </table>
+</div>
+</section>
+
+<!-- ════════════════════════════════════════════════ -->
+<!-- 12. SUMMARY -->
+<!-- ════════════════════════════════════════════════ -->
+<section id="summary">
+<div class="container">
+    <div class="sec-num">12 — SUMMARY</div>
+    <h2>The Complete Cheat Sheet</h2>
+
+    <div class="card" style="padding:0;overflow:hidden">
+        <table>
+            <thead><tr><th>What</th><th>Style</th><th>Example</th><th>Never</th></tr></thead>
+            <tbody>
+                <tr><td><strong>File names</strong></td><td>PascalCase (classes), lowercase (views/config)</td><td><code>AuthenticationService.php</code>, <code>dashboard.volt</code></td><td><code>AuthSvc.php</code>, <code>pg_dash.volt</code></td></tr>
+                <tr><td><strong>Folder names</strong></td><td>PascalCase (domains), lowercase (resources)</td><td><code>Controllers/</code>, <code>views/</code></td><td><code>Ctrl/</code>, <code>vw/</code></td></tr>
+                <tr><td><strong>Variables</strong></td><td>snake_case, full words</td><td><code>$user_email</code>, <code>$total_price</code></td><td><code>$em</code>, <code>$tot</code></td></tr>
+                <tr><td><strong>Booleans</strong></td><td>is_/has_/can_/should_ prefix</td><td><code>$is_active</code>, <code>$has_posts</code></td><td><code>$active</code>, <code>$flag</code></td></tr>
+                <tr><td><strong>Functions</strong></td><td>snake_case, verb + noun</td><td><code>send_otp_to_email()</code></td><td><code>dispatch()</code>, <code>proc()</code></td></tr>
+                <tr><td><strong>Classes</strong></td><td>PascalCase, full words</td><td><code>PaymentService</code></td><td><code>PaySvc</code>, <code>PmtSrv</code></td></tr>
+                <tr><td><strong>Tables</strong></td><td>plural, lowercase, snake_case</td><td><code>payment_transactions</code></td><td><code>tbl_pay_txns</code></td></tr>
+                <tr><td><strong>Columns</strong></td><td>lowercase, snake_case, full words</td><td><code>first_name</code>, <code>is_active</code></td><td><code>fn</code>, <code>act</code></td></tr>
+                <tr><td><strong>Routes/URLs</strong></td><td>lowercase, kebab-case</td><td><code>/send-otp</code>, <code>/admin/users</code></td><td><code>/sendOtp</code>, <code>/adm/usr</code></td></tr>
+                <tr><td><strong>Config keys</strong></td><td>snake_case, full words</td><td><code>otp_expiry_minutes</code></td><td><code>otp_exp</code></td></tr>
+                <tr><td><strong>Comments</strong></td><td>Explain WHY, not WHAT</td><td><code>// Tax included for PPN 11%</code></td><td><code>// Multiply price</code></td></tr>
+                <tr><td><strong>Error messages</strong></td><td>What + Why + What to do</td><td>"OTP expired. Request a new one."</td><td>"ERR_AUTH_001"</td></tr>
+                <tr><td><strong>Migration files</strong></td><td>NNN_descriptive_name.php</td><td><code>001_create_users_table.php</code></td><td><code>2025_07_08_043217_tbl_usr.php</code></td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="co co-good" style="margin-top:24px;font-size:16px;text-align:center;padding:24px">
+        <strong>When in doubt: write it like you're explaining to a friend who doesn't code.</strong>
+    </div>
+</div>
+</section>
+
+<footer>
+    <div class="container">
+        <p><strong style="color:var(--text)">TAVP Human Style Coding Standards</strong> — v1.0 — July 2025</p>
+        <p>Every line of TAVP code follows these rules. No exceptions.</p>
+        <p style="margin-top:8px">tavp.dev — Open Source (MIT)</p>
+    </div>
+</footer>
+
+</body>
+</html>

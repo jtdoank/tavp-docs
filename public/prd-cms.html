@@ -1,0 +1,1723 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PRD — TAVP Skeleton CMS v0.0.0</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0a0a0a;
+            --surface: #141414;
+            --surface-2: #1a1a1a;
+            --surface-3: #222222;
+            --border: #2a2a2a;
+            --border-light: #333333;
+            --text: #e5e5e5;
+            --text-2: #a3a3a3;
+            --text-3: #737373;
+            --accent: #10b981;
+            --accent-dim: rgba(16, 185, 129, 0.1);
+            --accent-border: rgba(16, 185, 129, 0.2);
+            --red: #ef4444;
+            --red-dim: rgba(239, 68, 68, 0.1);
+            --amber: #f59e0b;
+            --amber-dim: rgba(245, 158, 11, 0.1);
+            --blue: #3b82f6;
+            --blue-dim: rgba(59, 130, 246, 0.1);
+            --violet: #8b5cf6;
+            --violet-dim: rgba(139, 92, 246, 0.1);
+            --radius: 12px;
+            --mono: 'JetBrains Mono', monospace;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        ::selection { background: var(--accent); color: #000; }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 3px; }
+
+        .container { max-width: 900px; margin: 0 auto; padding: 0 24px; }
+
+        .doc-header { padding: 80px 0 60px; border-bottom: 1px solid var(--border); }
+        .doc-header .badge {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 6px 14px; background: var(--accent-dim);
+            border: 1px solid var(--accent-border); border-radius: 100px;
+            font-size: 12px; font-weight: 600; color: var(--accent);
+            letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 24px;
+        }
+        .doc-header h1 {
+            font-size: clamp(36px, 5vw, 52px); font-weight: 800;
+            letter-spacing: -0.03em; line-height: 1.1; margin-bottom: 16px;
+        }
+        .doc-header .subtitle { font-size: 18px; color: var(--text-2); max-width: 600px; line-height: 1.6; }
+        .meta-row { display: flex; flex-wrap: wrap; gap: 24px; margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--border); }
+        .meta-item { display: flex; flex-direction: column; gap: 2px; }
+        .meta-label { font-size: 11px; font-weight: 600; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.08em; }
+        .meta-value { font-size: 14px; color: var(--text); font-weight: 500; }
+
+        .toc { padding: 48px 0; border-bottom: 1px solid var(--border); }
+        .toc-title { font-size: 11px; font-weight: 700; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 20px; }
+        .toc-list { list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 4px 32px; }
+        .toc-list a { display: flex; align-items: center; gap: 10px; padding: 8px 0; font-size: 14px; color: var(--text-2); text-decoration: none; transition: color 0.15s; }
+        .toc-list a:hover { color: var(--accent); }
+        .toc-list .num { font-family: var(--mono); font-size: 12px; color: var(--text-3); min-width: 24px; }
+
+        .section { padding: 64px 0; border-bottom: 1px solid var(--border); }
+        .section:last-child { border-bottom: none; }
+        .section-num { font-family: var(--mono); font-size: 13px; font-weight: 600; color: var(--accent); margin-bottom: 8px; }
+        .section h2 { font-size: 28px; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 8px; }
+        .section .desc { font-size: 16px; color: var(--text-2); margin-bottom: 40px; max-width: 700px; }
+
+        h3 { font-size: 18px; font-weight: 700; margin: 40px 0 16px; padding-top: 32px; }
+        h3:first-child { margin-top: 0; padding-top: 0; }
+        h4 { font-size: 15px; font-weight: 600; margin: 24px 0 12px; color: var(--text-2); }
+        p { margin-bottom: 16px; font-size: 15px; color: var(--text-2); }
+        strong { color: var(--text); font-weight: 600; }
+        a { color: var(--accent); text-decoration: none; }
+        a:hover { text-decoration: underline; }
+
+        .callout { padding: 20px 24px; border-radius: var(--radius); margin: 24px 0; font-size: 14px; line-height: 1.6; }
+        .callout p { margin: 0; color: inherit; }
+        .callout.info { background: var(--blue-dim); border: 1px solid rgba(59, 130, 246, 0.2); color: #93c5fd; }
+        .callout.warn { background: var(--amber-dim); border: 1px solid rgba(245, 158, 11, 0.2); color: #fcd34d; }
+        .callout.critical { background: var(--red-dim); border: 1px solid rgba(239, 68, 68, 0.2); color: #fca5a5; }
+        .callout.tip { background: var(--accent-dim); border: 1px solid var(--accent-border); color: #6ee7b7; }
+        .callout-label { font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px; display: block; }
+
+        code { font-family: var(--mono); font-size: 13px; background: var(--surface-3); padding: 2px 7px; border-radius: 4px; color: var(--accent); }
+        pre { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; overflow-x: auto; margin: 20px 0; }
+        pre code { background: none; padding: 0; font-size: 13px; line-height: 1.8; color: var(--text-2); }
+        .sql-keyword { color: var(--accent); font-weight: 600; }
+        .sql-type { color: var(--amber); }
+        .sql-string { color: #fca5a5; }
+        .sql-comment { color: var(--text-3); font-style: italic; }
+
+        .table-wrap { overflow-x: auto; margin: 20px 0; border: 1px solid var(--border); border-radius: var(--radius); }
+        table { width: 100%; border-collapse: collapse; font-size: 14px; }
+        thead { background: var(--surface-2); }
+        th { text-align: left; padding: 12px 16px; font-weight: 600; font-size: 12px; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.06em; border-bottom: 1px solid var(--border); }
+        td { padding: 12px 16px; border-bottom: 1px solid var(--border); color: var(--text-2); }
+        tr:last-child td { border-bottom: none; }
+        tr:hover td { background: var(--surface); }
+
+        ul, ol { margin: 12px 0 20px 24px; color: var(--text-2); font-size: 15px; }
+        li { margin-bottom: 6px; }
+
+        .diagram { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 32px; margin: 24px 0; overflow-x: auto; }
+        .diagram pre { border: none; padding: 0; margin: 0; background: none; }
+        .diagram pre code { color: var(--text-3); font-size: 12px; line-height: 1.5; }
+
+        .tag { display: inline-flex; align-items: center; padding: 3px 10px; border-radius: 100px; font-size: 12px; font-weight: 600; font-family: var(--mono); }
+        .tag.required { background: var(--red-dim); color: #fca5a5; }
+        .tag.optional { background: var(--surface-3); color: var(--text-3); }
+        .tag.php { background: var(--violet-dim); color: #c4b5fd; }
+        .tag.volt { background: var(--blue-dim); color: #93c5fd; }
+        .tag.js { background: var(--amber-dim); color: #fcd34d; }
+        .tag.sql { background: var(--accent-dim); color: #6ee7b7; }
+        .tag.config { background: var(--surface-3); color: var(--text-2); }
+        .tag.new { background: var(--red-dim); color: #fca5a5; font-size: 10px; padding: 2px 8px; }
+
+        .version { display: inline-flex; align-items: center; gap: 6px; font-family: var(--mono); font-size: 14px; font-weight: 600; color: var(--text); }
+
+        .workflow { display: flex; flex-direction: column; gap: 2px; margin: 24px 0; }
+        .workflow-step { display: flex; gap: 20px; padding: 20px 0; }
+        .workflow-num { width: 36px; height: 36px; border-radius: 50%; background: var(--surface-2); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-family: var(--mono); font-size: 13px; font-weight: 600; color: var(--text-3); flex-shrink: 0; }
+        .workflow-content { flex: 1; padding-top: 6px; }
+        .workflow-content h4 { margin: 0 0 4px; color: var(--text); font-size: 15px; }
+        .workflow-content p { margin: 0; font-size: 14px; }
+
+        .comparison { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 24px 0; }
+        .comparison-card { padding: 24px; border-radius: var(--radius); border: 1px solid var(--border); }
+        .comparison-card h4 { margin: 0 0 12px; padding: 0; font-size: 14px; text-transform: uppercase; letter-spacing: 0.06em; }
+        .comparison-card.artisan { background: rgba(245, 158, 11, 0.03); }
+        .comparison-card.artisan h4 { color: var(--amber); }
+        .comparison-card.rekam { background: rgba(139, 92, 246, 0.03); }
+        .comparison-card.rekam h4 { color: var(--violet); }
+
+        .doc-footer { padding: 48px 0; text-align: center; color: var(--text-3); font-size: 13px; }
+
+        .changelog { margin: 24px 0; }
+        .changelog-item { display: flex; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--border); font-size: 14px; }
+        .changelog-item:last-child { border-bottom: none; }
+        .changelog-type { font-family: var(--mono); font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 4px; flex-shrink: 0; }
+        .changelog-type.added { background: var(--accent-dim); color: #6ee7b7; }
+        .changelog-type.updated { background: var(--amber-dim); color: #fcd34d; }
+        .changelog-type.new { background: var(--blue-dim); color: #93c5fd; }
+
+        @media (max-width: 640px) {
+            .toc-list { grid-template-columns: 1fr; }
+            .comparison { grid-template-columns: 1fr; }
+            .meta-row { gap: 16px; }
+            .doc-header { padding: 48px 0 40px; }
+            .section { padding: 40px 0; }
+        }
+
+        @media print {
+            body { background: #fff; color: #000; }
+            .toc { display: none; }
+            .section { border-bottom: 1px solid #eee; }
+            pre, .diagram { border-color: #ddd; background: #f9f9f9; }
+            code { background: #f0f0f0; color: #000; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="doc-header">
+    <div class="container">
+        <div class="badge">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/></svg>
+            Product Requirements Document
+        </div>
+        <h1>TAVP Skeleton CMS</h1>
+        <p class="subtitle">Skeleton CMS yang mesinnya tetap sama, tinggal ganti body (layout) sesuai kebutuhan project. Seperti mobil: mesin tetap, body bisa diganti model apa aja.</p>
+
+        <div class="meta-row">
+            <div class="meta-item">
+                <span class="meta-label">Version</span>
+                <span class="meta-value version">0.0.1</span>
+            </div>
+            <div class="meta-item">
+                <span class="meta-label">Versioning</span>
+                <span class="meta-value">Zero-Based (<a href="https://0ver.org/" target="_blank">0ver.org</a>)</span>
+            </div>
+            <div class="meta-item">
+                <span class="meta-label">Status</span>
+                <span class="meta-value">Planning</span>
+            </div>
+            <div class="meta-item">
+                <span class="meta-label">Tech Stack</span>
+                <span class="meta-value">Tailwind + Alpine.js + Volt + Phalcon</span>
+            </div>
+            <div class="meta-item">
+                <span class="meta-label">Deploy Target</span>
+                <span class="meta-value">Ubuntu VPS + HestiaCP</span>
+            </div>
+            <div class="meta-item">
+                <span class="meta-label">Audience</span>
+                <span class="meta-value">AI Executor</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- CHANGELOG (baru) -->
+<div class="section" style="padding: 40px 0; border-bottom: 1px solid var(--border);">
+    <div class="container">
+        <div class="section-num" style="color: var(--text-3);">CHANGELOG</div>
+        <h3 style="margin-top: 0; padding-top: 0; font-size: 16px;">v0.0.0 → v0.0.1</h3>
+        <div class="changelog">
+            <div class="changelog-item">
+                <span class="changelog-type updated">UPDATED</span>
+                <span>Section 04 — Tambah callout: Phalcon Router WAJIB pakai <code>URI_SOURCE_SERVER_REQUEST_URI</code></span>
+            </div>
+            <div class="changelog-item">
+                <span class="changelog-type updated">UPDATED</span>
+                <span>Section 05 — Tambah baris Phalcon Router URI Source di Tech Stack table</span>
+            </div>
+            <div class="changelog-item">
+                <span class="changelog-type updated">UPDATED</span>
+                <span>Section 11 — Tambah mapping deployment ke HestiaCP (private/ + public_html/)</span>
+            </div>
+            <div class="changelog-item">
+                <span class="changelog-type updated">UPDATED</span>
+                <span>Section 14 — Tambah aturan #11: Router URI Source wajib</span>
+            </div>
+            <div class="changelog-item">
+                <span class="changelog-type new">NEW</span>
+                <span>Section 15 — Deployment ke HestiaCP (step-by-step)</span>
+            </div>
+            <div class="changelog-item">
+                <span class="changelog-type new">NEW</span>
+                <span>Section 16 — Update Workflow (git pull + sync)</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- TABLE OF CONTENTS -->
+<div class="toc">
+    <div class="container">
+        <div class="toc-title">Daftar Isi</div>
+        <ul class="toc-list">
+            <li><a href="#s1"><span class="num">01</span> Konsep & Analogi</a></li>
+            <li><a href="#s2"><span class="num">02</span> Problem Statement</a></li>
+            <li><a href="#s3"><span class="num">03</span> Contoh Hasil Akhir</a></li>
+            <li><a href="#s4"><span class="num">04</span> Arsitektur Sistem</a></li>
+            <li><a href="#s5"><span class="num">05</span> Tech Stack Detail</a></li>
+            <li><a href="#s6"><span class="num">06</span> Database Schema</a></li>
+            <li><a href="#s7"><span class="num">07</span> Section Registry</a></li>
+            <li><a href="#s8"><span class="num">08</span> Theme Engine</a></li>
+            <li><a href="#s9"><span class="num">09</span> Admin Panel</a></li>
+            <li><a href="#s10"><span class="num">10</span> Frontend Renderer</a></li>
+            <li><a href="#s11"><span class="num">11</span> File Structure</a></li>
+            <li><a href="#s12"><span class="num">12</span> Versioning & Workflow</a></li>
+            <li><a href="#s13"><span class="num">13</span> Milestone v0.1.0</a></li>
+            <li><a href="#s14"><span class="num">14</span> Aturan Eksekusi</a></li>
+            <li><a href="#s15"><span class="num">15</span> Deployment ke HestiaCP <span class="tag new">NEW</span></a></li>
+            <li><a href="#s16"><span class="num">16</span> Update Workflow <span class="tag new">NEW</span></a></li>
+        </ul>
+    </div>
+</div>
+
+<!-- 01 — KONSEP & ANALOGI -->
+<div class="section" id="s1">
+    <div class="container">
+        <div class="section-num">01</div>
+        <h2>Konsep & Analogi</h2>
+        <p class="desc">Apa ini sebenarnya dan kenapa dibuat.</p>
+
+        <div class="callout tip">
+            <span class="callout-label">Analogi</span>
+            <p>Bayangkan ini seperti <strong>chassis mobil</strong>. Mesin, transmisi, suspensi — semuanya sudah jadi dan sudah teruji. Yang perlu diganti cuma <strong>body</strong>: sedan, SUV, pickup, atau van — tergantung kebutuhan.</p>
+        </div>
+
+        <h3>Artinya</h3>
+        <ul>
+            <li><strong>Mesin</strong> = Admin panel, Section Registry, Theme Engine, Page Renderer, Media Library. Ini <strong>tidak berubah</strong> antar project.</li>
+            <li><strong>Body</strong> = Kumpulan section yang dipilih, diurutkan, dan di-style dari admin. Ini <strong>berubah</strong> tiap project.</li>
+            <li><strong>Cat</strong> = Warna tema (primary, secondary, accent). Diganti dari admin, <strong>tanpa coding</strong>.</li>
+        </ul>
+
+        <h3>Contoh Nyata</h3>
+        <div class="comparison">
+            <div class="comparison-card artisan">
+                <h4>Artisan Kuliner</h4>
+                <p style="font-size:14px;color:var(--text-2)">Section: Hero → About → Services (3 col) → Gallery (4 col) → Testimonial → CTA → Contact. Warna: amber/gold.</p>
+            </div>
+            <div class="comparison-card rekam">
+                <h4>Rekam Films</h4>
+                <p style="font-size:14px;color:var(--text-2)">Section: Hero (minimal) → Video Showreel → Selected Works (1 col) → About (text only) → Contact (minimal). Warna: monochrome/dark.</p>
+            </div>
+        </div>
+        <p>Mesin yang render kedua website itu <strong>sama persis</strong>. Yang beda cuma: section mana yang dipakai, urutannya, style per section, dan warnanya.</p>
+    </div>
+</div>
+
+<!-- 02 — PROBLEM STATEMENT -->
+<div class="section" id="s2">
+    <div class="container">
+        <div class="section-num">02</div>
+        <h2>Problem Statement</h2>
+        <p class="desc">Masalah yang mau diselesaikan.</p>
+
+        <ol>
+            <li><strong>Setiap project web profil dimulai dari nol.</strong> Padahal pattern-nya sama: hero, about, services, gallery, contact. Buang-buang waktu.</li>
+            <li><strong>Ganti warna = utak-atik CSS.</strong> Harusnya cukup input hex color di admin.</li>
+            <li><strong>Ganti layout = rewrite kode.</strong> Harusnya cukup drag-drop section, pilih style, urutkan.</li>
+            <li><strong>Content statis di file.</strong> Harusnya semua konten bisa di-edit dari admin panel.</li>
+            <li><strong>Saya bukan programmer.</strong> Jadi semua yang berkaitan dengan tampilan harus bisa dilakukan dari GUI, bukan code.</li>
+        </ol>
+
+        <div class="callout critical">
+            <span class="callout-label">Constraint Penting</span>
+            <p>Saya <strong>bukan programmer</strong>. PRD ini harus cukup detail supaya AI lain bisa eksekusi tanpa perlu bertanya hal-hal yang sudah bisa di-infer dari dokumen ini.</p>
+        </div>
+    </div>
+</div>
+
+<!-- 03 — CONTOH HASIL AKHIR -->
+<div class="section" id="s3">
+    <div class="container">
+        <div class="section-num">03</div>
+        <h2>Contoh Hasil Akhir</h2>
+        <p class="desc">Referensi website yang bisa dihasilkan oleh skeleton ini.</p>
+
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Website</th>
+                        <th>URL</th>
+                        <th>Karakter</th>
+                        <th>Sections yang Dipakai</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Artisan Kuliner</strong></td>
+                        <td><a href="https://www.artisankulinergroup.co.id/" target="_blank">Link</a></td>
+                        <td>Corporate, ramai, warna-warni</td>
+                        <td>Hero (fullscreen) → About (split) → Services (grid 3) → Gallery (grid 4) → Testimonials (slider) → CTA (banner) → Contact (split)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Rekam Films</strong></td>
+                        <td><a href="https://www.rekamfilms.com/id" target="_blank">Link</a></td>
+                        <td>Minimalis, gelap, sinematik</td>
+                        <td>Hero (minimal) → Video (showreel) → Gallery (grid 2, 1 per row) → About (text only) → Contact (info only)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="callout info">
+            <span class="callout-label">Catatan</span>
+            <p>Dua website di atas <strong>bukan</strong> dibuat dengan skeleton ini. Mereka cuma <strong>referensi</strong> supaya AI executor paham level kualitas visual yang diharapkan. Skeleton ini harus mampu menghasilkan website dengan kualitas setara.</p>
+        </div>
+    </div>
+</div>
+
+<!-- 04 — ARSITEKTUR SISTEM -->
+<div class="section" id="s4">
+    <div class="container">
+        <div class="section-num">04</div>
+        <h2>Arsitektur Sistem</h2>
+        <p class="desc">Bagaimana komponen saling terhubung.</p>
+
+        <div class="diagram">
+<pre><code>┌─────────────────────────────────────────────────────────────┐
+│                        ADMIN PANEL                         │
+│                                                             │
+│  ┌──────────┐  ┌────────────────┐  ┌───────────────────┐   │
+│  │  Theme   │  │  Page Builder  │  │   Media Library   │   │
+│  │  Editor  │  │                │  │                   │   │
+│  │          │  │  ┌────────────┐│  │  Upload / Browse  │   │
+│  │ Colors   │  │  │ Drag &    ││  │  Crop / Resize    │   │
+│  │ Fonts    │  │  │ Drop      ││  │                   │   │
+│  │ Radius   │  │  │ Sections  ││  └─────────┬─────────┘   │
+│  │          │  │  │           ││            │             │
+│  └────┬─────┘  │  │ ┌───────┐ ││            │             │
+│       │        │  │ │Style  │ ││            │             │
+│       │        │  │ │Picker │ ││            │             │
+│       │        │  │ └───────┘ ││            │             │
+│       │        │  │ ┌───────┐ ││            │             │
+│       │        │  │ │Content│ ││            │             │
+│       │        │  │ │Editor │ ││            │             │
+│       │        │  │ └───────┘ ││            │             │
+│       │        │  └─────┬──────┘            │             │
+│       │        └────────┼───────────────────┘             │
+├───────┼─────────────────┼─────────────────────────────────┤
+│       │          ENGINE │                                  │
+│       ▼                 ▼                                  │
+│  ┌────────────────────────────────────────────────────┐    │
+│  │              SECTION REGISTRY                      │    │
+│  │                                                    │    │
+│  │  Setiap section type punya:                        │    │
+│  │  • name (label manusia)                           │    │
+│  │  • icon (nama ikon Lucide)                        │    │
+│  │  • category (header/content/conversion/...)       │    │
+│  │  • styles[] (variant tampilan)                    │    │
+│  │  • fields[] (konten yang bisa diisi)              │    │
+│  │  • settings[] (layout/padding/bg/spacing)         │    │
+│  └──────────────────────┬─────────────────────────────┘    │
+│                         │                                  │
+│                         ▼                                  │
+│  ┌────────────────────────────────────────────────────┐    │
+│  │              PAGE RENDERER                         │    │
+│  │                                                    │    │
+│  │  1. Ambil page dari DB                            │    │
+│  │  2. Ambil sections, urutkan by sort_order         │    │
+│  │  3. Untuk setiap section:                         │    │
+│  │     a. Lihat type → cari di Registry              │    │
+│  │     b. Lihat style → pilih variant template       │    │
+│  │     c. Lihat content → inject data ke template    │    │
+│  │     d. Lihat settings → apply layout config       │    │
+│  │     e. Render Volt partial                        │    │
+│  │  4. Bungkus dengan CSS variables dari Theme       │    │
+│  └──────────────────────┬─────────────────────────────┘    │
+│                         │                                  │
+├─────────────────────────┼──────────────────────────────────┤
+│                         ▼          FRONTEND                 │
+│  ┌────────────────────────────────────────────────────┐    │
+│  │           themes/frontend/index.volt               │    │
+│  │                                                    │    │
+│  │  &lt;style&gt;{{ theme.cssVariables() }}&lt;/style&gt;         │    │
+│  │  &lt;nav&gt;...&lt;/nav&gt;                                    │    │
+│  │                                                    │    │
+│  │  {% for section in sections %}                     │    │
+│  │    {{ partial('sections/' ~ section.type, [       │    │
+│  │      'content':  section.content,                 │    │
+│  │      'settings': section.settings,                │    │
+│  │      'theme':    theme                            │    │
+│  │    ]) }}                                          │    │
+│  │  {% endfor %}                                     │    │
+│  │                                                    │    │
+│  │  &lt;footer&gt;...&lt;/footer&gt;                                │    │
+│  └────────────────────────────────────────────────────┘    │
+└─────────────────────────────────────────────────────────────┘</code></pre>
+        </div>
+
+        <div class="callout warn">
+            <span class="callout-label">Penting: Phalcon Router URI Source</span>
+            <p>Phalcon Router WAJIB dikonfigurasi pakai <code>URI_SOURCE_SERVER_REQUEST_URI</code> agar kompatibel dengan template Nginx default HestiaCP. JANGAN pakai default (<code>_url</code> parameter). Tanpa ini, routing <strong>tidak akan jalan</strong> di HestiaCP tanpa custom Nginx template. Contoh implementasi ada di Section 15.</p>
+        </div>
+
+        <h3>Alur Data (Sederhana)</h3>
+        <div class="workflow">
+            <div class="workflow-step">
+                <div class="workflow-num">1</div>
+                <div class="workflow-content">
+                    <h4>Admin pilih layout & atur section</h4>
+                    <p>Drag section, isi konten, pilih style, atur warna tema.</p>
+                </div>
+            </div>
+            <div class="workflow-step">
+                <div class="workflow-num">2</div>
+                <div class="workflow-content">
+                    <h4>Data tersimpan di database</h4>
+                    <p>Sections (urutan, type), SectionContent (konten per field), SectionSettings (layout per section), Settings (tema).</p>
+                </div>
+            </div>
+            <div class="workflow-step">
+                <div class="workflow-num">3</div>
+                <div class="workflow-content">
+                    <h4>Pengunjung buka website</h4>
+                    <p>IndexController ambil data page + sections dari DB, kirim ke Volt template.</p>
+                </div>
+            </div>
+            <div class="workflow-step">
+                <div class="workflow-num">4</div>
+                <div class="workflow-content">
+                    <h4>Renderer loop section</h4>
+                    <p>Untuk setiap section: cek type di Registry → ambil template sesuai style → inject konten → render HTML.</p>
+                </div>
+            </div>
+            <div class="workflow-step">
+                <div class="workflow-num">5</div>
+                <div class="workflow-content">
+                    <h4>Final HTML keluar</h4>
+                    <p>Website tampil dengan warna dari CSS variables, konten dari DB, layout dari settings per section.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 05 — TECH STACK DETAIL -->
+<div class="section" id="s5">
+    <div class="container">
+        <div class="section-num">05</div>
+        <h2>Tech Stack Detail</h2>
+        <p class="desc">Setiap komponen dan perannya.</p>
+
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Komponen</th>
+                        <th>Teknologi</th>
+                        <th>Version</th>
+                        <th>Peran</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Backend Framework</strong></td>
+                        <td><span class="tag php">Phalcon</span></td>
+                        <td>5.x</td>
+                        <td>Router, ORM, DI, Session, Security. Router WAJIB pakai <code>URI_SOURCE_SERVER_REQUEST_URI</code>.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Template Engine</strong></td>
+                        <td><span class="tag volt">Volt</span></td>
+                        <td>Built-in Phalcon</td>
+                        <td>Render HTML, partials, inheritance</td>
+                    </tr>
+                    <tr>
+                        <td><strong>CSS Framework</strong></td>
+                        <td><span class="tag js">Tailwind CSS</span></td>
+                        <td>3.4+</td>
+                        <td>Utility classes di admin panel. Frontend pakai CSS variables, bukan Tailwind langsung.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>JS Framework</strong></td>
+                        <td><span class="tag js">Alpine.js</span></td>
+                        <td>3.x</td>
+                        <td>Reaktivitas di admin (drag-drop, toggle, form). Frontend untuk lightbox, mobile menu, scroll.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Icons</strong></td>
+                        <td><span class="tag js">Lucide</span></td>
+                        <td>Latest</td>
+                        <td>Ikon di admin &amp; frontend. Dipanggil via <code>data-lucide="icon-name"</code>.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Font</strong></td>
+                        <td>Inter</td>
+                        <td>Default</td>
+                        <td>Bisa diganti dari admin. Di-load via Google Fonts.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Database</strong></td>
+                        <td><span class="tag sql">MySQL</span></td>
+                        <td>8.0+</td>
+                        <td>Storage utama. Schema ada di Section 06.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Deploy Target</strong></td>
+                        <td><span class="tag config">HestiaCP</span></td>
+                        <td>Latest</td>
+                        <td>Ubuntu VPS control panel. Nginx default template. Tidak perlu custom config.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="callout warn">
+            <span class="callout-label">Penting: Tailwind di Frontend</span>
+            <p>Frontend <strong>TIDAK</strong> bergantung pada Tailwind classes. Semua styling frontend menggunakan <strong>CSS variables</strong> yang di-generate oleh Theme Engine. Tailwind hanya dipakai di <strong>admin panel</strong>. Ini supaya ganti warna tema tidak perlu recompile CSS.</p>
+        </div>
+    </div>
+</div>
+
+<!-- 06 — DATABASE SCHEMA (TIDAK BERUBAH) -->
+<div class="section" id="s6">
+    <div class="container">
+        <div class="section-num">06</div>
+        <h2>Database Schema</h2>
+        <p class="desc">Struktur tabel. Ini wajib diikuti persis.</p>
+
+        <div class="callout critical">
+            <span class="callout-label">Wajib</span>
+            <p>Jangan tambahkan kolom, jangan hapus kolom, jangan ganti tipe data. Schema ini sudah didesain untuk mendukung semua fitur yang dibutuhkan. Kalau ada yang kurang, itu artinya fitur itu belum masuk scope, bukan berarti schemanya salah.</p>
+        </div>
+
+        <h3>6.1 — layouts</h3>
+        <p>Template dasar halaman. Level A fleksibilitas.</p>
+        <div class="table-wrap">
+            <table>
+                <thead><tr><th>Kolom</th><th>Tipe</th><th>Null</th><th>Keterangan</th></tr></thead>
+                <tbody>
+                    <tr><td><code>id</code></td><td>INT AUTO_INCREMENT PK</td><td>No</td><td></td></tr>
+                    <tr><td><code>name</code></td><td>VARCHAR(100)</td><td>No</td><td>Nama manusia: "Corporate", "Portfolio"</td></tr>
+                    <tr><td><code>slug</code></td><td>VARCHAR(100) UNIQUE</td><td>No</td><td>Identifier: "corporate", "portfolio"</td></tr>
+                    <tr><td><code>description</code></td><td>TEXT</td><td>Yes</td><td>Deskripsi layout</td></tr>
+                    <tr><td><code>thumbnail</code></td><td>VARCHAR(255)</td><td>Yes</td><td>Path ke screenshot layout</td></tr>
+                    <tr><td><code>is_system</code></td><td>TINYINT(1) DEFAULT 0</td><td>No</td><td>1 = tidak bisa dihapus dari admin</td></tr>
+                    <tr><td><code>created_at</code></td><td>DATETIME</td><td>Yes</td><td></td></tr>
+                    <tr><td><code>updated_at</code></td><td>DATETIME</td><td>Yes</td><td></td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h3>6.2 — pages</h3>
+        <p>Halaman yang bisa ditambah oleh user.</p>
+        <div class="table-wrap">
+            <table>
+                <thead><tr><th>Kolom</th><th>Tipe</th><th>Null</th><th>Keterangan</th></tr></thead>
+                <tbody>
+                    <tr><td><code>id</code></td><td>INT AUTO_INCREMENT PK</td><td>No</td><td></td></tr>
+                    <tr><td><code>layout_id</code></td><td>INT FK → layouts.id</td><td>Yes</td><td>Bisa null (blank layout)</td></tr>
+                    <tr><td><code>title</code></td><td>VARCHAR(255)</td><td>No</td><td>Judul halaman</td></tr>
+                    <tr><td><code>slug</code></td><td>VARCHAR(255) UNIQUE</td><td>No</td><td>URL slug. Default: "beranda"</td></tr>
+                    <tr><td><code>status</code></td><td>ENUM('published','draft')</td><td>No</td><td>DEFAULT 'draft'</td></tr>
+                    <tr><td><code>seo_title</code></td><td>VARCHAR(255)</td><td>Yes</td><td>Override &lt;title&gt; tag</td></tr>
+                    <tr><td><code>seo_description</code></td><td>TEXT</td><td>Yes</td><td>Meta description</td></tr>
+                    <tr><td><code>created_at</code></td><td>DATETIME</td><td>Yes</td><td></td></tr>
+                    <tr><td><code>updated_at</code></td><td>DATETIME</td><td>Yes</td><td></td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h3>6.3 — sections</h3>
+        <p>Section yang ada di sebuah halaman. Level B fleksibilitas (urutan).</p>
+        <div class="table-wrap">
+            <table>
+                <thead><tr><th>Kolom</th><th>Tipe</th><th>Null</th><th>Keterangan</th></tr></thead>
+                <tbody>
+                    <tr><td><code>id</code></td><td>INT AUTO_INCREMENT PK</td><td>No</td><td></td></tr>
+                    <tr><td><code>page_id</code></td><td>INT FK → pages.id</td><td>No</td><td>ON DELETE CASCADE</td></tr>
+                    <tr><td><code>type</code></td><td>VARCHAR(50)</td><td>No</td><td>Harus match dengan key di Section Registry: "hero", "about", "services", dll</td></tr>
+                    <tr><td><code>sort_order</code></td><td>INT DEFAULT 0</td><td>No</td><td>Urutan tampil. 0 paling atas.</td></tr>
+                    <tr><td><code>is_active</code></td><td>TINYINT(1) DEFAULT 1</td><td>No</td><td>0 = disembunyikan tapi tidak dihapus</td></tr>
+                    <tr><td><code>created_at</code></td><td>DATETIME</td><td>Yes</td><td></td></tr>
+                    <tr><td><code>updated_at</code></td><td>DATETIME</td><td>Yes</td><td></td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h3>6.4 — section_content</h3>
+        <p>Konten dinamis per section. Setiap baris = 1 field value.</p>
+        <div class="table-wrap">
+            <table>
+                <thead><tr><th>Kolom</th><th>Tipe</th><th>Null</th><th>Keterangan</th></tr></thead>
+                <tbody>
+                    <tr><td><code>id</code></td><td>INT AUTO_INCREMENT PK</td><td>No</td><td></td></tr>
+                    <tr><td><code>section_id</code></td><td>INT FK → sections.id</td><td>No</td><td>ON DELETE CASCADE</td></tr>
+                    <tr><td><code>field_key</code></td><td>VARCHAR(100)</td><td>No</td><td>Harus match dengan key di fields[] di Registry</td></tr>
+                    <tr><td><code>field_value</code></td><td>LONGTEXT</td><td>Yes</td><td>Text biasa atau JSON (untuk repeater)</td></tr>
+                    <tr><td><code>sort_order</code></td><td>INT DEFAULT 0</td><td>No</td><td>Penting untuk repeater (urutan item)</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <p><strong>UNIQUE constraint:</strong> <code>(section_id, field_key, sort_order)</code></p>
+
+        <h3>6.5 — section_settings</h3>
+        <p>Layout/setting per section. Level C fleksibilitas.</p>
+        <div class="table-wrap">
+            <table>
+                <thead><tr><th>Kolom</th><th>Tipe</th><th>Null</th><th>Keterangan</th></tr></thead>
+                <tbody>
+                    <tr><td><code>id</code></td><td>INT AUTO_INCREMENT PK</td><td>No</td><td></td></tr>
+                    <tr><td><code>section_id</code></td><td>INT FK → sections.id</td><td>No</td><td>ON DELETE CASCADE</td></tr>
+                    <tr><td><code>setting_key</code></td><td>VARCHAR(100)</td><td>No</td><td>Harus match dengan key di settings[] di Registry</td></tr>
+                    <tr><td><code>setting_value</code></td><td>VARCHAR(255)</td><td>Yes</td><td>Nilai setting (selalu string)</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <p><strong>UNIQUE constraint:</strong> <code>(section_id, setting_key)</code></p>
+
+        <h3>6.6 — settings</h3>
+        <p>Key-value store untuk tema, site info, dll.</p>
+        <div class="table-wrap">
+            <table>
+                <thead><tr><th>Kolom</th><th>Tipe</th><th>Null</th><th>Keterangan</th></tr></thead>
+                <tbody>
+                    <tr><td><code>id</code></td><td>INT AUTO_INCREMENT PK</td><td>No</td><td></td></tr>
+                    <tr><td><code>key</code></td><td>VARCHAR(100) UNIQUE</td><td>No</td><td>Misal: "theme_colors", "theme_font", "nav_items"</td></tr>
+                    <tr><td><code>value</code></td><td>TEXT</td><td>Yes</td><td>String atau JSON</td></tr>
+                    <tr><td><code>updated_at</code></td><td>DATETIME</td><td>Yes</td><td></td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h3>6.7 — media</h3>
+        <p>File yang di-upload (gambar, video, dokumen).</p>
+        <div class="table-wrap">
+            <table>
+                <thead><tr><th>Kolom</th><th>Tipe</th><th>Null</th><th>Keterangan</th></tr></thead>
+                <tbody>
+                    <tr><td><code>id</code></td><td>INT AUTO_INCREMENT PK</td><td>No</td><td></td></tr>
+                    <tr><td><code>filename</code></td><td>VARCHAR(255)</td><td>No</td><td>Nama file di disk (hash)</td></tr>
+                    <tr><td><code>original_name</code></td><td>VARCHAR(255)</td><td>Yes</td><td>Nama asli dari user</td></tr>
+                    <tr><td><code>mime_type</code></td><td>VARCHAR(100)</td><td>Yes</td><td>image/jpeg, video/mp4, dll</td></tr>
+                    <tr><td><code>size</code></td><td>INT</td><td>Yes</td><td>Dalam bytes</td></tr>
+                    <tr><td><code>path</code></td><td>VARCHAR(500)</td><td>Yes</td><td>Relative path dari public/</td></tr>
+                    <tr><td><code>alt_text</code></td><td>VARCHAR(255)</td><td>Yes</td><td>Alt text untuk gambar</td></tr>
+                    <tr><td><code>created_at</code></td><td>DATETIME</td><td>Yes</td><td></td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h3>6.8 — contact_messages</h3>
+        <p>Pesan dari form kontak di frontend.</p>
+        <div class="table-wrap">
+            <table>
+                <thead><tr><th>Kolom</th><th>Tipe</th><th>Null</th><th>Keterangan</th></tr></thead>
+                <tbody>
+                    <tr><td><code>id</code></td><td>INT AUTO_INCREMENT PK</td><td>No</td><td></td></tr>
+                    <tr><td><code>name</code></td><td>VARCHAR(100)</td><td>Yes</td><td></td></tr>
+                    <tr><td><code>email</code></td><td>VARCHAR(100)</td><td>Yes</td><td></td></tr>
+                    <tr><td><code>subject</code></td><td>VARCHAR(255)</td><td>Yes</td><td></td></tr>
+                    <tr><td><code>message</code></td><td>TEXT</td><td>Yes</td><td></td></tr>
+                    <tr><td><code>is_read</code></td><td>TINYINT(1) DEFAULT 0</td><td>No</td><td></td></tr>
+                    <tr><td><code>created_at</code></td><td>DATETIME</td><td>Yes</td><td></td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h3>6.9 — Seed Data</h3>
+        <p>Data awal yang wajib ada setelah migration.</p>
+<pre><code><span class="sql-comment">-- Layouts</span>
+<span class="sql-keyword">INSERT INTO</span> layouts (name, slug, description, is_system, created_at) <span class="sql-keyword">VALUES</span>
+(<span class="sql-string">'Corporate'</span>,  <span class="sql-string">'corporate'</span>,  <span class="sql-string">'Multi-section cocok untuk company profile'</span>, 1, <span class="sql-keyword">NOW</span>()),
+(<span class="sql-string">'Portfolio'</span>,  <span class="sql-string">'portfolio'</span>,  <span class="sql-string">'Minimalis untuk portfolio/karya'</span>,         1, <span class="sql-keyword">NOW</span>()),
+(<span class="sql-string">'Landing Page'</span>, <span class="sql-string">'landing'</span>, <span class="sql-string">'Single-focus untuk produk/layanan'</span>,     1, <span class="sql-keyword">NOW</span>()),
+(<span class="sql-string">'Blank'</span>,      <span class="sql-string">'blank'</span>,     <span class="sql-string">'Kosong, mulai dari nol'</span>,                1, <span class="sql-keyword">NOW</span>());
+
+<span class="sql-comment">-- Default Theme</span>
+<span class="sql-keyword">INSERT INTO</span> settings (<span class="sql-string">`key`</span>, value, updated_at) <span class="sql-keyword">VALUES</span>
+(<span class="sql-string">'theme_name'</span>,   <span class="sql-string">'My Website'</span>, <span class="sql-keyword">NOW</span>()),
+(<span class="sql-string">'theme_colors'</span>, <span class="sql-string">'{"primary":"#10b981","secondary":"#0ea5e9","accent":"#f59e0b","dark":"#0f172a","light":"#f8fafc"}</span>', <span class="sql-keyword">NOW</span>()),
+(<span class="sql-string">'theme_font'</span>,   <span class="sql-string">'Inter'</span>, <span class="sql-keyword">NOW</span>()),
+(<span class="sql-string">'theme_rounded'</span>,<span class="sql-string">'lg'</span>, <span class="sql-keyword">NOW</span>()),
+(<span class="sql-string">'nav_items'</span>,   <span class="sql-string">'[{"label":"Beranda","url":"/"},{"label":"Tentang","url":"#about"},{"label":"Layanan","url":"#services"},{"label":"Galeri","url":"#gallery"},{"label":"Kontak","url":"#contact"}]'</span>, <span class="sql-keyword">NOW</span>()),
+(<span class="sql-string">'footer_text'</span>, <span class="sql-string">'Copyright {{ year }}. All rights reserved.'</span>, <span class="sql-keyword">NOW</span>()),
+(<span class="sql-string">'footer_address'</span>, <span class="sql-string">'Jakarta, Indonesia'</span>, <span class="sql-keyword">NOW</span>()),
+(<span class="sql-string">'footer_phone'</span>,  <span class="sql-string">'021-1234567'</span>, <span class="sql-keyword">NOW</span>()),
+(<span class="sql-string">'footer_email'</span>,  <span class="sql-string">'info@example.com'</span>, <span class="sql-keyword">NOW</span>());</code></pre>
+
+        <div class="callout info">
+            <span class="callout-label">Seed User Default</span>
+            <p>1 user admin default wajib di-seed di migration. Email: <code>admin@example.com</code>, Password: <code>password</code> (wajib di-hash dengan bcrypt). User ini ditambahkan via INSERT di file migration yang sama.</p>
+        </div>
+    </div>
+</div>
+
+<!-- 07 — SECTION REGISTRY (TIDAK BERUBAH) -->
+<div class="section" id="s7">
+    <div class="container">
+        <div class="section-num">07</div>
+        <h2>Section Registry</h2>
+        <p class="desc">Daftar semua section type yang tersedia. Ini adalah <strong>single source of truth</strong> untuk field, style, dan setting setiap section.</p>
+
+        <div class="callout info">
+            <span class="callout-label">Bagaimana Ini Bekerja</span>
+            <p>Registry ini di-define di PHP (<code>SectionRegistryBootstrap.php</code>). Setiap section type punya struktur tetap: <code>name</code>, <code>icon</code>, <code>category</code>, <code>styles[]</code>, <code>fields[]</code>, <code>settings[]</code>. Admin panel membaca registry ini untuk generate form secara otomatis. Frontend renderer membaca registry ini untuk menentukan template mana yang di-render.</p>
+        </div>
+
+        <h3>Field Types</h3>
+        <div class="table-wrap">
+            <table>
+                <thead><tr><th>Type</th><th>Deskripsi</th><th>Render di Admin</th></tr></thead>
+                <tbody>
+                    <tr><td><code>text</code></td><td>Input teks 1 baris</td><td>&lt;input type="text"&gt;</td></tr>
+                    <tr><td><code>textarea</code></td><td>Teks multi-baris</td><td>&lt;textarea&gt;</td></tr>
+                    <tr><td><code>richtext</code></td><td>WYSIWYG editor</td><td>TinyMCE atau Quill</td></tr>
+                    <tr><td><code>url</code></td><td>Input URL dengan validasi</td><td>&lt;input type="url"&gt;</td></tr>
+                    <tr><td><code>number</code></td><td>Angka</td><td>&lt;input type="number"&gt;</td></tr>
+                    <tr><td><code>media</code></td><td>Pilih file dari Media Library</td><td>Button buka media picker modal</td></tr>
+                    <tr><td><code>select</code></td><td>Dropdown pilihan</td><td>&lt;select&gt; dari options[]</td></tr>
+                    <tr><td><code>repeater</code></td><td>Array of items (bisa add/remove)</td><td>Group of fields + tombol tambah/hapus</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h3>Daftar Section Types</h3>
+
+        <h4>7.1 — hero</h4>
+        <div class="table-wrap">
+            <table>
+                <thead><tr><th>Properti</th><th>Value</th></tr></thead>
+                <tbody>
+                    <tr><td>name</td><td>Hero</td></tr>
+                    <tr><td>icon</td><td>layout</td></tr>
+                    <tr><td>category</td><td>header</td></tr>
+                    <tr><td>styles</td><td><code>fullscreen</code> · <code>split</code> · <code>minimal</code> · <code>video_bg</code></td></tr>
+                </tbody>
+            </table>
+        </div>
+        <p><strong>Fields:</strong></p>
+        <div class="table-wrap">
+            <table>
+                <thead><tr><th>Key</th><th>Type</th><th>Label</th><th>Default</th></tr></thead>
+                <tbody>
+                    <tr><td>badge</td><td>text</td><td>Badge</td><td><em>empty</em></td></tr>
+                    <tr><td>title</td><td>text</td><td>Judul</td><td><em>empty</em></td></tr>
+                    <tr><td>subtitle</td><td>textarea</td><td>Subtitle</td><td><em>empty</em></td></tr>
+                    <tr><td>bg_image</td><td>media</td><td>Background Image</td><td><em>empty</em></td></tr>
+                    <tr><td>video_url</td><td>url</td><td>Video URL (YouTube/Vimeo)</td><td><em>empty</em></td></tr>
+                    <tr><td>side_image</td><td>media</td><td>Side Image (untuk style: split)</td><td><em>empty</em></td></tr>
+                    <tr><td>btn_primary_text</td><td>text</td><td>Teks Tombol Utama</td><td><em>empty</em></td></tr>
+                    <tr><td>btn_primary_url</td><td>url</td><td>URL Tombol Utama</td><td>#</td></tr>
+                    <tr><td>btn_secondary_text</td><td>text</td><td>Teks Tombol Kedua</td><td><em>empty</em></td></tr>
+                    <tr><td>btn_secondary_url</td><td>url</td><td>URL Tombol Kedua</td><td>#</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <p><strong>Settings:</strong></p>
+        <div class="table-wrap">
+            <table>
+                <thead><tr><th>Key</th><th>Type</th><th>Label</th><th>Options</th><th>Default</th></tr></thead>
+                <tbody>
+                    <tr><td>style</td><td>select</td><td>Style</td><td>fullscreen · split · minimal · video_bg</td><td>fullscreen</td></tr>
+                    <tr><td>height</td><td>select</td><td>Tinggi</td><td>screen · auto · custom</td><td>screen</td></tr>
+                    <tr><td>custom_height</td><td>number</td><td>Custom Height (px)</td><td>—</td><td>600</td></tr>
+                    <tr><td>text_align</td><td>select</td><td>Posisi Teks</td><td>left · center · right</td><td>left</td></tr>
+                    <tr><td>overlay</td><td>select</td><td>Overlay</td><td>none · light · dark · gradient</td><td>dark</td></tr>
+                    <tr><td>padding_y</td><td>select</td><td>Padding</td><td>sm · md · lg · xl · 2xl</td><td>2xl</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h4>7.2 — about</h4>
+        <div class="table-wrap">
+            <table>
+                <thead><tr><th>Properti</th><th>Value</th></tr></thead>
+                <tbody>
+                    <tr><td>name</td><td>Tentang</td></tr>
+                    <tr><td>icon</td><td>info</td></tr>
+                    <tr><td>category</td><td>content</td></tr>
+                    <tr><td>styles</td><td><code>image_left</code> · <code>image_right</code> · <code>text_only</code> · <code>cards</code></td></tr>
+                </tbody>
+            </table>
+        </div>
+        <p><strong>Fields:</strong></p>
+        <div class="table-wrap">
+            <table>
+                <thead><tr><th>Key</th><th>Type</th><th>Label</th></tr></thead>
+                <tbody>
+                    <tr><td>section_title</td><td>text</td><td>Judul Section</td></tr>
+                    <tr><td>text</td><td>richtext</td><td>Konten</td></tr>
+                    <tr><td>image</td><td>media</td><td>Gambar</td></tr>
+                    <tr><td>items</td><td>repeater</td><td>Items (untuk style: cards)</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <p><strong>Repeater subfields (items):</strong> <code>icon</code> (text) · <code>title</code> (text) · <code>text</code> (text)</p>
+        <p><strong>Settings:</strong> <code>style</code> (select: image_left · image_right · text_only · cards) · <code>padding_y</code> (select) · <code>bg_color</code> (select: white · light · primary · dark) · <code>text_color</code> (select: dark · light)</p>
+
+        <h4>7.3 — services</h4>
+        <div class="table-wrap">
+            <table>
+                <thead><tr><th>Properti</th><th>Value</th></tr></thead>
+                <tbody>
+                    <tr><td>name</td><td>Layanan</td></tr>
+                    <tr><td>icon</td><td>briefcase</td></tr>
+                    <tr><td>category</td><td>content</td></tr>
+                    <tr><td>styles</td><td><code>grid_3</code> · <code>grid_2</code> · <code>list</code> · <code>cards</code></td></tr>
+                </tbody>
+            </table>
+        </div>
+        <p><strong>Fields:</strong> <code>section_title</code> (text) · <code>section_subtitle</code> (textarea) · <code>items</code> (repeater)</p>
+        <p><strong>Repeater subfields (items):</strong> <code>icon</code> (text, nama ikon Lucide) · <code>title</code> (text) · <code>description</code> (textarea) · <code>image</code> (media, optional) · <code>link_text</code> (text) · <code>link_url</code> (url)</p>
+        <p><strong>Settings:</strong> <code>style</code> (select) · <code>padding_y</code> (select) · <code>bg_color</code> (select: white · light · primary · dark)</p>
+
+        <h4>7.4 — gallery</h4>
+        <div class="table-wrap">
+            <table>
+                <thead><tr><th>Properti</th><th>Value</th></tr></thead>
+                <tbody>
+                    <tr><td>name</td><td>Galeri</td></tr>
+                    <tr><td>icon</td><td>image</td></tr>
+                    <tr><td>category</td><td>content</td></tr>
+                    <tr><td>styles</td><td><code>grid_4</code> · <code>grid_3</code> · <code>grid_2</code> · <code>masonry</code> · <code>slider</code></td></tr>
+                </tbody>
+            </table>
+        </div>
+        <p><strong>Fields:</strong> <code>section_title</code> (text) · <code>items</code> (repeater)</p>
+        <p><strong>Repeater subfields (items):</strong> <code>image</code> (media) · <code>caption</code> (text) · <code>span</code> (select: 1 · 2, default 1)</p>
+        <p><strong>Settings:</strong> <code>style</code> (select) · <code>padding_y</code> (select) · <code>bg_color</code> (select) · <code>gap</code> (select: none · sm · md · lg) · <code>lightbox</code> (select: yes · no) · <code>rounded</code> (select: none · sm · md · lg · xl · full)</p>
+
+        <h4>7.5 — video</h4>
+        <div class="table-wrap">
+            <table>
+                <thead><tr><th>Properti</th><th>Value</th></tr></thead>
+                <tbody>
+                    <tr><td>name</td><td>Video</td></tr>
+                    <tr><td>icon</td><td>play-circle</td></tr>
+                    <tr><td>category</td><td>content</td></tr>
+                    <tr><td>styles</td><td><code>embed</code> · <code>showreel</code> · <code>popup</code></td></tr>
+                </tbody>
+            </table>
+        </div>
+        <p><strong>Fields:</strong> <code>section_title</code> (text) · <code>video_url</code> (url, mendukung YouTube &amp; Vimeo) · <code>thumbnail</code> (media, untuk style: popup) · <code>aspect_ratio</code> (select: 16:9 · 4:3 · 21:9, default 16:9)</p>
+        <p><strong>Settings:</strong> <code>style</code> (select) · <code>padding_y</code> (select) · <code>bg_color</code> (select: white · light · dark) · <code>max_width</code> (select: sm · md · lg · full)</p>
+
+        <div class="callout info">
+            <span class="callout-label">Video Embed Logic</span>
+            <p>Helper <code>video_embed.volt</code> wajib bisa handle: (1) YouTube URL (youtube.com/watch?v= dan youtu.be/), (2) Vimeo URL (vimeo.com/), (3) Direct MP4. Untuk YouTube/Vimeo, extract video ID lalu render sebagai iframe. Untuk MP4, render sebagai <code>&lt;video&gt;</code> tag.</p>
+        </div>
+
+        <h4>7.6 — cta</h4>
+        <div class="table-wrap">
+            <table>
+                <thead><tr><th>Properti</th><th>Value</th></tr></thead>
+                <tbody>
+                    <tr><td>name</td><td>Call to Action</td></tr>
+                    <tr><td>icon</td><td>megaphone</td></tr>
+                    <tr><td>category</td><td>conversion</td></tr>
+                    <tr><td>styles</td><td><code>banner</code> · <code>centered</code> · <code>split</code></td></tr>
+                </tbody>
+            </table>
+        </div>
+        <p><strong>Fields:</strong> <code>title</code> (text) · <code>subtitle</code> (textarea) · <code>btn_text</code> (text) · <code>btn_url</code> (url) · <code>bg_image</code> (media)</p>
+        <p><strong>Settings:</strong> <code>style</code> (select) · <code>padding_y</code> (select) · <code>bg_color</code> (select: primary · dark · image)</p>
+
+        <h4>7.7 — stats</h4>
+        <div class="table-wrap">
+            <table>
+                <thead><tr><th>Properti</th><th>Value</th></tr></thead>
+                <tbody>
+                    <tr><td>name</td><td>Statistik</td></tr>
+                    <tr><td>icon</td><td>bar-chart-3</td></tr>
+                    <tr><td>category</td><td>social_proof</td></tr>
+                    <tr><td>styles</td><td><code>inline</code> · <code>grid_4</code> · <code>grid_3</code></td></tr>
+                </tbody>
+            </table>
+        </div>
+        <p><strong>Fields:</strong> <code>items</code> (repeater)</p>
+        <p><strong>Repeater subfields (items):</strong> <code>number</code> (text) · <code>suffix</code> (text, misal "+" atau "K") · <code>label</code> (text)</p>
+        <p><strong>Settings:</strong> <code>style</code> (select) · <code>bg_color</code> (select)</p>
+
+        <h4>7.8 — testimonials</h4>
+        <div class="table-wrap">
+            <table>
+                <thead><tr><th>Properti</th><th>Value</th></tr></thead>
+                <tbody>
+                    <tr><td>name</td><td>Testimoni</td></tr>
+                    <tr><td>icon</td><td>message-square</td></tr>
+                    <tr><td>category</td><td>social_proof</td></tr>
+                    <tr><td>styles</td><td><code>cards</code> · <code>slider</code> · <code>list</code></td></tr>
+                </tbody>
+            </table>
+        </div>
+        <p><strong>Fields:</strong> <code>section_title</code> (text) · <code>items</code> (repeater)</p>
+        <p><strong>Repeater subfields (items):</strong> <code>quote</code> (textarea) · <code>name</code> (text) · <code>role</code> (text) · <code>avatar</code> (media) · <code>rating</code> (select: 1-5, default 5)</p>
+        <p><strong>Settings:</strong> <code>style</code> (select) · <code>padding_y</code> (select) · <code>bg_color</code> (select)</p>
+
+        <h4>7.9 — contact</h4>
+        <div class="table-wrap">
+            <table>
+                <thead><tr><th>Properti</th><th>Value</th></tr></thead>
+                <tbody>
+                    <tr><td>name</td><td>Kontak</td></tr>
+                    <tr><td>icon</td><td>mail</td></tr>
+                    <tr><td>category</td><td>footer</td></tr>
+                    <tr><td>styles</td><td><code>split</code> · <code>form_only</code> · <code>info_only</code> · <code>cards</code></td></tr>
+                </tbody>
+            </table>
+        </div>
+        <p><strong>Fields:</strong> <code>section_title</code> (text) · <code>subtitle</code> (textarea) · <code>address</code> (text) · <code>phone</code> (text) · <code>email</code> (text) · <code>show_form</code> (select: yes · no, default yes) · <code>map_embed</code> (textarea, Google Maps embed code)</p>
+        <p><strong>Settings:</strong> <code>style</code> (select) · <code>padding_y</code> (select) · <code>bg_color</code> (select)</p>
+
+        <div class="callout tip">
+            <span class="callout-label">Form Kontak</span>
+            <p>Ketika <code>show_form = yes</code>, section contact WAJIB render form dengan field: Nama, Email, Subjek, Pesan. Form submit via AJAX ke <code>POST /api/contact</code>. Setelah berhasil, tampilkan pesan sukses tanpa reload halaman.</p>
+        </div>
+
+        <h4>7.10 — faq</h4>
+        <div class="table-wrap">
+            <table>
+                <thead><tr><th>Properti</th><th>Value</th></tr></thead>
+                <tbody>
+                    <tr><td>name</td><td>FAQ</td></tr>
+                    <tr><td>icon</td><td>help-circle</td></tr>
+                    <tr><td>category</td><td>footer</td></tr>
+                    <tr><td>styles</td><td><code>accordion</code> · <code>grid</code></td></tr>
+                </tbody>
+            </table>
+        </div>
+        <p><strong>Fields:</strong> <code>section_title</code> (text) · <code>items</code> (repeater)</p>
+        <p><strong>Repeater subfields (items):</strong> <code>question</code> (text) · <code>answer</code> (textarea)</p>
+        <p><strong>Settings:</strong> <code>style</code> (select) · <code>padding_y</code> (select) · <code>bg_color</code> (select: white · light)</p>
+
+        <div class="callout info">
+            <span class="callout-label">Accordion Behavior</span>
+            <p>Untuk style <code>accordion</code>, hanya 1 item yang boleh terbuka di saat yang sama. Klik item lain → item sebelumnya tutup otomatis. Gunakan Alpine.js untuk ini.</p>
+        </div>
+    </div>
+</div>
+
+<!-- 08 — THEME ENGINE (TIDAK BERUBAH) -->
+<div class="section" id="s8">
+    <div class="container">
+        <div class="section-num">08</div>
+        <h2>Theme Engine</h2>
+        <p class="desc">Cara kerja sistem warna dan tema.</p>
+
+        <h3>Alur</h3>
+        <ol>
+            <li>Admin buka Theme Editor di admin panel.</li>
+            <li>Pilih warna (color picker) atau pilih preset.</li>
+            <li>Save → tersimpan di tabel <code>settings</code> dengan key <code>theme_colors</code> sebagai JSON.</li>
+            <li>Di frontend, <code>ThemeProvider.php</code> baca dari DB (fallback ke config file).</li>
+            <li><code>ThemeProvider-&gt;cssVariables()</code> generate CSS custom properties.</li>
+            <li>CSS variables di-inject di <code>&lt;head&gt;</code> frontend.</li>
+            <li>Semua styling frontend pakai <code>var(--color-xxx)</code>, bukan hardcode.</li>
+        </ol>
+
+        <h3>Warna yang Tersedia</h3>
+        <div class="table-wrap">
+            <table>
+                <thead><tr><th>Key</th><th>Default</th><th>Digunakan Untuk</th></tr></thead>
+                <tbody>
+                    <tr><td><code>primary</code></td><td>#10b981</td><td>Tombol utama, aksen, link, badge, ikon aktif</td></tr>
+                    <tr><td><code>secondary</code></td><td>#0ea5e9</td><td>Elemen sekunder, gradient</td></tr>
+                    <tr><td><code>accent</code></td><td>#f59e0b</td><td>Highlight, warning, elemen khusus</td></tr>
+                    <tr><td><code>dark</code></td><td>#0f172a</td><td>Teks utama, heading, navbar bg, footer bg</td></tr>
+                    <tr><td><code>light</code></td><td>#f8fafc</td><td>Background halaman, section alternating</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h3>CSS Variables yang Di-generate</h3>
+        <p>Untuk setiap warna, Theme Engine WAJIB generate:</p>
+<pre><code><span class="sql-comment">/* Base color */</span>
+--color-primary: #10b981;
+
+<span class="sql-comment">/* Opacity variants (wajib ada semua) */</span>
+--color-primary-5:  rgba(16, 185, 129, 0.05);
+--color-primary-10: rgba(16, 185, 129, 0.10);
+--color-primary-20: rgba(16, 185, 129, 0.20);
+--color-primary-30: rgba(16, 185, 129, 0.30);
+--color-primary-50: rgba(16, 185, 129, 0.50);
+--color-primary-70: rgba(16, 185, 129, 0.70);
+--color-primary-90: rgba(16, 185, 129, 0.90);</code></pre>
+
+        <p>Ini berlaku untuk ke-5 warna (primary, secondary, accent, dark, light). Jadi total ada <strong>40 CSS variables</strong>.</p>
+
+        <h3>Preset Warna (di Admin)</h3>
+        <div class="table-wrap">
+            <table>
+                <thead><tr><th>Nama</th><th>Primary</th><th>Secondary</th><th>Accent</th><th>Dark</th><th>Light</th></tr></thead>
+                <tbody>
+                    <tr><td>Emerald</td><td>#10b981</td><td>#0ea5e9</td><td>#f59e0b</td><td>#0f172a</td><td>#f8fafc</td></tr>
+                    <tr><td>Blue</td><td>#3b82f6</td><td>#8b5cf6</td><td>#f59e0b</td><td>#1e293b</td><td>#f1f5f9</td></tr>
+                    <tr><td>Violet</td><td>#8b5cf6</td><td>#ec4899</td><td>#06b6d4</td><td>#1a1025</td><td>#faf5ff</td></tr>
+                    <tr><td>Rose</td><td>#f43f5e</td><td>#f97316</td><td>#eab308</td><td>#1c1917</td><td>#fff1f2</td></tr>
+                    <tr><td>Amber</td><td>#f59e0b</td><td>#ef4444</td><td>#10b981</td><td>#1c1917</td><td>#fffbeb</td></tr>
+                    <tr><td>Monochrome</td><td>#475569</td><td>#64748b</td><td>#94a3b8</td><td>#0f172a</td><td>#f8fafc</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h3>Setting Tambahan</h3>
+        <div class="table-wrap">
+            <table>
+                <thead><tr><th>Key</th><th>Type</th><th>Options</th><th>Default</th></tr></thead>
+                <tbody>
+                    <tr><td>theme_name</td><td>text</td><td>—</td><td>My Website</td></tr>
+                    <tr><td>theme_font</td><td>select</td><td>Inter · Plus Jakarta Sans · Poppins · Manrope · DM Sans · Outfit</td><td>Inter</td></tr>
+                    <tr><td>theme_rounded</td><td>select</td><td>none · sm · md · lg · xl · 2xl · full</td><td>lg</td></tr>
+                    <tr><td>site_logo</td><td>media</td><td>—</td><td><em>empty</em></td></tr>
+                    <tr><td>nav_items</td><td>JSON</td><td>—</td><td>[{"label":"Beranda","url":"/"}, ...]</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- 09 — ADMIN PANEL (TIDAK BERUBAH) -->
+<div class="section" id="s9">
+    <div class="container">
+        <div class="section-num">09</div>
+        <h2>Admin Panel</h2>
+        <p class="desc">Halaman-halaman di admin dan fungsinya.</p>
+
+        <div class="callout warn">
+            <span class="callout-label">Scope v0.1.0</span>
+            <p>Di milestone pertama (v0.1.0), admin panel fokus pada: (1) Theme Editor, (2) Page Builder, (3) Login/Logout. Media Library dan halaman lainnya masuk milestone selanjutnya.</p>
+        </div>
+
+        <div class="table-wrap">
+            <table>
+                <thead><tr><th>Halaman</th><th>URL</th><th>Milestone</th><th>Deskripsi</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>Login</strong></td><td>/admin/login</td><td>v0.1.0</td><td>Form email + password. Tanpa "forgot password" dulu.</td></tr>
+                    <tr><td><strong>Dashboard</strong></td><td>/admin</td><td>v0.1.0</td><td>Halaman kosong dengan sapaan. Cukup "Selamat datang, [nama]".</td></tr>
+                    <tr><td><strong>Theme Editor</strong></td><td>/admin/theme</td><td>v0.1.0</td><td>Color picker, preset, font, rounded, site info. Save ke settings table.</td></tr>
+                    <tr><td><strong>Page Builder</strong></td><td>/admin/pages/:id/build</td><td>v0.1.0</td><td>Drag-drop sections, edit content per section, edit settings per section.</td></tr>
+                    <tr><td><strong>Pages List</strong></td><td>/admin/pages</td><td>v0.1.0</td><td>Daftar halaman, tambah, hapus, ubah status draft/published.</td></tr>
+                    <tr><td><strong>Media Library</strong></td><td>/admin/media</td><td>v0.2.0</td><td>Upload, browse, hapus file. Grid view.</td></tr>
+                    <tr><td><strong>Contact Messages</strong></td><td>/admin/messages</td><td>v0.2.0</td><td>Daftar pesan, mark as read, lihat detail.</td></tr>
+                    <tr><td><strong>Users</strong></td><td>/admin/users</td><td>v0.3.0</td><td>CRUD pengguna admin.</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h3>Page Builder — Detail Interaksi</h3>
+        <p>Layout: 3 kolom.</p>
+        <ul>
+            <li><strong>Kiri</strong>: Daftar section types (dari Registry), dikelompokkan per category. Bisa di-drag ke canvas atau klik + untuk tambah.</li>
+            <li><strong>Tengah</strong>: Canvas. Menampilkan daftar section yang sudah ditambahkan, diurutkan by <code>sort_order</code>. Bisa di-reorder via drag-drop. Setiap item menampilkan: icon, nama type, style badge, tombol toggle visibility, duplicate, edit, delete.</li>
+            <li><strong>Kanan</strong>: Editor panel. Muncul ketika section diklik "edit". Menampilkan 2 tab: <strong>Content</strong> (form fields sesuai Registry) dan <strong>Style</strong> (form settings sesuai Registry). Ada tombol Save di bawah.</li>
+        </ul>
+
+        <h3>Auto-save Behavior</h3>
+        <ul>
+            <li>Reorder section (drag-drop) → auto-save sort_order via AJAX.</li>
+            <li>Toggle visibility → auto-save is_active via AJAX.</li>
+            <li>Edit content/style → manual save (klik tombol Save).</li>
+            <li>Semua save action menampilkan toast notification (success/error).</li>
+        </ul>
+    </div>
+</div>
+
+<!-- 10 — FRONTEND RENDERER (TIDAK BERUBAH) -->
+<div class="section" id="s10">
+    <div class="container">
+        <div class="section-num">10</div>
+        <h2>Frontend Renderer</h2>
+        <p class="desc">Cara frontend menampilkan halaman.</p>
+
+        <h3>Alur Render</h3>
+        <ol>
+            <li>User buka <code>/</code> (atau slug lain).</li>
+            <li><code>IndexController</code> cari page berdasarkan slug, status = published.</li>
+            <li>Ambil semua sections milik page tersebut, urutkan by <code>sort_order</code>, filter <code>is_active = 1</code>.</li>
+            <li>Untuk setiap section, panggil <code>afterFetch()</code> di model → otomatis load content &amp; settings dari DB, merge dengan default dari Registry.</li>
+            <li>Kirim data ke <code>themes/frontend/index.volt</code>.</li>
+            <li>Template loop sections, untuk setiap section: render <code>themes/frontend/sections/[type].volt</code> sebagai partial.</li>
+        </ol>
+
+        <h3>Struktur Template Frontend</h3>
+<pre><code>themes/frontend/
+├── index.volt                 <span class="sql-comment"># Layout utama</span>
+├── partials/
+│   ├── navbar.volt            <span class="sql-comment"># Navigasi (selalu sama)</span>
+│   ├── footer.volt            <span class="sql-comment"># Footer (selalu sama)</span>
+│   └── video_embed.volt       <span class="sql-comment"># Helper render video</span>
+└── sections/
+    ├── hero.volt              <span class="sql-comment"># 4 style dalam 1 file</span>
+    ├── about.volt             <span class="sql-comment"># 4 style dalam 1 file</span>
+    ├── services.volt          <span class="sql-comment"># 4 style dalam 1 file</span>
+    ├── gallery.volt           <span class="sql-comment"># 5 style dalam 1 file</span>
+    ├── video.volt             <span class="sql-comment"># 3 style dalam 1 file</span>
+    ├── cta.volt               <span class="sql-comment"># 3 style dalam 1 file</span>
+    ├── stats.volt             <span class="sql-comment"># 3 style dalam 1 file</span>
+    ├── testimonials.volt      <span class="sql-comment"># 3 style dalam 1 file</span>
+    ├── contact.volt           <span class="sql-comment"># 4 style dalam 1 file</span>
+    └── faq.volt               <span class="sql-comment"># 2 style dalam 1 file</span></code></pre>
+
+        <h3>Pattern 1 File = Multi Style</h3>
+        <p>Setiap file section menggunakan <code>{% if s.style == 'xxx' %}...{% endif %}</code> untuk memilih variant. Ini disengaja supaya tidak terlalu banyak file. Contoh:</p>
+<pre><code>{# themes/frontend/sections/hero.volt #}
+{% set s = settings %}
+{% set c = content %}
+
+{% if s.style == 'fullscreen' or s.style is empty %}
+    <span class="sql-comment">{# ... fullscreen HTML ... #}</span>
+{% endif %}
+
+{% if s.style == 'split' %}
+    <span class="sql-comment">{# ... split HTML ... #}</span>
+{% endif %}
+
+{% if s.style == 'minimal' %}
+    <span class="sql-comment">{# ... minimal HTML ... #}</span>
+{% endif %}
+
+{% if s.style == 'video_bg' %}
+    <span class="sql-comment">{# ... video background HTML ... #}</span>
+{% endif %}</code></pre>
+
+        <h3>Navbar</h3>
+        <p>Navbar BUKAN section. Ia selalu render dari <code>partials/navbar.volt</code>. Data diambil dari settings: <code>nav_items</code> (JSON), <code>site_logo</code>, <code>theme_name</code>.</p>
+        <ul>
+            <li>Fixed top, background transparan → berubah putih/blur saat scroll (pakai Alpine.js <code>@scroll.window</code>).</li>
+            <li>Mobile: hamburger menu yang toggle dropdown.</li>
+            <li>Logo kiri, menu tengah/kanan.</li>
+        </ul>
+
+        <h3>Footer</h3>
+        <p>Footer BUKAN section. Ia selalu render dari <code>partials/footer.volt</code>. Data dari settings: <code>footer_text</code>, <code>footer_address</code>, <code>footer_phone</code>, <code>footer_email</code>, <code>nav_items</code>.</p>
+        <ul>
+            <li>Background gelap (var(--color-dark)).</li>
+            <li>3-4 kolom: logo+desc, menu, kontak.</li>
+            <li>Copyright bar di bawah.</li>
+        </ul>
+
+        <h3>Responsive</h3>
+        <p>Semua section WAJIB responsive. Breakpoint: <code>sm</code> (640px), <code>md</code> (768px), <code>lg</code> (1024px). Gunakan class Tailwind-like yang di-convert ke CSS variables-based classes.</p>
+    </div>
+</div>
+
+<!-- 11 — FILE STRUCTURE (UPDATED) -->
+<div class="section" id="s11">
+    <div class="container">
+        <div class="section-num">11</div>
+        <h2>File Structure</h2>
+        <p class="desc">Struktur folder project. Wajib mengikuti ini.</p>
+
+<pre><code>skeleton-tavp/
+├── app/
+│   ├── controllers/
+│   │   ├── IndexController.php       <span class="sql-comment"># Frontend: render page</span>
+│   │   ├── AdminController.php       <span class="sql-comment"># Admin: dashboard</span>
+│   │   ├── AuthController.php        <span class="sql-comment"># Admin: login/logout</span>
+│   │   ├── ThemeController.php       <span class="sql-comment"># Admin: theme editor CRUD</span>
+│   │   ├── PageController.php        <span class="sql-comment"># Admin: pages list + builder</span>
+│   │   ├── SectionController.php     <span class="sql-comment"># Admin: section AJAX CRUD</span>
+│   │   └── ApiContactController.php  <span class="sql-comment"># Frontend: contact form submit</span>
+│   ├── models/
+│   │   ├── Layouts.php
+│   │   ├── Pages.php
+│   │   ├── Sections.php              <span class="sql-comment"># Punya afterFetch() untuk load content/settings</span>
+│   │   ├── SectionContent.php
+│   │   ├── SectionSettings.php
+│   │   ├── Settings.php
+│   │   ├── Media.php
+│   │   ├── Users.php
+│   │   └── ContactMessages.php
+│   └── providers/
+│       ├── AuthProvider.php          <span class="sql-comment"># Login logic, session check</span>
+│       ├── ThemeProvider.php         <span class="sql-comment"># CSS variables generator, color helper</span>
+│       ├── SectionRegistry.php       <span class="sql-comment"># Registry container: register(), get(), all()</span>
+│       └── SectionRegistryBootstrap.php  <span class="sql-comment"># Definisi semua section types</span>
+├── config/
+│   ├── config.php                    <span class="sql-comment"># DB, app name, debug, base URI</span>
+│   └── theme.php                     <span class="sql-comment"># Default colors, font, rounded</span>
+├── themes/
+│   ├── admin/                        <span class="sql-comment"># Pakai Tailwind langsung</span>
+│   │   ├── layouts/main.volt
+│   │   ├── partials/
+│   │   │   ├── sidebar.volt
+│   │   │   ├── navbar.volt
+│   │   │   └── toast.volt
+│   │   └── pages/
+│   │       ├── dashboard.volt
+│   │       ├── login.volt
+│   │       ├── theme.volt
+│   │       ├── pages/index.volt
+│   │       └── pages/builder.volt
+│   └── frontend/                     <span class="sql-comment"># Pakai CSS variables, BUKAN Tailwind</span>
+│       ├── index.volt
+│       ├── partials/
+│       │   ├── navbar.volt
+│       │   ├── footer.volt
+│       │   └── video_embed.volt
+│       └── sections/
+│           ├── hero.volt
+│           ├── about.volt
+│           ├── services.volt
+│           ├── gallery.volt
+│           ├── video.volt
+│           ├── cta.volt
+│           ├── stats.volt
+│           ├── testimonials.volt
+│           ├── contact.volt
+│           └── faq.volt
+├── public/
+│   ├── index.php                     <span class="sql-comment"># Entry point, bootstrap Phalcon</span>
+│   ├── css/app.css                   <span class="sql-comment"># Compiled Tailwind (untuk admin)</span>
+│   ├── js/app.js                     <span class="sql-comment"># Alpine.js plugins (untuk admin)</span>
+│   └── uploads/                      <span class="sql-comment"># Uploaded files (gitignored)</span>
+├── migrations/
+│   └── 001_initial_schema.sql        <span class="sql-comment"># Semua CREATE TABLE + seed</span>
+├── composer.json
+├── tailwind.config.js
+├── postcss.config.js
+├── package.json
+└── .gitignore</code></pre>
+
+        <h3>Mapping ke HestiaCP (Saat Deploy)</h3>
+        <div class="callout info">
+            <span class="callout-label">Pola Deploy</span>
+            <p>Struktur di atas adalah struktur <strong>repository</strong>. Saat deploy ke HestiaCP, seluruh project di-clone ke <code>private/</code>, lalu isi folder <code>public/</code> di-copy ke <code>public_html/</code>. Path di <code>public_html/index.php</code> di-patch ke absolute path. Lihat Section 15 untuk detail lengkap.</p>
+        </div>
+
+<pre><code><span class="sql-comment"># Mapping saat deploy ke HestiaCP</span>
+~/web/{domain}/
+├── private/
+│   └── skeleton_tavp_app/            <span class="sql-comment"># ← Seluruh repo di sini</span>
+│       ├── app/
+│       ├── config/
+│       ├── themes/
+│       ├── migrations/
+│       ├── vendor/
+│       ├── public/                   <span class="sql-comment"># ← folder public asli (tidak diakses web)</span>
+│       └── ...
+├── public_html/                      <span class="sql-comment"># ← COPY dari public/ di atas</span>
+│   ├── index.php                     <span class="sql-comment"># ← path di-patch ke absolute</span>
+│   ├── css/
+│   ├── js/
+│   └── uploads/
+├── private/                          <span class="sql-comment"># (folder ini sendiri)</span>
+├── cgi-bin/
+├── logs/
+└── conf/</code></pre>
+    </div>
+</div>
+
+<!-- 12 — VERSIONING & WORKFLOW (TIDAK BERUBAH) -->
+<div class="section" id="s12">
+    <div class="container">
+        <div class="section-num">12</div>
+        <h2>Versioning &amp; Workflow</h2>
+        <p class="desc">Menggunakan Zero-Based Versioning sesuai <a href="https://0ver.org/" target="_blank">0ver.org</a>.</p>
+
+        <h3>Aturan Versioning</h3>
+        <div class="table-wrap">
+            <table>
+                <thead><tr><th>Format</th><th>Kapan Naik</th><th>Contoh</th></tr></thead>
+                <tbody>
+                    <tr><td><code>0.MAJOR.0</code></td><td>Ada perubahan yang <strong>breaking</strong>: schema berubah, API berubah, cara pakai berubah</td><td>0.0.0 → 0.1.0 (initial release)</td></tr>
+                    <tr><td><code>0.MAJOR.MINOR</code></td><td>Ada fitur baru yang <strong>backwards compatible</strong>: tambah section type, tambah halaman admin, dll</td><td>0.1.0 → 0.1.1 (tambah media library)</td></tr>
+                    <tr><td><code>0.MAJOR.MINOR.PATCH</code></td><td>Bug fix, typo, styling kecil, tanpa fitur baru</td><td>0.1.0 → 0.1.0.1 (fix bug drag-drop)</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="callout info">
+            <span class="callout-label">Kenapa 0.x.x?</span>
+            <p>Skeleton ini belum siap dianggap "stable". Selama masih di 0.x.x, breaking changes bisa terjadi di mana saja. Kalau sudah cukup matang dan dipakai di beberapa project nyata tanpa masalah, baru naik ke 1.0.0.</p>
+        </div>
+
+        <h3>Workflow Per Milestone</h3>
+        <div class="workflow">
+            <div class="workflow-step">
+                <div class="workflow-num">1</div>
+                <div class="workflow-content">
+                    <h4>Buat branch</h4>
+                    <p>Format: <code>v0.X.0</code>. Misal: <code>git checkout -b v0.1.0</code></p>
+                </div>
+            </div>
+            <div class="workflow-step">
+                <div class="workflow-num">2</div>
+                <div class="workflow-content">
+                    <h4>Eksekusi semua requirement di milestone</h4>
+                    <p>Commit ke branch tersebut. Commit message bebas asli jelas.</p>
+                </div>
+            </div>
+            <div class="workflow-step">
+                <div class="workflow-num">3</div>
+                <div class="workflow-content">
+                    <h4>Testing manual</h4>
+                    <p>Buka admin, buat page, tambah section, isi konten, lihat frontend. Pastikan semua berjalan.</p>
+                </div>
+            </div>
+            <div class="workflow-step">
+                <div class="workflow-num">4</div>
+                <div class="workflow-content">
+                    <h4>Merge ke main + tag</h4>
+                    <p><code>git checkout main &amp;&amp; git merge v0.1.0 &amp;&amp; git tag v0.1.0</code></p>
+                </div>
+            </div>
+            <div class="workflow-step">
+                <div class="workflow-num">5</div>
+                <div class="workflow-content">
+                    <h4>Update PRD</h4>
+                    <p>Ubah version di header PRD ini ke versi terbaru. Tandai milestone yang sudah selesai.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 13 — MILESTONE v0.1.0 (TIDAK BERUBAH) -->
+<div class="section" id="s13">
+    <div class="container">
+        <div class="section-num">13</div>
+        <h2>Milestone v0.1.0</h2>
+        <p class="desc">Scope pertama. Yang lainnya menyusul.</p>
+
+        <div class="callout tip">
+            <span class="callout-label">Target</span>
+            <p>v0.1.0 = skeleton ini bisa dipakai untuk bikin website sederhana (1 halaman, multi-section) dari nol, tanpa coding, hanya lewat admin panel. Visual belum harus sempurna, tapi alur kerjanya sudah benar.</p>
+        </div>
+
+        <h3>Wajib Selesai di v0.1.0</h3>
+
+        <h4>Backend</h4>
+        <ul>
+            <li>Bootstrap Phalcon 5 (DI, Router dengan <code>URI_SOURCE_SERVER_REQUEST_URI</code>, Session, Security).</li>
+            <li>Semua 8 tabel di-create via migration SQL.</li>
+            <li>Semua 8 model (CRUD dasar).</li>
+            <li>SectionRegistry + SectionRegistryBootstrap (10 section types sesuai Section 07).</li>
+            <li>Sections model dengan <code>afterFetch()</code> yang load &amp; merge content/settings.</li>
+            <li>ThemeProvider dengan <code>cssVariables()</code> dan <code>hexToRgb()</code>.</li>
+            <li>AuthProvider (login, logout, session check).</li>
+            <li>IndexController yang render page + sections.</li>
+            <li>API endpoint: <code>POST /api/contact</code>.</li>
+        </ul>
+
+        <h4>Admin Panel</h4>
+        <ul>
+            <li>Login page (email + password). 1 user default di-seed.</li>
+            <li>Dashboard (halaman sapaan aja).</li>
+            <li>Theme Editor: color picker (5 warna), 6 preset, font select, rounded select, site name. Save ke settings table.</li>
+            <li>Pages List: daftar halaman, tombol tambah, hapus, toggle draft/published.</li>
+            <li>Page Builder: 3 kolom layout (library, canvas, editor). Drag-drop reorder. Klik + untuk tambah section. Edit content &amp; style per section. Toggle visibility. Delete section. Duplicate section.</li>
+        </ul>
+
+        <h4>Frontend</h4>
+        <ul>
+            <li><code>index.volt</code> yang inject CSS variables, render navbar, loop sections, render footer.</li>
+            <li><code>navbar.volt</code>: fixed, transparan→blur on scroll, mobile menu.</li>
+            <li><code>footer.volt</code>: 3 kolom, copyright.</li>
+            <li><code>video_embed.volt</code>: handle YouTube, Vimeo, MP4.</li>
+            <li>10 file section templates (hero, about, services, gallery, video, cta, stats, testimonials, contact, faq). Masing-masing dengan semua style variants.</li>
+            <li>Contact form section: AJAX submit, success message tanpa reload.</li>
+            <li>FAQ section: accordion dengan 1-terbuka-saja.</li>
+        </ul>
+
+        <h4>Tidak Wajib di v0.1.0 (Tidak Kerjakan)</h4>
+        <ul>
+            <li>Media Library UI (untuk sementara, field media diisi manual dengan URL atau path).</li>
+            <li>Richtext editor (untuk sementara, field richtext pakai textarea biasa).</li>
+            <li>Users management (cukup 1 user default).</li>
+            <li>Contact messages list di admin.</li>
+            <li>SEO fields (seo_title, seo_description diabaikan dulu).</li>
+            <li>Dark mode di admin panel.</li>
+            <li>Export/import data.</li>
+        </ul>
+    </div>
+</div>
+
+<!-- 14 — ATURAN EKSEKUSI (UPDATED) -->
+<div class="section" id="s14">
+    <div class="container">
+        <div class="section-num">14</div>
+        <h2>Aturan Eksekusi</h2>
+        <p class="desc">Aturan yang WAJIB diikuti oleh AI executor.</p>
+
+        <div class="callout critical">
+            <span class="callout-label">Wajib Baca Sebelum Mulai</span>
+            <p>Bagian ini bukan saran. Ini adalah <strong>constraint</strong>. Langgar = hasil tidak sesuai ekspektasi.</p>
+        </div>
+
+        <h3>1. Jangan Invent Fitur</h3>
+        <p>Jangan tambahkan fitur yang tidak ada di PRD ini. Tidak ada "nice to have", tidak ada "kebetulan bisa ditambahkan". Kalau ragu, <strong>jangan tambah</strong>.</p>
+
+        <h3>2. Schema = Suci</h3>
+        <p>Jangan tambah kolom, jangan hapus kolom, jangan ganti tipe data, jangan tambah tabel, jangan hapus tabel. Schema di Section 06 adalah final untuk v0.1.0.</p>
+
+        <h3>3. Registry = Suci</h3>
+        <p>Jangan tambah section type, jangan hapus, jangan ubah field key, jangan ubah options. Registry di Section 07 adalah final untuk v0.1.0.</p>
+
+        <h3>4. Frontend Pakai CSS Variables</h3>
+        <p>Jangan hardcode warna di frontend section templates. Semua warna harus pakai <code>var(--color-xxx)</code>. Satu-satunya tempat boleh hardcode: admin panel (pakai Tailwind).</p>
+
+        <h3>5. 1 File Section = Multi Style</h3>
+        <p>Jangan buat file terpisah per style. Semua style variant dari 1 section type harus dalam 1 file, dipisahkan dengan <code>{% if s.style == 'xxx' %}</code>.</p>
+
+        <h3>6. Admin Pakai Tailwind, Frontend Tidak</h3>
+        <p>Admin panel boleh (dan sebaiknya) pakai Tailwind utility classes. Frontend section templates TIDAK BOLEH bergantung pada Tailwind — semua styling via CSS variables + custom CSS.</p>
+
+        <h3>7. Output Format</h3>
+        <p>Keluaran harus berupa file-file yang bisa langsung di-save ke struktur folder di Section 11. Jangan keluarin dalam bentuk narasi "buat file ini isinya begini". Keluarin dalam format code block dengan nama file di atasnya.</p>
+
+        <h3>8. Urutan Eksekusi</h3>
+        <p>Kerjakan dalam urutan ini:</p>
+        <ol>
+            <li><strong>config/</strong> — config.php, theme.php</li>
+            <li><strong>composer.json</strong> — dependency</li>
+            <li><strong>migrations/</strong> — SQL schema + seed</li>
+            <li><strong>app/models/</strong> — semua 8 model</li>
+            <li><strong>app/providers/</strong> — Auth, Theme, SectionRegistry, Bootstrap</li>
+            <li><strong>public/index.php</strong> — bootstrap</li>
+            <li><strong>themes/admin/</strong> — layout, partials, pages</li>
+            <li><strong>themes/frontend/partials/</strong> — navbar, footer, video_embed</li>
+            <li><strong>themes/frontend/sections/</strong> — 10 section files</li>
+            <li><strong>themes/frontend/index.volt</strong> — main renderer</li>
+            <li><strong>public/js/app.js</strong> — Alpine plugins</li>
+            <li><strong>tailwind.config.js</strong> + <strong>package.json</strong></li>
+        </ol>
+
+        <h3>9. Jangan Tanya Hal yang Sudah Ada di PRD</h3>
+        <p>"Gimana cara kerja section registry?" — sudah di Section 07. "Apa aja field-nya hero?" — sudah di Section 07. "Warna defaultnya apa?" — sudah di Section 08. Hanya tanya kalau ada konflik atau ambiguitas yang <strong>benar-benar</strong> tidak bisa di-resolve dari PRD ini.</p>
+
+        <h3>10. Kalau Menemui Masalah</h3>
+        <p>Berhenti. Jelaskan masalahnya secara spesifik: file mana, baris mana, error apa, expected vs actual apa. Jangan melanjutkan dengan asumsi sendiri.</p>
+
+        <h3>11. Router WAJIB Pakai REQUEST_URI</h3>
+        <p>Di dalam service router Phalcon, WAJIB set <code>$router-&gt;setUriSource(\Phalcon\Mvc\Router::URI_SOURCE_SERVER_REQUEST_URI)</code>. Ini agar routing jalan dengan template Nginx default HestiaCP tanpa perlu custom template. JANGAN pakai default Phalcon (<code>_url</code> parameter).</p>
+
+        <h3>12. Deploy Pattern = HestiaCP Standard</h3>
+        <p>Jangan bikin custom Nginx template. Jangan edit config Nginx manual. Pola deploy: clone ke <code>private/</code>, copy <code>public/</code> ke <code>public_html/</code>, patch path di <code>index.php</code>. Lihat Section 15.</p>
+    </div>
+</div>
+
+<!-- 15 — DEPLOYMENT KE HESTIACP (NEW) -->
+<div class="section" id="s15">
+    <div class="container">
+        <div class="section-num">15</div>
+        <h2>Deployment ke HestiaCP</h2>
+        <p class="desc">Step-by-step deploy ke Ubuntu VPS dengan HestiaCP. Tanpa custom config.</p>
+
+        <div class="callout warn">
+            <span class="callout-label">Prasyarat</span>
+            <p>Sebelum mulai, pastikan: (1) HestiaCP sudah terinstall di VPS, (2) Phalcon 5 extension sudah terinstall (pakai script installer), (3) Domain sudah ditambahkan di HestiaCP, (4) Database + user DB sudah dibuat di HestiaCP panel.</p>
+        </div>
+
+        <h3>Step 1: Buat Web Domain di HestiaCP Panel</h3>
+        <ul>
+            <li>Buka HestiaCP panel di browser.</li>
+            <li>Web → Add Web Domain.</li>
+            <li>Isi domain. PHP version: sesuaikan dengan yang terinstall Phalcon extension.</li>
+            <li>Enable SSL: Let's Encrypt (1 klik).</li>
+            <li>Selesai. Jangan edit Nginx config.</li>
+        </ul>
+
+        <h3>Step 2: Buat Database di HestiaCP Panel</h3>
+        <ul>
+            <li>DB → Add Database.</li>
+            <li>Catat: DB name, DB user, DB password.</li>
+        </ul>
+
+        <h3>Step 3: Clone Project ke private/</h3>
+<pre><code><span class="sql-comment"># SSH ke server</span>
+ssh user@server
+
+<span class="sql-comment"># Clone ke private/ (di luar document root)</span>
+cd ~/web/{domain}/private/
+git clone {repo-url} skeleton_tavp_app
+cd skeleton_tavp_app</code></pre>
+
+        <h3>Step 4: Install Dependencies</h3>
+<pre><code><span class="sql-comment"># PHP dependencies</span>
+composer install --no-dev --optimize-autoloader --no-interaction
+
+<span class="sql-comment"># Node dependencies + build Tailwind (untuk admin panel)</span>
+npm install
+npm run build</code></pre>
+
+        <h3>Step 5: Edit Config</h3>
+<pre><code><span class="sql-comment"># Edit config/config.php</span>
+nano config/config.php</code></pre>
+        <p>Isi dengan database credentials dari HestiaCP:</p>
+<pre><code><span class="sql-comment">// config/config.php</span>
+<span class="sql-keyword">return</span> [
+    <span class="sql-string">'application'</span> =&gt; [
+        <span class="sql-string">'baseUri'</span>   =&gt; <span class="sql-string">'/'</span>,
+        <span class="sql-string">'basePath'</span>  =&gt; <span class="sql-keyword">dirname</span>(<span class="sql-keyword">__DIR__</span>),
+        <span class="sql-string">'publicDir'</span> =&gt; <span class="sql-keyword">dirname</span>(<span class="sql-keyword">__DIR__</span>) . <span class="sql-string">'/public'</span>,
+        <span class="sql-string">'themesDir'</span> =&gt; <span class="sql-keyword">dirname</span>(<span class="sql-keyword">__DIR__</span>) . <span class="sql-string">'/themes'</span>,
+    ],
+    <span class="sql-string">'database'</span> =&gt; [
+        <span class="sql-string">'host'</span>     =&gt; <span class="sql-string">'127.0.0.1'</span>,
+        <span class="sql-string">'dbname'</span>   =&gt; <span class="sql-string">'{db_name_dari_hestia}'</span>,
+        <span class="sql-string">'username'</span> =&gt; <span class="sql-string">'{db_user_dari_hestia}'</span>,
+        <span class="sql-string">'password'</span> =&gt; <span class="sql-string">'{db_password_dari_hestia}'</span>,
+        <span class="sql-string">'charset'</span>  =&gt; <span class="sql-string">'utf8mb4'</span>,
+    ],
+];</code></pre>
+
+        <h3>Step 6: Import Migration</h3>
+<pre><code><span class="sql-comment"># Import schema + seed data</span>
+mysql -u {db_user} -p{db_password} {db_name} &lt; migrations/001_initial_schema.sql</code></pre>
+
+        <h3>Step 7: Copy public/ ke public_html/</h3>
+<pre><code>APP_DIR=~/web/{domain}/private/skeleton_tavp_app
+PUBLIC_DIR=~/web/{domain}/public_html
+
+<span class="sql-comment"># Copy isi public ke public_html</span>
+cp -r $APP_DIR/public/* $PUBLIC_DIR/
+cp $APP_DIR/public/.htaccess $PUBLIC_DIR/ 2>/dev/null</code></pre>
+
+        <h3>Step 8: Patch index.php — Absolute Path</h3>
+<pre><code><span class="sql-comment"># Ganti dirname(__DIR__) dengan absolute path ke project</span>
+sed -i "s|dirname(__DIR__)|'/home/{user}/web/{domain}/private/skeleton_tavp_app'|g" \
+  ~/web/{domain}/public_html/index.php
+
+<span class="sql-comment"># Verifikasi</span>
+cat ~/web/{domain}/public_html/index.php</code></pre>
+        <p>Setelah di-patch, <code>index.php</code> di <code>public_html/</code> akan menunjuk ke <code>/home/{user}/web/{domain}/private/skeleton_tavp_app</code> — tempat seluruh project berada.</p>
+
+        <h3>Step 9: Set Permission</h3>
+<pre><code><span class="sql-comment"># Set ownership sesuai user HestiaCP</span>
+chown -R {user}:{user} ~/web/{domain}/public_html/
+
+<span class="sql-comment"># Folder uploads harus writable</span>
+chmod -R 755 ~/web/{domain}/public_html/
+chmod -R 777 ~/web/{domain}/public_html/uploads/ 2>/dev/null</code></pre>
+
+        <h3>Step 10: Buka Website</h3>
+        <p>Buka <code>https://{domain}</code>. Jika ada error, cek log di <code>~/web/{domain}/logs/</code>.</p>
+
+        <h3>Contoh index.php Setelah Deploy</h3>
+<pre><code><span class="sql-comment">// ~/web/{domain}/public_html/index.php</span>
+<span class="sql-comment">// (file ini sudah di-patch, path menunjuk ke private/)</span>
+
+<span class="sql-keyword">use</span> Phalcon\Di\FactoryDefault;
+<span class="sql-keyword">use</span> Phalcon\Mvc\Application;
+
+<span class="sql-keyword">define</span>(<span class="sql-string">'BASE_PATH'</span>, <span class="sql-string">'/home/{user}/web/{domain}/private/skeleton_tavp_app'</span>);
+<span class="sql-keyword">define</span>(<span class="sql-string">'APP_PATH'</span>, BASE_PATH . <span class="sql-string">'/app'</span>);
+<span class="sql-keyword">define</span>(<span class="sql-string">'CONFIG_PATH'</span>, BASE_PATH . <span class="sql-string">'/config'</span>);
+<span class="sql-keyword">define</span>(<span class="sql-string">'THEMES_PATH'</span>, BASE_PATH . <span class="sql-string">'/themes'</span>);
+
+<span class="sql-keyword">require</span> BASE_PATH . <span class="sql-string">'/vendor/autoload.php'</span>;
+
+$di = <span class="sql-keyword">new</span> FactoryDefault();
+$config = <span class="sql-keyword">require</span> CONFIG_PATH . <span class="sql-string">'/config.php'</span>;
+
+<span class="sql-comment">// ... register services ...</span>
+
+$application = <span class="sql-keyword">new</span> Application($di);
+<span class="sql-keyword">echo</span> $application-&gt;handle($_SERVER[<span class="sql-string">'REQUEST_URI'</span>])-&gt;getContent();</code></pre>
+
+        <h3>Contoh Router Service</h3>
+<pre><code><span class="sql-comment">// app/providers/ — saat register router di DI</span>
+$di-&gt;set(<span class="sql-string">'router'</span>, <span class="sql-keyword">function</span> () {
+    $router = <span class="sql-keyword">new</span> \Phalcon\Mvc\Router();
+
+    <span class="sql-comment">// WAJIB — agar jalan dengan Nginx default HestiaCP</span>
+    $router-&gt;setUriSource(
+        \Phalcon\Mvc\Router::URI_SOURCE_SERVER_REQUEST_URI
+    );
+
+    <span class="sql-comment">// Frontend: semua slug → IndexController</span>
+    $router-&gt;add(<span class="sql-string">'/'</span>, [
+        <span class="sql-string">'controller'</span> =&gt; <span class="sql-string">'index'</span>,
+        <span class="sql-string">'action'</span>     =&gt; <span class="sql-string">'index'</span>
+    ]);
+
+    $router-&gt;add(<span class="sql-string">'/:params'</span>, [
+        <span class="sql-string">'controller'</span> =&gt; <span class="sql-string">'index'</span>,
+        <span class="sql-string">'action'</span>     =&gt; <span class="sql-string">'index'</span>,
+        <span class="sql-string">'params'</span>     =&gt; 1
+    ]);
+
+    <span class="sql-comment">// Admin routes</span>
+    $router-&gt;add(<span class="sql-string">'/admin/login'</span>, [
+        <span class="sql-string">'controller'</span> =&gt; <span class="sql-string">'auth'</span>,
+        <span class="sql-string">'action'</span>     =&gt; <span class="sql-string">'login'</span>
+    ]);
+
+    $router-&gt;add(<span class="sql-string">'/admin'</span>, [
+        <span class="sql-string">'controller'</span> =&gt; <span class="sql-string">'admin'</span>,
+        <span class="sql-string">'action'</span>     =&gt; <span class="sql-string">'dashboard'</span>
+    ]);
+
+    $router-&gt;add(<span class="sql-string">'/admin/theme'</span>, [
+        <span class="sql-string">'controller'</span> =&gt; <span class="sql-string">'theme'</span>,
+        <span class="sql-string">'action'</span>     =&gt; <span class="sql-string">'index'</span>
+    ]);
+
+    $router-&gt;add(<span class="sql-string">'/admin/pages'</span>, [
+        <span class="sql-string">'controller'</span> =&gt; <span class="sql-string">'page'</span>,
+        <span class="sql-string">'action'</span>     =&gt; <span class="sql-string">'index'</span>
+    ]);
+
+    <span class="sql-comment">// API routes</span>
+    $router-&gt;addPost(<span class="sql-string">'/api/contact'</span>, [
+        <span class="sql-string">'controller'</span> =&gt; <span class="sql-string">'apiContact'</span>,
+        <span class="sql-string">'action'</span>     =&gt; <span class="sql-string">'submit'</span>
+    ]);
+
+    <span class="sql-keyword">return</span> $router;
+});</code></pre>
+    </div>
+</div>
+
+<!-- 16 — UPDATE WORKFLOW (NEW) -->
+<div class="section" id="s16">
+    <div class="container">
+        <div class="section-num">16</div>
+        <h2>Update Workflow</h2>
+        <p class="desc">Cara update project setelah deploy pertama.</p>
+
+        <h3>Setiap Ada Update dari Repository</h3>
+<pre><code><span class="sql-comment"># 1. Masuk ke folder project di server</span>
+cd ~/web/{domain}/private/skeleton_tavp_app
+
+<span class="sql-comment"># 2. Stash local changes (jika ada)</span>
+git stash
+
+<span class="sql-comment"># 3. Pull update</span>
+git pull origin main
+
+<span class="sql-comment"># 4. Restore stash (jika ada perubahan lokal)</span>
+git stash pop || true
+
+<span class="sql-comment"># 5. Install dependency (jika composer.json berubah)</span>
+composer install --no-dev --optimize-autoloader --no-interaction
+
+<span class="sql-comment"># 6. Build assets (jika ada perubahan CSS/JS)</span>
+npm install &amp;&amp; npm run build
+
+<span class="sql-comment"># 7. Run migration (jika ada SQL baru)</span>
+mysql -u {db_user} -p{db_password} {db_name} &lt; migrations/{new_file}.sql
+
+<span class="sql-comment"># 8. Sync public files ke public_html</span>
+rsync -av --exclude='uploads' public/ ~/web/{domain}/public_html/
+
+<span class="sql-comment"># 9. Re-patch index.php (jika index.php berubah)</span>
+sed -i "s|dirname(__DIR__)|'/home/{user}/web/{domain}/private/skeleton_tavp_app'|g" \
+  ~/web/{domain}/public_html/index.php
+
+<span class="sql-comment"># 10. Clear cache (jika ada)</span>
+rm -rf ~/web/{domain}/private/skeleton_tavp_app/cache/volt/*.php 2>/dev/null</code></pre>
+
+        <div class="callout tip">
+            <span class="callout-label">Kapan Perlu Step Mana?</span>
+            <p>Tidak semua step perlu dijalankan setiap update. Lihat perubahan apa yang masuk: kalau cuma perubahan PHP/logic → cukup step 1-4. Kalau ada perubahan CSS/JS → tambah step 6. Kalau ada migration baru → tambah step 7. Kalau ada perubahan di folder public/ → tambah step 8-9.</p>
+        </div>
+    </div>
+</div>
+
+<!-- FOOTER -->
+<div class="doc-footer">
+    <div class="container">
+        <p>TAVP Skeleton CMS — PRD v0.0.1</p>
+        <p style="margin-top:4px;color:var(--text-3)">Zero-Based Versioning · <a href="https://0ver.org/" target="_blank">0ver.org</a></p>
+    </div>
+</div>
+
+</body>
+</html>
