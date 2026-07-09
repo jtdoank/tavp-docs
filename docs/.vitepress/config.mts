@@ -5,13 +5,13 @@ export default defineConfig({
   description: 'Tailwind CSS + Alpine.js + Volt + Phalcon = TAVP',
   outDir: '../dist',
   head: [
-    ['link', { rel: 'icon', type: 'image/svg+xml', href: '/logo.svg' }],
+    ['link', { rel: 'icon', type: 'image/png', href: '/logo.png' }],
     ['link', { rel: 'preconnect', href: 'https://fonts.googleapis.com' }],
     ['link', { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' }],
     ['link', { href: 'https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap', rel: 'stylesheet' }]
   ],
   themeConfig: {
-    logo: '/logo.svg',
+    logo: '/logo.png',
     nav: [
       { text: 'Guide', link: '/guide/what-is-tavp' },
       { text: 'GitHub', link: 'https://github.com/tavp-stack' }
