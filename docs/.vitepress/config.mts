@@ -58,7 +58,8 @@ export default defineConfig({
             { text: 'Tavp Marketplace', link: '/ecosystem/tavp-marketplace' },
             { text: 'Tavp Installer', link: '/ecosystem/tavp-installer' },
             { text: 'Tavp Analytics', link: '/ecosystem/tavp-analytics' },
-            { text: 'Tavp Starter', link: '/ecosystem/tavp-starter' }
+            { text: 'Tavp Starter', link: '/ecosystem/tavp-starter' },
+            { text: 'TAVP CMS', link: '/ecosystem/tavp-cms' }
           ]
         }
       ],
@@ -80,7 +81,8 @@ export default defineConfig({
             { text: 'Events', link: '/features/events' },
             { text: 'Broadcasting', link: '/features/broadcasting' },
             { text: 'Validation', link: '/features/validation' },
-            { text: 'Security', link: '/features/security' }
+            { text: 'Security', link: '/features/security' },
+            { text: 'CMS', link: '/features/cms' }
           ]
         }
       ],
