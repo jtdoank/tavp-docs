@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TAVP CMS — Content Management System | TAVP Stack</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://docs.tavp.web.id/assets/docs.css">
+</head>
+<body>
+    <div class="vp-doc">
+        <div class="vp-sidebar">
+            <a href="/" class="vp-logo">
+                <span class="vp-logo-text">TAVP Stack</span>
+            </a>
+            <nav class="vp-nav">
+                <div class="vp-nav-group">
+                    <div class="vp-nav-title">Guide</div>
+                    <a href="/en/guide/what-is-tavp.html" class="vp-nav-link">What is TAVP?</a>
+                    <a href="/en/guide/why-tavp.html" class="vp-nav-link">Why TAVP?</a>
+                    <a href="/en/guide/installation.html" class="vp-nav-link">Installation</a>
+                </div>
+                <div class="vp-nav-group">
+                    <div class="vp-nav-title">Ecosystem</div>
+                    <a href="/en/ecosystem/overview.html" class="vp-nav-link">Overview</a>
+                    <a href="/en/ecosystem/tavp-core.html" class="vp-nav-link">TAVP Core</a>
+                    <a href="/en/ecosystem/tavp-cli.html" class="vp-nav-link">TAVP CLI</a>
+                    <a href="/en/ecosystem/tavpid.html" class="vp-nav-link">Tavpid</a>
+                    <a href="/en/ecosystem/tavphub.html" class="vp-nav-link">TavpHub</a>
+                    <a href="/en/ecosystem/tavpblocks.html" class="vp-nav-link">TavpBlocks</a>
+                    <a href="/en/ecosystem/tavp-cms.html" class="vp-nav-link vp-nav-link--active">TAVP CMS</a>
+                </div>
+                <div class="vp-nav-group">
+                    <div class="vp-nav-title">Features</div>
+                    <a href="/en/features/authentication.html" class="vp-nav-link">Authentication</a>
+                    <a href="/en/features/cms.html" class="vp-nav-link vp-nav-link--active">CMS</a>
+                </div>
+            </nav>
+        </div>
+        <div class="vp-content">
+            <div class="vp-doc-content">
+                <h1>TAVP CMS <span class="vp-badge">v0.2.0</span></h1>
+                <p class="vp-tagline">Content management system built on the TAVP Stack. WordPress-familiar, Voyager-style admin, thin and fast — with pluggable storage, headless API, and a modern feature set.</p>
+
+                <div class="vp-callout vp-callout--tip">
+                    <p><strong>Version 0.2.0 (Mature)</strong> — TAVP CMS is now a credible alternative to modern CMSs like WordPress, Strapi, Statamic, and Contentful.</p>
+                </div>
+
+                <h2 id="quick-start">Quick Start <a class="header-anchor" href="#quick-start">#</a></h2>
+
+                <h3 id="install">Install</h3>
+                <pre><code class="language-bash">composer create-project tavp/cms my-site
+cd my-site
+tavp migrate
+tavp serve</code></pre>
+
+                <h3 id="configure">Configure</h3>
+                <pre><code class="language-bash"># .env
+CMS_STORAGE=database
+CMS_ADMIN_EMAILS=you@example.com
+CMS_API_TOKENS=your-secret-token-here
+APP_URL=https://mysite.com</code></pre>
+
+                <h3 id="admin">Admin</h3>
+                <p>Visit <code>/admin</code>, sign in with your allowed email via OTP.</p>
+
+                <h3 id="headless-api">Headless API</h3>
+                <pre><code class="language-bash"># List content types
+curl -H "Authorization: Bearer YOUR_TOKEN" https://mysite.com/api/cms/types
+
+# Browse posts
+curl -H "Authorization: Bearer YOUR_TOKEN" https://mysite.com/api/cms/post
+
+# Create a post
+curl -X POST -H "Authorization: Bearer YOUR_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"title":"Hello","slug":"hello","body":"World","status":"published"}' \
+  https://mysite.com/api/cms/post</code></pre>
+
+                <h2 id="features">Features <a class="header-anchor" href="#features">#</a></h2>
+
+                <h3 id="pluggable-storage">Pluggable Storage</h3>
+                <p>Choose the driver in <code>config/cms.php</code>:</p>
+                <ul>
+                    <li><strong>database</strong> — WordPress/Voyager style, via Phalcon ORM</li>
+                    <li><strong>flatfile</strong> — Statamic style, Markdown + YAML front matter</li>
+                </ul>
+                <p>The rest of the CMS behaves identically regardless of driver.</p>
+
+                <h3 id="bread-content-types">BREAD Content Types</h3>
+                <p>Page and Post ship by default. Define your own content types with fields and validation rules:</p>
+                <pre><code class="language-php">'content_types' => [
+    'product' => [
+        'label' => 'Products',
+        'singular' => 'Product',
+        'fields' => [
+            ['name' => 'title', 'type' => 'text', 'required' => true, 'rules' => ['max:200']],
+            ['name' => 'slug', 'type' => 'slug', 'from' => 'title', 'rules' => ['unique']],
+            ['name' => 'price', 'type' => 'number', 'rules' => ['numeric']],
+            ['name' => 'body', 'type' => 'richtext'],
+            ['name' => 'status', 'type' => 'select', 'options' => ['draft', 'published']],
+        ],
+    ],
+],</code></pre>
+
+                <h3 id="field-types">Field Types</h3>
+                <table>
+                    <thead>
+                        <tr><th>Type</th><th>Control</th><th>Description</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><code>text</code></td><td>input</td><td>Plain text</td></tr>
+                        <tr><td><code>textarea</code></td><td>textarea</td><td>Multi-line text</td></tr>
+                        <tr><td><code>richtext</code></td><td>editor</td><td>Rich text editor</td></tr>
+                        <tr><td><code>slug</code></td><td>input</td><td>URL slug (auto-generated)</td></tr>
+                        <tr><td><code>number</code></td><td>number</td><td>Numeric value</td></tr>
+                        <tr><td><code>boolean</code></td><td>toggle</td><td>Yes/no</td></tr>
+                        <tr><td><code>select</code></td><td>select</td><td>Dropdown selection</td></tr>
+                        <tr><td><code>date</code></td><td>date</td><td>Date picker</td></tr>
+                        <tr><td><code>datetime</code></td><td>datetime</td><td>Date + time picker</td></tr>
+                        <tr><td><code>media</code></td><td>media-picker</td><td>File/image upload</td></tr>
+                        <tr><td><code>relation</code></td><td>relation-picker</td><td>Related content</td></tr>
+                        <tr><td><code>blocks</code></td><td>block-editor</td><td>Block-based content</td></tr>
+                        <tr><td><code>json</code></td><td>code</td><td>Raw JSON</td></tr>
+                        <tr><td><code>password</code></td><td>password</td><td>Password input</td></tr>
+                        <tr><td><code>email</code></td><td>input (email)</td><td>Email input</td></tr>
+                        <tr><td><code>url</code></td><td>input (url)</td><td>URL input</td></tr>
+                        <tr><td><code>color</code></td><td>color</td><td>Color picker</td></tr>
+                        <tr><td><code>tags</code></td><td>tags-input</td><td>Tag list</td></tr>
+                        <tr><td><code>repeater</code></td><td>repeater</td><td>Repeating field groups</td></tr>
+                        <tr><td><code>seo</code></td><td>seo-editor</td><td>SEO meta fields</td></tr>
+                    </tbody>
+                </table>
+
+                <h3 id="validation">Validation</h3>
+                <p>Server-side validation rules:</p>
+                <table>
+                    <thead>
+                        <tr><th>Rule</th><th>Example</th><th>Description</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><code>required</code></td><td><code>'required'</code></td><td>Field must be present and non-empty</td></tr>
+                        <tr><td><code>min:N</code></td><td><code>'min:3'</code></td><td>Minimum length (strings)</td></tr>
+                        <tr><td><code>max:N</code></td><td><code>'max:200'</code></td><td>Maximum length (strings)</td></tr>
+                        <tr><td><code>email</code></td><td><code>'email'</code></td><td>Must be valid email</td></tr>
+                        <tr><td><code>url</code></td><td><code>'url'</code></td><td>Must be valid URL</td></tr>
+                        <tr><td><code>unique</code></td><td><code>'unique'</code></td><td>Slug must be unique</td></tr>
+                        <tr><td><code>numeric</code></td><td><code>'numeric'</code></td><td>Must be numeric</td></tr>
+                        <tr><td><code>in:a,b,c</code></td><td><code>'in:draft,published'</code></td><td>Must be in the list</td></tr>
+                        <tr><td><code>regex:/pattern/</code></td><td><code>'/^[a-z]+$/'</code></td><td>Must match regex</td></tr>
+                    </tbody>
+                </table>
+
+                <h3 id="taxonomy">Taxonomy</h3>
+                <p>Categories (hierarchical) and tags (flat) are built-in. Attach terms to any content type.</p>
+                <pre><code class="language-bash"># Admin UI
+/admin/taxonomy/category
+/admin/taxonomy/tag
+
+# API
+GET /api/cms/taxonomy/category
+POST /api/cms/taxonomy</code></pre>
+
+                <h3 id="revisions">Revisions</h3>
+                <p>Every save creates a snapshot. Rollback with one click from the admin UI or API.</p>
+                <pre><code class="language-bash"># API
+GET /api/cms/post/1/revisions
+POST /api/cms/post/1/rollback/2026-07-11_01-30-00</code></pre>
+
+                <h3 id="search">Search</h3>
+                <p>Full-text search across all content types from admin UI and API.</p>
+                <pre><code class="language-bash"># API
+GET /api/cms/search?q=hello
+GET /api/cms/search?q=hello&type=post</code></pre>
+
+                <h3 id="seo--sitemap">SEO & Sitemap</h3>
+                <p>Per-record meta fields + auto-generated <code>/sitemap.xml</code>.</p>
+
+                <h3 id="webhooks">Webhooks</h3>
+                <p>Fire HTTP POST on content created/updated/deleted with HMAC signature verification.</p>
+
+                <h3 id="rbac">RBAC</h3>
+                <p>Email-to-role mapping with permission patterns.</p>
+                <pre><code class="language-php">'roles' => [
+    'admin@site.com' => 'admin',
+    'editor@site.com' => 'editor',
+],
+'permissions' => [
+    'admin' => ['content.*', 'taxonomy.*', 'media.*'],
+    'editor' => ['content.*', 'taxonomy.*'],
+],</code></pre>
+
+                <h2 id="api-reference">API Reference <a class="header-anchor" href="#api-reference">#</a></h2>
+
+                <p>All endpoints require a Bearer token: <code>Authorization: Bearer &lt;token&gt;</code></p>
+
+                <h3 id="content-endpoints">Content</h3>
+                <table>
+                    <thead>
+                        <tr><th>Method</th><th>Endpoint</th><th>Description</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>GET</td><td><code>/api/cms/types</code></td><td>List content types</td></tr>
+                        <tr><td>GET</td><td><code>/api/cms/{type}</code></td><td>Browse records (paginated)</td></tr>
+                        <tr><td>GET</td><td><code>/api/cms/{type}/{id}</code></td><td>Read a record</td></tr>
+                        <tr><td>POST</td><td><code>/api/cms/{type}</code></td><td>Create a record</td></tr>
+                        <tr><td>PUT</td><td><code>/api/cms/{type}/{id}</code></td><td>Update a record</td></tr>
+                        <tr><td>DELETE</td><td><code>/api/cms/{type}/{id}</code></td><td>Delete a record</td></tr>
+                    </tbody>
+                </table>
+
+                <h3 id="query-parameters">Query Parameters (Browse)</h3>
+                <table>
+                    <thead>
+                        <tr><th>Param</th><th>Default</th><th>Description</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><code>page</code></td><td>1</td><td>Page number</td></tr>
+                        <tr><td><code>per_page</code></td><td>15</td><td>Items per page (max: 100)</td></tr>
+                        <tr><td><code>status</code></td><td>—</td><td>Filter by status</td></tr>
+                    </tbody>
+                </table>
+
+                <h3 id="search-endpoint">Search</h3>
+                <table>
+                    <thead>
+                        <tr><th>Method</th><th>Endpoint</th><th>Description</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>GET</td><td><code>/api/cms/search?q={query}</code></td><td>Full-text search</td></tr>
+                    </tbody>
+                </table>
+
+                <h3 id="taxonomy-endpoints">Taxonomy</h3>
+                <table>
+                    <thead>
+                        <tr><th>Method</th><th>Endpoint</th><th>Description</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>GET</td><td><code>/api/cms/taxonomy/{type}</code></td><td>List terms</td></tr>
+                        <tr><td>POST</td><td><code>/api/cms/taxonomy</code></td><td>Create a term</td></tr>
+                    </tbody>
+                </table>
+
+                <h3 id="revision-endpoints">Revisions</h3>
+                <table>
+                    <thead>
+                        <tr><th>Method</th><th>Endpoint</th><th>Description</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>GET</td><td><code>/api/cms/{type}/{id}/revisions</code></td><td>Revision history</td></tr>
+                        <tr><td>POST</td><td><code>/api/cms/{type}/{id}/rollback/{ts}</code></td><td>Rollback to revision</td></tr>
+                    </tbody>
+                </table>
+
+                <h2 id="cli">CLI <a class="header-anchor" href="#cli">#</a></h2>
+                <pre><code class="language-bash">php bin/cms help                        # Show help
+php bin/cms types                        # List content types
+php bin/cms make:type product            # Create new content type
+php bin/cms api:token my-app             # Generate API token
+php bin/cms search:reindex               # Flush search cache
+php bin/cms taxonomy:list category       # List taxonomy terms</code></pre>
+
+                <h2 id="configuration">Configuration <a class="header-anchor" href="#configuration">#</a></h2>
+
+                <table>
+                    <thead>
+                        <tr><th>Key</th><th>Default</th><th>Description</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><code>CMS_STORAGE</code></td><td><code>database</code></td><td>Storage driver</td></tr>
+                        <tr><td><code>CMS_CACHE_ENABLED</code></td><td><code>true</code></td><td>Enable read-through cache</td></tr>
+                        <tr><td><code>CMS_CACHE_DRIVER</code></td><td><code>file</code></td><td>Cache backend</td></tr>
+                        <tr><td><code>CMS_CACHE_TTL</code></td><td><code>300</code></td><td>Cache TTL in seconds</td></tr>
+                        <tr><td><code>CMS_API_PREFIX</code></td><td><code>api/cms</code></td><td>API route prefix</td></tr>
+                        <tr><td><code>CMS_API_TOKENS</code></td><td>—</td><td>Comma-separated bearer tokens</td></tr>
+                        <tr><td><code>CMS_REVISIONS_ENABLED</code></td><td><code>true</code></td><td>Enable version history</td></tr>
+                        <tr><td><code>CMS_SEARCH_ENABLED</code></td><td><code>true</code></td><td>Enable search</td></tr>
+                        <tr><td><code>CMS_TAXONOMY_ENABLED</code></td><td><code>true</code></td><td>Enable categories + tags</td></tr>
+                        <tr><td><code>CMS_SEO_ENABLED</code></td><td><code>true</code></td><td>Enable sitemap + SEO</td></tr>
+                        <tr><td><code>CMS_WEBHOOKS_ENABLED</code></td><td><code>true</code></td><td>Enable webhooks</td></tr>
+                    </tbody>
+                </table>
+
+                <h2 id="front-end-routes">Front-end Routes <a class="header-anchor" href="#front-end-routes">#</a></h2>
+                <table>
+                    <thead>
+                        <tr><th>Route</th><th>Description</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><code>/blog</code></td><td>Blog index (published posts)</td></tr>
+                        <tr><td><code>/blog/{slug}</code></td><td>Single post</td></tr>
+                        <tr><td><code>/category/{slug}</code></td><td>Category archive</td></tr>
+                        <tr><td><code>/tag/{slug}</code></td><td>Tag archive</td></tr>
+                        <tr><td><code>/{slug}</code></td><td>Page (catch-all)</td></tr>
+                        <tr><td><code>/sitemap.xml</code></td><td>Auto-generated sitemap</td></tr>
+                    </tbody>
+                </table>
+
+                <h2 id="comparison">Comparison with Other CMSs <a class="header-anchor" href="#comparison">#</a></h2>
+
+                <table>
+                    <thead>
+                        <tr><th>Feature</th><th>TAVP CMS</th><th>WordPress</th><th>Strapi</th><th>Statamic</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Pluggable storage</td><td>✅ DB + flat-file</td><td>❌</td><td>❌</td><td>Flat-file only</td></tr>
+                        <tr><td>Headless API</td><td>✅ Built-in REST</td><td>Plugin</td><td>✅ REST+GraphQL</td><td>Pro</td></tr>
+                        <tr><td>Revisions</td><td>✅ File-based</td><td>✅ DB</td><td>❌</td><td>Git-based</td></tr>
+                        <tr><td>Validation</td><td>✅ 9 rules</td><td>Limited</td><td>✅</td><td>✅</td></tr>
+                        <tr><td>Search</td><td>✅ Built-in</td><td>MySQL</td><td>Plugin</td><td>✅</td></tr>
+                        <tr><td>Caching</td><td>✅ Read-through</td><td>Plugin</td><td>❌</td><td>✅</td></tr>
+                        <tr><td>Webhooks</td><td>✅ + HMAC</td><td>Plugin</td><td>✅</td><td>Plugin</td></tr>
+                        <tr><td>SEO/Sitemap</td><td>✅ Built-in</td><td>Plugin</td><td>❌</td><td>Addon</td></tr>
+                        <tr><td>Memory</td><td>~4MB</td><td>~256MB</td><td>~128MB</td><td>~16MB</td></tr>
+                        <tr><td>Self-hosted</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td></tr>
+                    </tbody>
+                </table>
+
+                <h2 id="links">Links <a class="header-anchor" href="#links">#</a></h2>
+                <ul>
+                    <li><a href="https://github.com/tavp-stack/tavp-cms">GitHub</a></li>
+                    <li><a href="https://git.glotama.com/tavp-stack/tavp-cms">Gitea</a></li>
+                    <li><a href="/en/ecosystem/tavp-cms.html">Ecosystem page</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
