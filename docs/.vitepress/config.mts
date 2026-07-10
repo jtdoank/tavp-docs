@@ -2,14 +2,36 @@ import { defineConfig } from 'vitepress'
 
 export default defineConfig({
   title: 'TAVP Stack',
-  description: 'Tailwind CSS + Alpine.js + Volt + Phalcon = TAVP',
+  description: 'TAVP is a curated PHP tech stack combining Tailwind CSS, Alpine.js, Volt, and Phalcon for high-performance web applications. Not a framework — a curated stack.',
   outDir: '../dist',
   ignoreDeadLinks: true,
+  sitemap: {
+    hostname: 'https://docs.tavp.web.id'
+  },
   head: [
     ['link', { rel: 'icon', type: 'image/png', href: '/logo.png' }],
     ['link', { rel: 'preconnect', href: 'https://fonts.googleapis.com' }],
     ['link', { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' }],
-    ['link', { href: 'https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap', rel: 'stylesheet' }]
+    ['link', { href: 'https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap', rel: 'stylesheet' }],
+    ['meta', { name: 'keywords', content: 'TAVP, Tailwind, Alpine.js, Volt, Phalcon, PHP, tech stack, framework, high performance' }],
+    ['meta', { property: 'og:type', content: 'website' }],
+    ['meta', { property: 'og:title', content: 'TAVP Stack — PHP, but fast.' }],
+    ['meta', { property: 'og:description', content: 'A curated PHP tech stack: Tailwind CSS + Alpine.js + Volt + Phalcon. Phalcon speed with Laravel-style ergonomics.' }],
+    ['meta', { property: 'og:url', content: 'https://docs.tavp.web.id/' }],
+    ['meta', { name: 'twitter:card', content: 'summary_large_image' }],
+    ['script', { type: 'application/ld+json' }, JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'SoftwareApplication',
+      name: 'TAVP Stack',
+      description: 'A curated PHP tech stack combining Tailwind CSS, Alpine.js, Volt, and Phalcon for high-performance web applications.',
+      applicationCategory: 'DeveloperApplication',
+      operatingSystem: 'Linux, macOS, Windows',
+      offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+      softwareVersion: '1.0.0',
+      license: 'https://opensource.org/licenses/MIT',
+      url: 'https://docs.tavp.web.id/',
+      sameAs: ['https://github.com/tavp-stack', 'https://packagist.org/packages/tavp/core']
+    })]
   ],
   locales: {
     root: {

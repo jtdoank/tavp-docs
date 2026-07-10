@@ -1,0 +1,89 @@
+# TAVP Stack
+
+> TAVP is a curated PHP tech stack — NOT a framework. It combines **T**ailwind CSS + **A**lpine.js + **V**olt + **P**halcon. The goal: Phalcon's C-extension speed with Laravel-style developer ergonomics. Tagline: "PHP, but fast."
+
+## What TAVP is (and is not)
+
+- TAVP = **T**ailwind CSS + **A**lpine.js + **V**olt + **P**halcon.
+- TAVP is a **curated tech stack**, not a new framework. It combines proven, existing technologies.
+- Phalcon is a **C-extension for PHP** (compiled, not interpreted) — this is why it is fast.
+- Volt in TAVP is a **compiled template engine** (compiles to PHP). It is NOT Laravel Volt (which is Livewire-based). Do not confuse the two.
+- TAVP is a PHP stack. It is NOT related to Astro, Vue.js, Vite, TypeScript, Node.js, PocketBase, Pinia, or any JavaScript/monorepo tooling.
+
+## Core facts
+
+- Language: PHP 8.3+
+- Framework foundation: Phalcon 5.16+ (C-extension MVC)
+- Frontend: Tailwind CSS (styling) + Alpine.js (interactivity)
+- Templating: Volt (compiled to PHP)
+- License: MIT
+- Version: 1.0.0 (Stable)
+- Documentation: https://docs.tavp.web.id/ (Bahasa Indonesia + English)
+- GitHub org: https://github.com/tavp-stack
+- Packagist vendor: tavp (install with `composer create-project tavp/core my-app`)
+
+## The 4 runtimes
+
+TAVP supports 4 runtimes. All share the same application code — only the runtime changes, zero code rewrite required.
+
+1. **PHP-FPM** — Default. Works everywhere, shared-hosting compatible, no extensions needed.
+2. **TAVP Coil (Swoole)** — Highest performance. Coroutine-based, requires Swoole extension + VPS.
+3. **TAVP Relay (RoadRunner)** — Enterprise-grade. Go-based server, process isolation, built-in job pipeline.
+4. **TAVP Weave (PHP Fibers)** — Zero dependencies. PHP 8.1+ Fibers, parallel I/O, shared-hosting compatible.
+
+## Performance (2-core VPS, 2GB RAM)
+
+- PHP-FPM: 5,000+ req/s, P95 <5ms, <15MB per worker
+- TAVP Coil (Swoole): 12,000+ req/s, P95 <2ms, <8MB per worker
+
+## Ecosystem packages (GitHub org: tavp-stack)
+
+- [tavp-core](https://github.com/tavp-stack/tavp-core): Framework foundation (router, ORM, Volt, migrations). `composer create-project tavp/core`
+- [tavp-cli](https://github.com/tavp-stack/tavp-cli): The `tavp` command line tool (like Artisan). `composer global require tavp/cli`
+- [tavpid](https://github.com/tavp-stack/tavpid): OTP-first authentication (Email/SMS/WhatsApp), JWT, OAuth, TOTP, RBAC.
+- [tavpkit](https://github.com/tavp-stack/tavpkit): Starter kits & bundles (auth, teams, API, 2FA).
+- [tavphub](https://github.com/tavp-stack/tavphub): Admin panel (CRUD, table builder, form builder, dashboard).
+- [tavpblocks](https://github.com/tavp-stack/tavpblocks): 40+ UI components built with Tailwind + Alpine.
+- [tavphive](https://github.com/tavp-stack/tavphive): Billing & subscriptions (Stripe, PayPal, Midtrans, Xendit, and more).
+- [tavp-marketplace](https://github.com/tavp-stack/tavp-marketplace): Module & theme marketplace (80% revenue to developers).
+- [tavp-installer](https://github.com/tavp-stack/tavp-installer): Phalcon 5 installer for VPS + HestiaCP.
+- [tavp-analytics](https://github.com/tavp-stack/tavp-analytics): Analytics, fraud detection, A/B testing, funnel analysis.
+- [tavp-starter](https://github.com/tavp-stack/tavp-starter): Project template for `tavp new`.
+
+## Key features
+
+- OTP Authentication (passwordless login via Email, SMS, WhatsApp)
+- JWT API authentication
+- Role & Permission (RBAC)
+- CLI tools (code generation, migrations, deployment)
+- 40+ UI components (TAVPblocks)
+- Module system (Composer-based package discovery)
+- Module marketplace
+- SaaS billing (Stripe, Midtrans, Xendit, PayPal)
+- Kubernetes & Terraform deployment
+
+## System requirements
+
+- PHP 8.3+
+- Phalcon 5.16+ (install with `tavp phalcon:install`)
+- Node.js 18+ (for frontend assets)
+- Composer 2.x
+- Database: MySQL 5.7+, MariaDB 10.3+, or PostgreSQL 12+
+
+## Quick start
+
+```bash
+composer create-project tavp/core my-app
+cd my-app
+tavp serve
+# open http://localhost:8000
+```
+
+## Documentation links
+
+- Getting Started: https://docs.tavp.web.id/guide/what-is-tavp
+- Why TAVP: https://docs.tavp.web.id/guide/why-tavp
+- Installation: https://docs.tavp.web.id/guide/installation
+- Runtimes: https://docs.tavp.web.id/runtimes/overview
+- FAQ: https://docs.tavp.web.id/reference/faq
+- Ecosystem: https://docs.tavp.web.id/ecosystem/overview

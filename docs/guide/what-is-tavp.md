@@ -1,8 +1,13 @@
+---
+title: "Apa itu TAVP?"
+description: "TAVP (Tailwind + Alpine + Volt + Phalcon) adalah curated PHP tech stack untuk membangun web application berperforma tinggi."
+---
+
 # Apa itu TAVP?
 
 **T**ailwind CSS + **A**lpine.js + **V**olt + **P**halcon = **TAVP**
 
-TAVP adalah curated tech stack untuk membangun web application PHP yang berperforma tinggi. TAVP menggabungkan performa Phalcon dengan developer experience yang modern.
+**TAVP is a curated PHP tech stack — not a framework.** TAVP menggabungkan Phalcon (C-extension PHP, compiled bukan interpreted) dengan developer experience modern: Tailwind CSS untuk styling, Alpine.js untuk interaktivitas, dan Volt untuk templating.
 
 ## Komponen TAVP
 
@@ -25,10 +30,10 @@ Lightweight JavaScript framework. Interaktif tanpa complex setup.
 ```
 
 ### [Phalcon PHP](https://phalconphp.com)
-C-extension PHP framework. compiled, bukan interpreted.
+C-extension PHP framework. Compiled, bukan interpreted. Karena di-compile ke native code, performanya sangat tinggi.
 
 ### Volt (TAVP)
-Template engine yang di-compile ke PHP. Bukan [Laravel Volt](https://laravel.com/docs/volt) yang Livewire-based.
+Template engine yang di-compile ke PHP. **Bukan** [Laravel Volt](https://laravel.com/docs/volt) yang Livewire-based. TAVP Volt adalah template engine standalone.
 
 ```volt
 {% for user in users %}
@@ -38,13 +43,18 @@ Template engine yang di-compile ke PHP. Bukan [Laravel Volt](https://laravel.com
 
 ## Performance
 
+Benchmarked on a 2-core VPS with 2GB RAM:
+
 | Metric | TAVP |
 |--------|------|
-| Requests/sec | 12,000+ |
-| Memory per worker | 8MB |
+| Requests/sec (PHP-FPM) | 5,000+ |
+| Requests/sec (Coil/Swoole) | 12,000+ |
+| Memory per worker | <15MB |
 | P95 Latency | <5ms |
 
 ## Next
 
 - [Kenapa TAVP?](/guide/why-tavp)
 - [Installation](/guide/installation)
+- [Runtimes](/runtimes/overview)
+- [FAQ](/reference/faq)
