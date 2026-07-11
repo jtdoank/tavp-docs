@@ -11,15 +11,19 @@ TAVP CMS is a content management system built on the TAVP Stack. WordPress-famil
 - **Pluggable Storage** — Database (Phalcon ORM) or flat-file (Markdown + YAML front matter)
 - **BREAD Content Types** — Browse, Read, Edit, Add, Delete with auto-generated admin UI
 - **19 Field Types** — text, textarea, richtext, slug, number, boolean, select, date, datetime, media, relation, blocks, json, password, email, url, color, tags, repeater, seo
+- **Per-record SEO** — seo_title + seo_description fields on every content type
 - **Validation** — Server-side rules: required, min, max, email, url, unique, numeric, in, regex
 - **Taxonomy** — Hierarchical categories and flat tags
 - **Revisions** — Version history with one-click rollback
 - **Search** — Full-text search across all content types
+- **Media Library** — Upload, list, preview, delete files via admin UI
+- **Menu Builder** — Nestable menu items with drag-and-drop ordering
+- **Settings** — Site name, description, URL, SEO defaults
 - **SEO & Sitemap** — Per-record meta fields + auto-generated `/sitemap.xml`
 - **Webhooks** — HTTP POST on content events with HMAC signature
 - **RBAC** — Email-to-role mapping with permission patterns
 - **Headless API** — REST API with Bearer token auth
-- **CLI** — Command-line tools for migrations, tokens, and management
+- **CLI** — `tavp cms:publish`, `tavp cache:clear`, `tavp schedule:run`
 
 ## Quick Start
 

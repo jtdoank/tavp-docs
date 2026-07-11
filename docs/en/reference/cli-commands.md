@@ -66,6 +66,15 @@ tavp make:scaffold Product
 | `tavp relay:start` | Start Relay (RoadRunner) |
 | `tavp relay:stop` | Stop Relay |
 | `tavp queue:work` | Start queue worker |
+| `tavp schedule:run` | Run scheduled tasks (publish, cleanup) |
+
+## CMS
+
+| Command | Description |
+|---------|-------------|
+| `tavp cms:publish` | Publish scheduled content |
+| `tavp cache:clear` | Clear Volt cache + CMS cache |
+| `tavp cache:clear --revisions` | Also clear old revisions |
 
 ## Security
 
