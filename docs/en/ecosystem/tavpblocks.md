@@ -4,103 +4,108 @@ title: TavpBlocks
 
 # TavpBlocks — UI Components
 
-60 real UI components with Tailwind CSS. Each component renders clean HTML.
+60+ real UI components with Tailwind CSS. Each component renders clean HTML.
 
-## Components
+## Interactive Components
 
-| Component | Category | Description |
-|-----------|-------------|
-| **Button** | Interactive button (primary/secondary/danger/ghost) |
-| **Card** | Content card with title, body, footer |
-| **Alert** | Alert messages (info/success/error/warning) |
-| **Badge** | Status badges (gray/green/red/yellow/blue) |
-| **Modal** | Dialog modal with confirm/cancel |
-| **Tabs** | Tab navigation (Alpine.js powered) |
-| **Pagination** | Page navigation |
-| **StatCard** | Statistics card with trend |
-| **Datatable** | Data table with search |
-| **Skeleton** | Loading skeleton |
-| **Breadcrumb** | Navigation breadcrumb |
-| **Accordion** | Collapsible sections |
-| **ProgressBar** | Progress indicator |
-| **Tooltip** | Hover tooltip |
-| **Avatar** | User avatar (image or initials) |
-| **EmptyState** | Empty state with action |
-| **LoadingSpinner** | Loading spinner |
-| **SearchBar** | Search input with icon |
-| **NotificationBell** | Notification bell with count |
-| **Timeline** | Event timeline |
-| **AlertBanner** | Alert banner |
-| **Chip** | Chip/tag |
-| **Divider** | Divider line |
-| **Dropdown** | Dropdown menu |
-| **Toggle** | Toggle switch |
-| **Navbar** | Navigation bar |
-| **CopyButton** | Copy to clipboard button |
-| **StatusBadge** | Status badge |
-| **FileCard** | File card |
-| **Comment** | Comment component |
-| **Rating** | Rating component |
-| **Stepper** | Stepper/wizard |
-| **CodeBlock** | Code block |
-| **TableOfContents** | Table of contents |
-| **KeyValue** | Key-value pair |
-| **DescriptionList** | Description list |
-| **ImageGallery** | Image gallery |
-| **VideoPlayer** | Video player |
-| **AudioPlayer** | Audio player |
-| **MapPlaceholder** | Map placeholder |
-| **QRCode** | QR code |
-| **StarRating** | Star rating |
-| **DatePicker** | Date picker |
-| **TimePicker** | Time picker |
-| **ColorPicker** | Color picker |
-| **RangeSlider** | Range slider |
-| **CheckboxGroup** | Checkbox group |
-| **RadioGroup** | Radio group |
-| **SelectWithSearch** | Select with search |
-| **TagInput** | Tag input |
-| **RichTextEditor** | Rich text editor |
-| **FileSize** | File size display |
-| **Countdown** | Countdown timer |
-| **Clipboard** | Clipboard component |
-| **ShareButtons** | Share buttons |
-| **BackToTop** | Back to top button |
-| **Chart** | Chart (bar/line/horizontal) |
-| **Gauge** | Gauge/meter |
-| **PieChart** | Pie chart |
-| **LineChart** | Line chart |
-| **BarChart** | Bar chart |
-| **RadarChart** | Radar chart |
-| **DoughnutChart** | Doughnut chart |
-| **PolarAreaChart** | Polar area chart |
-| **BubbleChart** | Bubble chart |
-| **ScatterChart** | Scatter chart |
+- **Button** — primary/secondary/danger/ghost
+- **Modal** — dialog with confirm/cancel
+- **Tabs** — tab navigation (Alpine.js)
+- **Dropdown** — dropdown menu
+- **Toggle** — toggle switch
+- **Accordion** — collapsible sections
+- **Tooltip** — hover tooltip
+- **CopyButton** — copy to clipboard
+- **BackToTop** — back to top button
+
+## Data Display
+
+- **Card** — content card with title, body, footer
+- **StatCard** — statistics with trend
+- **Datatable** — data table with search
+- **Badge** — status badges
+- **StatusBadge** — status indicator
+- **Chip** — chip/tag
+- **Avatar** — user avatar (image/initials)
+- **Rating** — rating component
+- **StarRating** — star rating
+- **FileSize** — file size display
+- **Countdown** — countdown timer
+- **QRCode** — QR code generator
+
+## Navigation
+
+- **Navbar** — navigation bar
+- **Breadcrumb** — navigation breadcrumb
+- **Pagination** — page navigation
+- **Stepper** — wizard/stepper
+- **TableOfContents** — table of contents
+
+## Feedback
+
+- **Alert** — alert messages (info/success/error/warning)
+- **AlertBanner** — alert banner
+- **LoadingSpinner** — loading spinner
+- **ProgressBar** — progress indicator
+- **Skeleton** — loading skeleton
+- **EmptyState** — empty state with action
+- **NotificationBell** — notification bell with count
+
+## Forms
+
+- **SearchBar** — search input
+- **DatePicker** — date picker
+- **TimePicker** — time picker
+- **ColorPicker** — color picker
+- **RangeSlider** — range slider
+- **CheckboxGroup** — checkbox group
+- **RadioGroup** — radio group
+- **SelectWithSearch** — select with search
+- **TagInput** — tag input
+- **RichTextEditor** — rich text editor
+
+## Layout
+
+- **Divider** — divider line
+- **KeyValue** — key-value pair
+- **DescriptionList** — description list
+- **Timeline** — event timeline
+- **Comment** — comment component
+
+## Media
+
+- **ImageGallery** — image gallery
+- **VideoPlayer** — video player
+- **AudioPlayer** — audio player
+- **MapPlaceholder** — map placeholder
+
+## Code
+
+- **CodeBlock** — code block with syntax highlighting
 
 ## Chart.js Components
 
-All Chart.js chart types are available via the `ChartJsComponent` base class:
+All Chart.js chart types available via `ChartJsComponent` base class:
 
-| Component | Type | Description |
-|-----------|------|-------------|
-| **Chart** | bar/line/horizontal | Generic chart (legacy) |
-| **PieChart** | pie | Pie chart |
-| **LineChart** | line | Line chart with smooth/fill options |
-| **BarChart** | bar | Bar chart (vertical/horizontal/stacked) |
-| **RadarChart** | radar | Radar/spider chart |
-| **DoughnutChart** | doughnut | Doughnut chart with cutout |
-| **PolarAreaChart** | polarArea | Polar area chart |
-| **BubbleChart** | bubble | Bubble chart (x, y, r) |
-| **ScatterChart** | scatter | Scatter chart (x, y) |
+- **Chart** — bar/line/horizontal (legacy)
+- **PieChart** — pie chart
+- **LineChart** — line chart (smooth/fill)
+- **BarChart** — bar chart (vertical/horizontal/stacked)
+- **RadarChart** — radar/spider chart
+- **DoughnutChart** — doughnut chart
+- **PolarAreaChart** — polar area chart
+- **BubbleChart** — bubble chart (x, y, r)
+- **ScatterChart** — scatter chart (x, y)
+- **Gauge** — circular progress indicator
 
-### Usage in PHP
+## Usage in PHP
 
 ```php
 use Tavp\Blocks\BlockRegistry;
 
 $registry = new BlockRegistry();
 
-// Create a button
+// Button
 $button = $registry->make('Button', [
     'label' => 'Save',
     'variant' => 'primary',
@@ -108,24 +113,32 @@ $button = $registry->make('Button', [
 ]);
 echo $button->render();
 
-// Create a stat card
+// Stat Card
 $stat = $registry->make('StatCard', [
     'label' => 'Total Users',
     'value' => 1234,
-    'trend' => '+12% this month',
+    'trend' => '+12%',
     'trendColor' => 'green'
 ]);
 echo $stat->render();
 
-// Create a data table
+// Data Table
 $table = $registry->make('Datatable');
 $table->addColumn('name', 'Name');
 $table->addColumn('email', 'Email');
 $table->addRow(['name' => 'John', 'email' => 'john@example.com']);
 echo $table->render();
+```
 
-// Create a bar chart
-$barChart = $registry->make('BarChart', ['title' => 'Monthly Sales']);
+## Chart.js Usage
+
+```php
+use Tavp\Blocks\Components\BarChart;
+use Tavp\Blocks\Components\LineChart;
+use Tavp\Blocks\Components\PieChart;
+
+// Bar Chart
+$barChart = new BarChart('Monthly Sales');
 $barChart->setLabels(['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'])
          ->addDataset('Sales', [120, 190, 300, 500, 200, 300], [
              'backgroundColor' => 'rgba(59, 130, 246, 0.5)',
@@ -134,8 +147,8 @@ $barChart->setLabels(['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'])
          ]);
 echo $barChart->render();
 
-// Create a line chart with smooth curves
-$lineChart = $registry->make('LineChart', ['title' => 'Revenue Trend']);
+// Line Chart
+$lineChart = new LineChart('Revenue Trend');
 $lineChart->setLabels(['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'])
           ->addDataset('Revenue', [1000, 1200, 900, 1500, 1800, 2000], [
               'borderColor' => 'rgb(34, 197, 94)',
@@ -145,16 +158,16 @@ $lineChart->setLabels(['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'])
           ->setFill(true);
 echo $lineChart->render();
 
-// Create a pie chart
-$pieChart = $registry->make('PieChart', ['title' => 'Market Share']);
+// Pie Chart
+$pieChart = new PieChart('Market Share');
 $pieChart->addSegment('Product A', 35, 'rgba(59, 130, 246, 0.8)')
          ->addSegment('Product B', 25, 'rgba(34, 197, 94, 0.8)')
          ->addSegment('Product C', 20, 'rgba(251, 191, 36, 0.8)')
          ->addSegment('Product D', 20, 'rgba(239, 68, 68, 0.8)');
 echo $pieChart->render();
 
-// Create a doughnut chart
-$doughnutChart = $registry->make('DoughnutChart', ['title' => 'Expenses']);
+// Doughnut Chart
+$doughnutChart = new DoughnutChart('Expenses');
 $doughnutChart->addSegment('Marketing', 30, 'rgba(59, 130, 246, 0.8)')
               ->addSegment('Development', 40, 'rgba(34, 197, 94, 0.8)')
               ->addSegment('Operations', 20, 'rgba(251, 191, 36, 0.8)')
@@ -162,15 +175,15 @@ $doughnutChart->addSegment('Marketing', 30, 'rgba(59, 130, 246, 0.8)')
               ->setCutout('60%');
 echo $doughnutChart->render();
 
-// Create a radar chart
-$radarChart = $registry->make('RadarChart', ['title' => 'Skills Assessment']);
+// Radar Chart
+$radarChart = new RadarChart('Skills Assessment');
 $radarChart->setLabels(['PHP', 'JavaScript', 'SQL', 'CSS', 'DevOps'])
            ->addDataset('Developer A', [90, 80, 85, 70, 60])
            ->addDataset('Developer B', [70, 90, 75, 85, 80]);
 echo $radarChart->render();
 
-// Create a stacked bar chart
-$stackedBar = $registry->make('BarChart', ['title' => 'Quarterly Revenue', 'stacked' => true]);
+// Stacked Bar Chart
+$stackedBar = new BarChart('Quarterly Revenue', true);
 $stackedBar->setLabels(['Q1', 'Q2', 'Q3', 'Q4'])
            ->addDataset('Product A', [100, 150, 200, 180], [
                'backgroundColor' => 'rgba(59, 130, 246, 0.8)',
