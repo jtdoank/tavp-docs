@@ -39,9 +39,12 @@ sudo bash install/install-linux.sh
 ### Windows (WSL2)
 Buka **PowerShell sebagai Administrator**:
 ```powershell
-powershell -ExecutionPolicy Bypass -File install/install-wsl.ps1
+powershell -ExecutionPolicy Bypass -File install/install-windows.ps1
 ```
-Kalau WSL baru di-install, reboot lalu jalankan installer lagi.
+Setelah reboot (kalau WSL baru di-install), jalankan installer itu lagi.
+
+> **Tips:** Setelah terpasang, lo bisa gunakan GUI desktop **TAVP Box Desktop**  
+> (unduh di [release tavpbox-desktop](https://github.com/tavp-stack/tavpbox-desktop/releases)).
 
 ### macOS (Lima)
 ```bash
@@ -207,10 +210,25 @@ tenant), pakai mode **VM** (LXD `--vm`) — evolusi ke **tavp-cloud**.
 
 ---
 
-## 8. Troubleshooting
+## 8. TAVP Box Desktop (GUI)
+
+Supaya tidak perlu terminal, pakai **TAVP Box Desktop** — aplikasi native (Rust + Slint)
+yang membungkus `tavpbox` CLI dengan antarmuka grafis:
+
+- List box live (status, IP, distro)
+- Tombol Start / Stop / Open / Destroy
+- Wizard buat box baru (pilih distro, stack, service)
+- Pengaturan (cek dependensi, install otomatis)
+
+Unduh installer untuk Windows (`.exe`), macOS (`.dmg`), atau Linux (`.AppImage`)
+di [halaman rilis](https://github.com/tavp-stack/tavpbox-desktop/releases).
+
+---
+
+## 9. Troubleshooting
 
 - **Domain tidak resolve (Windows)**: IP WSL2 bisa berubah tiap reboot.
-  Jalankan lagi `install/install-wsl.ps1`.
+  Jalankan lagi `install/install-windows.ps1`.
 - **Caddy gagal**: pastikan port 80/443 bebas. Cek log Caddy.
 - **dnsmasq bentrok systemd-resolved**: arahkan `/etc/resolv.conf` ke dnsmasq.
 - **Folder Windows tak kelihatan di box**: pakai path WSL
