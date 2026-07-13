@@ -239,7 +239,77 @@ Kotak search di atas tabel akan mencari ke semua kolom tersebut (OR).
 
 ## Komponen UI (tavpblocks)
 
-TavpHub merender metrik, pagination, badge, dan alert lewat **tavpblocks** bila terpasang. Tanpa tavpblocks, TavpHub fallback ke HTML Tailwind biasa — panel tetap jalan.
+TavpHub merender seluruh panel lewat komponen **tavpblocks** bila terpasang — StatCard, Badge, Alert, Card, SearchBar, Dropdown, Pagination, Button, dan Chart (Chart.js). Tanpa tavpblocks, TavpHub fallback ke HTML Tailwind biasa — panel tetap jalan.
+
+### Tema terang & gelap (dark/light)
+
+Shell admin TavpHub menggunakan pendekatan **shadcn/zenith**: Tailwind dengan `darkMode: 'class'`, aksen warna **brand** (indigo `#4f46e5`), dan sudut membulat (`rounded-xl`). Di pojok kanan atas ada tombol **Toggle Theme** yang:
+
+- menyimpan pilihan ke `localStorage` (`hub-theme`),
+- mengikuti preferensi sistem (`prefers-color-scheme`) bila belum dipilih,
+- dan langsung membalik kelas `dark` di `<html>` tanpa reload.
+
+Semua komponen **theme-adaptive**: mereka menulis kelas Tailwind `dark:` sehingga otomatis mengikuti tema aktif. Mau memaksa satu tema? lewat parameter `theme`:
+
+```php
+// 'light' | 'dark' | 'auto' (default: ikut tema aktif)
+UI::statCard('Users', 1284, '+12%', 'green', '👥', 'brand', $sparkline, 'auto');
+```
+
+### StatCard (kartu metrik)
+
+```php
+UI::statCard(
+    label:    'Total Users',
+    value:    1284,
+    trend:    '+12%',        // string delta, contoh dari ValueMetric::calculate()
+    trendColor:'green',      // green | red | yellow | gray
+    icon:     '👥',          // glyph/emoji apa pun
+    color:    'brand',       // brand | blue | green | red | yellow | purple | pink | gray
+    sparkline:[3,5,4,8,7,10,9], // array angka -> sparkline SVG otomatis
+    theme:    'auto'
+);
+```
+
+Di dashboard, metrik `TrendMetric` otomatis dapat sparkline dari seri bulannya; metrik `ValueMetric` dapat badge delta hijau/merah dari `compareTo()`.
+
+### Badge
+
+```php
+UI::badge('Active', 'green', 'soft');   // variant: soft | outline | solid
+UI::badge('Pro',     'brand', 'solid'); // 8 warna: gray,green,red,yellow,blue,indigo,purple,pink
+```
+
+### Alert
+
+```php
+UI::alert('Resource disimpan.', 'success', 'Tersimpan', dismissible: true);
+// type: success | error | warning | info
+```
+
+### Card (panel)
+
+```php
+UI::card(
+    title:  'Latest Activity',
+    body:   '<p>User admin login 2 menit lalu.</p>',
+    footer: '',
+    actions: '<button class="...">Export</button>', // slot header kanan
+    theme:  'auto'
+);
+```
+
+### Chart (trend metrik)
+
+```php
+UI::chart('Signups', $series, 'line', 220); // $series = [label => nilai]
+```
+
+`UI::chart()` merender `<canvas>` Chart.js yang responsif (mengisi container, tidak overflow).
+
+### Lihat semua komponen
+
+Repo `tavpblocks` menyertakan demo yang merender seluruh komponen secara langsung dari class PHP: `examples/components-full-demo.html` (buka di browser; ada tombol **Toggle Dark**). Generate ulang dengan `php examples/render-full-demo.php`.
 
 ## Lisensi
 
