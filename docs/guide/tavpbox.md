@@ -34,12 +34,6 @@ di-compile ulang tiap kali laptop mati/restart**.
 ### Windows (PowerShell as Administrator)
 
 ```powershell
-# Cara cepat
-iex (irm 'https://get.tavp.dev/setup-tavpbox.ps1' -UseB)
-```
-
-Atau manual:
-```powershell
 # 1. Enable WSL2
 wsl --install --no-distribution
 
@@ -60,15 +54,22 @@ wsl -d Ubuntu -- sudo lxd init --auto
 ### macOS
 
 ```bash
-# Install via Lima
-curl -fsSL https://get.tavp.dev/setup-tavpbox.sh | bash
+# Install Lima (jika belum)
+brew install lima
+
+# Download binary dari GitHub Releases
+# https://github.com/tavp-stack/tavpbox/releases
 ```
 
 ### Linux
 
 ```bash
-# Install langsung
-sudo curl -fsSL https://get.tavp.dev/setup-tavpbox.sh | bash
+# Install LXD
+sudo snap install lxd
+sudo lxd init --auto
+
+# Download binary dari GitHub Releases
+# https://github.com/tavp-stack/tavpbox/releases
 ```
 
 Installer memasang **LXD**, **Caddy**, **dnsmasq**, dan menyalin CLI
