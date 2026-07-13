@@ -1,6 +1,6 @@
-# TAVP Box — Dev Environment All-in-One
+# TAVPBox — Dev Environment All-in-One
 
-TAVP Box adalah dev environment lokal ala **Lando**, tapi berbasis **LXC**
+TAVPBox adalah dev environment lokal ala **Lando**, tapi berbasis **LXC**
 bukan Docker. Hasilnya: jauh lebih irit RAM, dan **Phalcon tidak perlu
 di-compile ulang tiap kali laptop mati/restart**.
 
@@ -8,7 +8,7 @@ di-compile ulang tiap kali laptop mati/restart**.
 1 laptop = banyak "VPS mini". Tiap project = 1 box LXC terisolasi.
 ```
 
-| | Lando (Docker) | TAVP Box (LXC) |
+| | Lando (Docker) | TAVPBox (LXC) |
 |---|---|---|
 | RAM / 20 project | ~40 GB | ~700 MB (Windows) · ~600 MB (Linux) |
 | Phalcon reinstall? | Sering | Sekali (di-bake ke box) |
@@ -31,24 +31,47 @@ di-compile ulang tiap kali laptop mati/restart**.
 
 ## 1. Install
 
-### Linux (native)
-```bash
-sudo bash install/install-linux.sh
-```
+### Windows (PowerShell as Administrator)
 
-### Windows (WSL2)
-Buka **PowerShell sebagai Administrator**:
 ```powershell
-powershell -ExecutionPolicy Bypass -File install/install-wsl.ps1
+# Cara cepat
+iex (irm 'https://get.tavp.dev/setup-tavpbox.ps1' -UseB)
 ```
-Kalau WSL baru di-install, reboot lalu jalankan installer lagi.
 
-### macOS (Lima)
+Atau manual:
+```powershell
+# 1. Enable WSL2
+wsl --install --no-distribution
+
+# 2. Install Ubuntu
+wsl --install -d Ubuntu
+
+# 3. Install LXD di dalam WSL
+wsl -d Ubuntu -- sudo snap install lxd
+wsl -d Ubuntu -- sudo lxd init --auto
+
+# 4. Download binary dari GitHub Releases
+# https://github.com/tavp-stack/tavpbox/releases
+
+# 5. Jalankan
+.\tavpbox.exe init
+```
+
+### macOS
+
 ```bash
-bash install/install-mac.sh
+# Install via Lima
+curl -fsSL https://get.tavp.dev/setup-tavpbox.sh | bash
 ```
 
-Installer memasang **LXD**, **whiptail** (TUI), **jq**, dan menyalin CLI
+### Linux
+
+```bash
+# Install langsung
+sudo curl -fsSL https://get.tavp.dev/setup-tavpbox.sh | bash
+```
+
+Installer memasang **LXD**, **Caddy**, **dnsmasq**, dan menyalin CLI
 `tavpbox` ke PATH.
 
 ---
@@ -58,17 +81,20 @@ Installer memasang **LXD**, **whiptail** (TUI), **jq**, dan menyalin CLI
 Jalankan sekali. TUI akan muncul:
 
 ```
-Pilih base distro:
-  ⮞ Ubuntu 24.04      (default, stabil, LXD resmi)
-    Alpine 3.20      (paling irit RAM)
-    Debian 12 / Fedora / Arch / Rocky / openSUSE / Mint / Manjaro / Void
-    Lainnya...       (ketik nama distro)
-Domain suffix: tavp.local
-RAM max/box: 512MB
-CPU max/box: 1
+⚡ TAVPBox — Initial Setup
+
+Select base distro for your boxes:
+
+  > ubuntu/24.04
+    alpine/3.20
+    debian/12
+    fedora/40
+    archlinux
+
+  ↑↓ navigate · enter select
 ```
 
-- **Distro**: 10 populer + "lainnya". Box dibuat dari image distro ini.
+- **Distro**: Box dibuat dari image distro ini.
 - **Domain**: tiap box dapat subdomain otomatis `namabox.tavp.local`.
 - **RAM/CPU**: limit per box agar 1 box tidak memakan semua resource.
 
@@ -81,139 +107,220 @@ Setelah init, **Caddy** (reverse proxy) dan **DNS wildcard** sudah jalan.
 Tanpa argumen → TUI interaktif:
 
 ```
-Nama box : project1
-Stack    : tavp
-Phalcon  : 5.16          (kosong = tanpa Phalcon)
-Folder   : /path/ke/project   (jadi webroot box)
-Services : [✓] mariadb [✓] redis [✓] mailpit [✓] phpmyadmin
+⚡ Create Box (step 1/4)
+
+Box name:
+
+  [Type name and press Enter]
+  (becomes: <name>.tavp.local)
 ```
 
-Atau dari file (alak `.lando.yml`):
+Atau dari file `.tavpbox.yml`:
 
 ```bash
-tavpbox create --from tavpbox.yml
+tavpbox create
 ```
 
-Yang dilakukan `tavpbox`:
+### Contoh `.tavpbox.yml`
+
+```yaml
+name: my-project
+stack: tavp
+services:
+  - mariadb
+  - redis
+  - mailpit
+webroot: .
+env:
+  APP_NAME: "My Project"
+  APP_ENV: local
+tooling:
+  artisan:
+    cmd: php artisan
+  composer:
+    cmd: composer
+```
+
+Yang dilakukan `tavpbox create`:
 
 1. `lxc launch` image distro pilihan.
 2. Pasang limit RAM/CPU.
 3. **Map folder lo** → `/var/www/html` di box (persis seperti Lando
    memetakan webroot).
 4. Pasang **stack** (PHP + nginx + composer, atau Python/Node/Go/...).
-5. **Bake Phalcon** kalau dipilih — sekali saja, persist across restart.
-6. Pasang **services** yang dipilih.
+5. Pasang **services** yang dipilih.
+6. Inject **environment variables** ke container.
 7. Daftarkan domain + mail ke Caddy/DNS.
-
-### Contoh `tavpbox.yml`
-
-```yaml
-name: project1
-stack: tavp
-phalcon: "5.16"
-path: /home/user/projects/cms
-services:
-  - mariadb
-  - redis
-  - mailpit
-  - phpmyadmin
-```
 
 ---
 
 ## 4. Jalankan & Akses
 
 ```bash
-tavpbox start project1
+tavpbox start my-project
 ```
 
 Buka browser:
 
-- **App** : `http://project1.tavp.local`
-- **Mail**: `http://mail.project1.tavp.local`  ← OTP/email per-project
-- **DB UI**: `http://pma.project1.tavp.local` (kalau pilih phpmyadmin)
+- **App** : `http://my-project.tavp.local`
+- **Mail**: `http://mail.my-project.tavp.local`  ← OTP/email per-project
+- **DB UI**: `http://pma.my-project.tavp.local` (kalau pilih phpmyadmin)
 
-Perintah harian:
+### Perintah Harian
 
 ```bash
-tavpbox list              # semua box + status
-tavpbox stop project1     # matikan → RAM balik 0
-tavpbox start project1    # nyalakan (detik, Phalcon tetap ada)
-tavpbox rebuild project1  # recreate container, data tetap
-tavpbox ssh project1      # masuk terminal box
-tavpbox mail project1     # buka mailpit
-tavpbox destroy project1  # hapus box
-tavpbox snapshot project1 # backup (production)
+tavpbox list                  # semua box + status
+tavpbox stop my-project       # matikan → RAM balik 0
+tavpbox start my-project      # nyalakan (detik, Phalcon tetap ada)
+tavpbox rebuild my-project    # recreate container, data tetap
+tavpbox ssh my-project        # masuk terminal box
+tavpbox logs my-project       # lihat logs
+tavpbox destroy my-project    # hapus box
+tavpbox snapshot my-project   # backup (production)
+```
+
+### Custom Tooling
+
+Jika `.tavpbox.yml` punya `tooling:` section, bisa langsung:
+
+```bash
+tavpbox artisan migrate       # php artisan migrate
+tavpbox composer install      # composer install
+tavpbox npm run dev           # npm run dev
 ```
 
 ---
 
-## 5. Multi-Project (20 box sekaligus)
+## 5. Semua Commands
 
-Karena tiap box cuma ~30 MB, 20 project aman:
+### Lifecycle
 
-```bash
-tavpbox create   # project1
-tavpbox create   # project2
-tavpbox create   # project3
-...
-tavpbox list
-```
+| Command | Description |
+|---------|-------------|
+| `tavpbox init` | Setup pertama kali (TUI wizard) |
+| `tavpbox create` | Buat box baru (TUI wizard atau dari file) |
+| `tavpbox start <name>` | Start box |
+| `tavpbox stop <name>` | Stop box (RAM langsung bebas) |
+| `tavpbox restart <name>` | Restart box |
+| `tavpbox destroy <name>` | Hapus box permanen |
+| `tavpbox rebuild <name>` | Rebuild box (data di folder tetap ada) |
 
-Masing-masing dapat domain sendiri:
+### Monitoring
 
-```
-http://project1.tavp.local   + mail.project1.tavp.local
-http://project2.tavp.local   + mail.project2.tavp.local
-http://project3.tavp.local   + mail.project3.tavp.local
-```
+| Command | Description |
+|---------|-------------|
+| `tavpbox list` | Lihat semua box |
+| `tavpbox status` | Lihat status system + resource usage |
+| `tavpbox info <name>` | Detail box (IP, stack, services) |
+| `tavpbox logs <name>` | Lihat logs (nginx, PHP, system) |
+| `tavpbox snapshot <name>` | Buat snapshot |
 
-Email **tidak tercampur** karena tiap box punya mailpit sendiri.
+### Exec & SSH
 
----
+| Command | Description |
+|---------|-------------|
+| `tavpbox ssh <name>` | Masuk terminal box |
+| `tavpbox ssh <name> <cmd>` | Jalankan command di box |
+| `tavpbox exec <name> <cmd>` | Jalankan command di box |
 
-## 6. Service Plugin (tambah sendiri)
+### Plugin & Images
 
-Tiap service = 1 file `*.tavp.sh` di `~/.tavpbox/services/`. Contoh
-`solr.tavp.sh`:
-
-```bash
-TVP_NAME="solr"
-TVP_DESC="Apache Solr search"
-TVP_CATEGORY="search"
-TVP_PORTS=(8983)
-TVP_UI_PORT="8983"
-TVP_UI_SUBDOMAIN="solr"
-TVP_INSTALL_apt='apt-get install -y solr-tomcat && service solr start'
-TVP_INSTALL_apk='apk add solr && rc-service solr start'
-# ... per distro: dnf / zypper / pacman / xbps
-```
-
-Taruh file → langsung muncul di TUI `create`. Lando punya ~30 plugin;
-TAVP Box bisa **unlimited** karena definisinya terbuka.
-
-Service bawaan: `mariadb mysql postgres mongodb redis memcached
-elasticsearch solr varnish mailpit mailhog phpmyadmin adminer nginx apache`.
-
-Stack bawaan: `tavp laravel symfony wordpress python node go ruby blank`.
+| Command | Description |
+|---------|-------------|
+| `tavpbox plugin list` | Lihat plugin terinstall |
+| `tavpbox plugin install <file>` | Install plugin dari YAML |
+| `tavpbox plugin remove <name>` | Hapus plugin |
+| `tavpbox images list` | Lihat cached images |
+| `tavpbox images pull <image>` | Download & cache image |
 
 ---
 
-## 7. Production & TAVP Cloud
+## 6. Stacks
 
-TAVP Box dipakai juga di **VPS production**: banyak website, 1 VPS, tiap box
+| Stack | Description | Components |
+|-------|-------------|------------|
+| `tavp` | TAVP Stack (PHP + Nginx + Node.js) | PHP 8.3, Nginx, Node 20 |
+| `laravel` | Laravel | PHP 8.3, Nginx |
+| `node` | Node.js | Node 20, Nginx |
+| `python` | Python | Python 3, Nginx |
+| `blank` | Empty container | Basic tools |
+
+## 7. Services
+
+| Service | Description | Port |
+|---------|-------------|------|
+| `mariadb` | MariaDB database | 3306 |
+| `postgres` | PostgreSQL database | 5432 |
+| `redis` | Redis cache | 6379 |
+| `mailpit` | Email testing | 8025, 1025 |
+| `phpmyadmin` | Database admin UI | 8080 |
+
+---
+
+## 8. Service Plugin (tambah sendiri)
+
+Tiap service = 1 file YAML di `~/.tavpbox/plugins/services/`. Contoh:
+
+```yaml
+name: solr
+display_name: "Apache Solr"
+description: "Search engine"
+category: service
+provision: scripts/solr.sh
+ports:
+  - 8983
+```
+
+Taruh file → langsung muncul di TUI `create`. TAVPBox bisa **unlimited**
+karena definisinya terbuka.
+
+---
+
+## 9. RAM Comparison
+
+```
+Scenario: 20 development projects running simultaneously
+
+Docker (Lando):
+  dockerd         :  ~200MB
+  20 containers   :  ~20 × 150MB = ~3000MB
+  Total           :  ~3.2GB
+
+LXC (TAVPBox):
+  lxd daemon      :  ~30MB
+  20 containers   :  ~20 × 35MB = ~700MB
+  Caddy + dnsmasq :  ~15MB
+  Total           :  ~745MB
+
+  Savings: ~2.4GB (75% less RAM!)
+```
+
+---
+
+## 10. Production & TAVP Cloud
+
+TAVPBox dipakai juga di **VPS production**: banyak website, 1 VPS, tiap box
 terisolasi + resource limit. Untuk **jual hosting ke orang asing** (untrusted
 tenant), pakai mode **VM** (LXD `--vm`) — evolusi ke **tavp-cloud**.
 
 ---
 
-## 8. Troubleshooting
+## 11. Troubleshooting
 
 - **Domain tidak resolve (Windows)**: IP WSL2 bisa berubah tiap reboot.
-  Jalankan lagi `install/install-wsl.ps1`.
+  Jalankan lagi `tavpbox init`.
 - **Caddy gagal**: pastikan port 80/443 bebas. Cek log Caddy.
 - **dnsmasq bentrok systemd-resolved**: arahkan `/etc/resolv.conf` ke dnsmasq.
 - **Folder Windows tak kelihatan di box**: pakai path WSL
   (`/mnt/c/Users/...`), bukan `C:\...`.
+- **Container tidak bisa start**: `tavpbox logs <name>` untuk cek error.
+
+---
+
+## Links
+
+- **Gitea (primary)**: https://git.glotama.com/tavp-stack/tavp-box
+- **GitHub (mirror)**: https://github.com/tavp-stack/tavpbox
+- **Releases**: https://github.com/tavp-stack/tavpbox/releases
 
 Lisensi: MIT
