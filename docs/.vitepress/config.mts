@@ -52,8 +52,7 @@ export default defineConfig({
       { text: 'Features', link: '/features/authentication' },
       { text: 'Standards', link: '/standards/overview' },
       { text: 'Reference', link: '/reference/cli-commands' },
-      { text: 'GitHub', link: 'https://github.com/tavp-stack' },
-      { text: 'TavpHub', link: '/features/tavphub' }
+      { text: 'GitHub', link: 'https://github.com/tavp-stack' }
     ],
     sidebar: {
       '/guide/': [
