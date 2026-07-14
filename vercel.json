@@ -2,7 +2,5 @@
     "buildCommand": "npm run docs:build",
     "outputDirectory": "dist",
     "framework": "vitepress",
-    "rewrites": [
-        { "source": "/((?!assets/).*)", "destination": "/index.html" }
-    ]
+    "cleanUrls": true
 }
