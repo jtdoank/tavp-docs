@@ -589,8 +589,6 @@ tavpbox config list
   default_cpu:       1
   default_image:     docker.io/library/ubuntu:24.04
   panel_port:        8080
-  cloudflare_token:  cfut_xxx...
-  cloudflare_zone:   816fd4831683b15ad52b09b963e105e5
 ```
 
 ### Set Config
