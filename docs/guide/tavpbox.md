@@ -498,24 +498,54 @@ tavpbox create
 
 Cert wildcard di-embed di binary. Browser auto-trust. Auto-renew via GitHub Actions setiap minggu.
 
-### Email Isolation
+---
 
-Setiap project punya mailpit sendiri. Email OTP project A gak akan masuk ke project B.
+## 12. Pre-built Images
 
-```
-project-a → mailpit.project-a.tavp.my.id (port 8025)
-project-b → mailpit.project-b.tavp.my.id (port 8025)
+TAVPBox pakai pre-built images untuk performa terbaik. Semua service udah terinstall di image, jadi `tavpbox create` instant.
+
+### Official Images
+
+| Image | Recipe | Services |
+|-------|--------|----------|
+| `ghcr.io/tavp-stack/tavpbox-php` | tavp, laravel, php | Nginx, PHP 8.2, MariaDB, Redis, Mailpit, Node.js, Composer, Phalcon |
+| `ghcr.io/tavp-stack/tavpbox-node` | node | Nginx, Node.js 20 |
+| `ghcr.io/tavp-stack/tavpbox-go` | go | Nginx, Go 1.22 |
+| `ghcr.io/tavp-stack/tavpbox-python` | python | Nginx, Python 3.12 |
+
+### Custom Images
+
+Developer bisa build custom image dari container yang lagi jalan:
+
+```powershell
+# Install custom packages di container
+tavpbox ssh
+apt-get install -y php-imagick ffmpeg
+exit
+
+# Build image
+tavpbox image build --name my-php-custom
+
+# Push ke registry
+tavpbox image push ghcr.io/myuser/my-php-custom:latest
+
+# Pakai di .tavpbox.yml
+echo "image: ghcr.io/myuser/my-php-custom:latest" >> .tavpbox.yml
+tavpbox create  # instant!
 ```
 
-Masing-masing project punya SMTP server terpisah (port 1025). Konfigurasi di `.env`:
-```
-MAIL_HOST=localhost
-MAIL_PORT=1025
-```
+### Image Commands
+
+| Command | Description |
+|---------|-------------|
+| `tavpbox image build` | Build custom image dari container |
+| `tavpbox image push <image>` | Push image ke registry |
+| `tavpbox image pull <image>` | Pull image dari registry |
+| `tavpbox image list` | List local images |
 
 ---
 
-## 12. Web Panel
+## 13. Web Panel
 
 ```powershell
 tavpbox panel
