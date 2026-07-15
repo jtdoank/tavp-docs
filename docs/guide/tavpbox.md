@@ -492,18 +492,26 @@ tavpbox mysql -u app -papp app
 HTTPS otomatis. TAVPBox sudah include wildcard cert `*.tavp.my.id` yang valid. Developer gak perlu setup apa-apa.
 
 ```powershell
-# Langsung pakai, cert auto-trusted
 tavpbox create
-# https://myproject.tavp.my.id → langsung jalan tanpa warning
+# https://myproject.tavp.my.id → langsung jalan
 ```
 
-### Cara Kerja
+Cert wildcard di-embed di binary. Browser auto-trust. Auto-renew via GitHub Actions setiap minggu.
 
-Cert wildcard `*.tavp.my.id` di-embed di binary. Setiap project otomatis dapat HTTPS. Browser auto-trust karena cert dari Let's Encrypt.
+### Email Isolation
 
-### Auto-renew
+Setiap project punya mailpit sendiri. Email OTP project A gak akan masuk ke project B.
 
-Cert expired ~90 hari. Admin akan release binary baru sebelum expired. Developer tinggal download binary terbaru.
+```
+project-a → mailpit.project-a.tavp.my.id (port 8025)
+project-b → mailpit.project-b.tavp.my.id (port 8025)
+```
+
+Masing-masing project punya SMTP server terpisah (port 1025). Konfigurasi di `.env`:
+```
+MAIL_HOST=localhost
+MAIL_PORT=1025
+```
 
 ---
 
