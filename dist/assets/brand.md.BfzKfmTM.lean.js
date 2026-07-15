@@ -1,1 +1,0 @@
-import{_ as t,o as e,c as r,a2 as o}from"./chunks/framework.BWuWLRhz.js";const b=JSON.parse('{"title":"Brand Assets","description":"","frontmatter":{},"headers":[],"relativePath":"brand.md","filePath":"brand.md"}'),l={name:"brand.md"};function d(n,a,i,s,h,u){return e(),r("div",null,[...a[0]||(a[0]=[o("",22)])])}const p=t(l,[["render",d]]);export{b as __pageData,p as default};
