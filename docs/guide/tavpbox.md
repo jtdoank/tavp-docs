@@ -103,7 +103,35 @@ go install github.com/tavp-stack/tavpbox@latest
 
 ---
 
-## 2. Project Baru (`tavpbox init`)
+## 2. Setelah Host Restart / Shutdown
+
+Setelah komputer restart, jalankan satu command:
+
+```powershell
+tavpbox start --all
+```
+
+Output:
+```
+Starting all TAVPBox containers...
+  ✓ tavp-web-id → http://tavp-web-id.tavp.my.id
+  ✓ lula → http://lula.tavp.my.id
+
+Starting proxy...
+
+✓ 2 containers started + proxy running
+```
+
+Atau start per-folder:
+
+```powershell
+cd ~/projects/my-app
+tavpbox start
+```
+
+---
+
+## 3. Project Baru (`tavpbox init`)
 
 ```powershell
 cd ~/projects/my-app
@@ -231,7 +259,8 @@ tavpbox info
 ### Lifecycle
 
 ```powershell
-tavpbox start              # Start container
+tavpbox start --all       # Start semua containers + proxy (setelah restart)
+tavpbox start              # Start container di folder ini
 tavpbox stop               # Stop container (RAM balik 0)
 tavpbox restart            # Restart container
 tavpbox destroy            # Hapus container permanen
