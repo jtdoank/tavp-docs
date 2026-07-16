@@ -92,6 +92,82 @@ User::with('posts')->get();
 tavp asset:build --production
 ```
 
+## Client-Side Optimization (Lighthouse)
+
+Server-side cepat (Phalcon <5ms), tapi Lighthouse mengukur **client-side performance**. Untuk score 90+, optimasi sisi client:
+
+### Build Tailwind CSS Offline
+
+JANGAN pakai `<script src="https://cdn.tailwindcss.com">` — ini 300KB+ runtime compiler.
+
+```bash
+npm install tailwindcss @tailwindcss/typography --save-dev
+npx tailwindcss -i resources/css/app.css -o public/assets/app.css --minify
+```
+
+**Hasil**: 300KB+ → 20-30KB
+
+### Self-host Fonts
+
+JANGAN pakai Google Fonts CDN — render-blocking.
+
+```html
+<!-- ❌ -->
+<link href="https://fonts.googleapis.com/css2?family=Inter..." rel="stylesheet"/>
+
+<!-- ✅ -->
+<link rel="stylesheet" href="/assets/fonts.css"/>
+```
+
+Download `.woff2` files, buat `@font-face` declarations dengan `font-display: swap`.
+
+### Inline Critical CSS
+
+```html
+<style><?php readfile(base_path('public/assets/critical.css')); ?></style>
+<link rel="stylesheet" href="/assets/app.css" media="print" onload="this.media='all'"/>
+<noscript><link rel="stylesheet" href="/assets/app.css"/></noscript>
+```
+
+### Defer Non-critical Scripts
+
+```html
+<script defer src="/js/alpine.min.js"></script>
+<script defer src="/js/prism-bundle.js"></script>
+```
+
+### Bundle Scripts
+
+```bash
+# Gabung Prism.js components jadi 1 file
+cat node_modules/prismjs/prism.js \
+    node_modules/prismjs/components/prism-php.min.js \
+    > public/js/prism-bundle.js
+```
+
+### Enable Gzip (Nginx)
+
+```nginx
+server {
+    gzip on;
+    gzip_types text/plain text/css application/json application/javascript text/xml text/javascript image/svg+xml;
+    gzip_min_length 256;
+    gzip_vary on;
+}
+```
+
+### Expected Scores
+
+| Environment | Performance | Accessibility | Best Practices | SEO |
+|-------------|-------------|---------------|----------------|-----|
+| Local (TavpBox) | 70-80 | 93-100 | 100 | 100 |
+| Production VPS | 90-100 | 93-100 | 100 | 100 |
+
+::: tip
+Lighthouse score di local container SELALU lebih rendah karena container overhead + proxy. Test dari production VPS untuk score akurat.
+:::
+
 ## Link
 
+- [Lighthouse Documentation](https://developer.chrome.com/docs/lighthouse/)
 - [Community](/community/contributing)
