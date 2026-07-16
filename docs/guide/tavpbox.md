@@ -353,7 +353,30 @@ tavpbox create
 
 ---
 
-## 8. Recipes
+## 8. Database Persistence
+
+Database data otomatis persist di host. Gak hilang saat rebuild.
+
+```
+~/.tavpbox/volumes/<project>/mysql/     → MariaDB/MySQL data
+~/.tavpbox/volumes/<project>/postgres/  → PostgreSQL data
+```
+
+### Backup
+
+```powershell
+podman exec tavp-<project> mysqldump -u root <database> > backup.sql
+```
+
+### Restore
+
+```powershell
+cat backup.sql | tavpbox ssh mysql -u root
+```
+
+---
+
+## 9. Recipes
 
 | Recipe | Description | Image | Default Services |
 |--------|-------------|-------|------------------|
