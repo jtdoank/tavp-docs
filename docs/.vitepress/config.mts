@@ -125,8 +125,9 @@ export default defineConfig({
             { text: 'Broadcasting', link: '/features/broadcasting' },
 { text: 'Validation', link: '/features/validation' },
 { text: 'Security', link: '/features/security' },
-{ text: 'CMS', link: '/features/cms' },
-{ text: 'BREAD Manager', link: '/features/bread' },
+            { text: 'CMS', link: '/features/cms' },
+            { text: 'SEO', link: '/features/seo' },
+            { text: 'BREAD Manager', link: '/features/bread' },
             { text: 'TavpHub Admin', link: '/features/tavphub' }
           ]
         }
